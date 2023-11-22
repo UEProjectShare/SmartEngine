@@ -96,7 +96,8 @@ void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
 {
 	struct _finddata_t finddata;
 
-	long hfile = 0;
+	//long hfile = 0;
+	intptr_t hfile = 0;
 	char tmp_path[8196] = { 0 };
 	strcpy(tmp_path, in_path);
 	strcat(tmp_path, "\\*");

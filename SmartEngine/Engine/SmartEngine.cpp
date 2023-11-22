@@ -2,11 +2,15 @@
 #include "EngineFactory.h"
 #include "Debug/Log/SimpleLog.h"
 
-int Init(FEngine* InEngine, HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
+int Init(FEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
 {
+#if defined(_WIN32)
+	const FWinMainCommandParameters WinMainParameters(hInstance, prevInstance, cmdLine, showCmd);
+#endif 
+
 	int ReturnValue = InEngine->PreInit(
 #if defined(_WIN32)
-		FWinMainCommandParameters(hInstance, prevInstance, cmdLine, showCmd)
+		WinMainParameters
 #endif 
 	);
 
@@ -16,7 +20,11 @@ int Init(FEngine* InEngine, HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cm
 		return ReturnValue;
 	}
 
-	ReturnValue = InEngine->Init();
+	ReturnValue = InEngine->Init(
+#if defined(_WIN32)
+		WinMainParameters
+#endif 
+	);
 	if (ReturnValue != 0)
 	{
 		Engine_Log_Error("[%i]Engine initialization error, please check the initialization problem.", ReturnValue);
@@ -35,7 +43,10 @@ int Init(FEngine* InEngine, HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cm
 
 void Tick(FEngine* InEngine)
 {
-	InEngine->Tick();
+	float DeltaTime = 0.03f;
+	//InEngine->Tick(DeltaTime);
+
+	//Sleep(30);
 }
 
 int Exit(FEngine* InEngine)
@@ -77,10 +88,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 		//初始化
 		Init(Engine, hInstance, prevInstance, cmdLine, showCmd);
 
+		MSG EngineMsg = { 0 };
+
 		//渲染出图
-		while (true)
+		while (EngineMsg.message != WM_QUIT)
 		{
-			Tick(Engine);
+			//PM_NOREMOVE 消息不从队列里除掉。
+			//PM_REMOVE   消息从队列里除掉。
+			//PM_NOYIELD  此标志使系统不释放等待调用程序空闲的线程
+			// 
+			//PM_QS_INPUT 处理鼠标和键盘消息。
+			//PM_QS_PAINT 处理画图消息。
+			//PM_QS_POSTMESSAGE 处理所有被寄送的消息，包括计时器和热键。
+			//PM_QS_SENDMESSAGE 处理所有发送消息。
+			if (PeekMessage(&EngineMsg,0,0,0, PM_REMOVE))
+			{
+				TranslateMessage(&EngineMsg);
+				DispatchMessage(&EngineMsg);
+			}
+			else
+			{
+				Tick(Engine);
+			}
 		}
 
 		//退出
