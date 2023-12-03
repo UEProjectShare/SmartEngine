@@ -7,7 +7,6 @@ LRESULT CALLBACK EngineWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;
-	default: ;
 	}
 
 	//交给windows自己处理完成

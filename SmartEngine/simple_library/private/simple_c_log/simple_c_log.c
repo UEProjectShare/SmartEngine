@@ -3,8 +3,8 @@
 #include "../../public/simple_core_minimal/simple_c_windows/simple_c_windows_setting.h"
 #include "../../public/simple_core_minimal/simple_c_core/simple_c_string_algorithm/string_algorithm.h"
 
-char log_path[MAX_PATH] = { 0 }; //å­˜å‚¨ç€æˆ‘ä»¬çš„è·¯å¾„
-char log_filename[MAX_PATH] = { 0 };//å…·ä½“æ–‡ä»¶
+char log_path[MAX_PATH] = { 0 }; //´æ´¢×ÅÎÒÃÇµÄÂ·¾¶
+char log_filename[MAX_PATH] = { 0 };//¾ßÌåÎÄ¼ş
 
 const char *get_log_filename()
 {
@@ -29,7 +29,7 @@ const char *get_log_filename()
 
 		time_t now_time = time(NULL);
 
-		//char* p_time = ctime(__TIME__);//æ—¥æœŸè·å–å¤±è´¥
+		//char* p_time = ctime(__TIME__);//ÈÕÆÚ»ñÈ¡Ê§°Ü
 		char p_time[256] = { 0 };
 		get_local_time_string(p_time);
 		if (p_time)

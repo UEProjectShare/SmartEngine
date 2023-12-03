@@ -5,6 +5,7 @@
 
 class FWindowsEngine : public FEngine
 {
+	friend class IRenderingInterface;
 public:
 	FWindowsEngine();
 	
@@ -30,6 +31,13 @@ public:
 	
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentDepthStencilView() const;
 
+	DXGI_FORMAT GetBackBufferFormat() const { return BackBufferFormat; }
+	
+	DXGI_FORMAT GetDepthStencilFormat() const { return DepthStencilFormat; }
+	
+	UINT GetDXGISampleCount()const;
+	
+	UINT GetDXGISampleQuality()const;
 protected:
 	void WaitGPUCommandQueueComplete();
 
@@ -38,6 +46,7 @@ private:
 
 	bool InitDirect3D();
 	
+	void PostInitDirect3D();
 protected:
 	UINT64 CurrentFenceIndex;
 	
@@ -50,25 +59,25 @@ protected:
 	ComPtr<ID3D12Fence> Fence;//一个用于同步 CPU 和一个或多个 GPU 的对象。
 
 	ComPtr<ID3D12CommandQueue> CommandQueue;//队列
-	
+
 	ComPtr<ID3D12CommandAllocator> CommandAllocator; //存储
-	
+
 	ComPtr<ID3D12GraphicsCommandList> GraphicsCommandList;//命令列表
 
 	ComPtr<IDXGISwapChain> SwapChain;
 
 	//描述符对象和堆
 	ComPtr<ID3D12DescriptorHeap> RTVHeap;
-	
+
 	ComPtr<ID3D12DescriptorHeap> DSVHeap;
 
 	vector<ComPtr<ID3D12Resource>> SwapChainBuffer;
-	
+
 	ComPtr<ID3D12Resource> DepthStencilBuffer;
 
 	//和屏幕的视口有关
 	D3D12_VIEWPORT ViewportInfo;
-	
+
 	D3D12_RECT ViewportRect;
 	
 	HWND MainWindowsHandle;//主windows句柄

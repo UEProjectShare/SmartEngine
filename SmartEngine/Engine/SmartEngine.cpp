@@ -43,10 +43,10 @@ int Init(FEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd
 
 void Tick(FEngine* InEngine)
 {
-	float DeltaTime = 0.03f;
-	//InEngine->Tick(DeltaTime);
+	const float DeltaTime = 0.03f;
+	InEngine->Tick(DeltaTime);
 
-	//Sleep(30);
+	Sleep(30);
 }
 
 int Exit(FEngine* InEngine)
@@ -75,6 +75,8 @@ int Exit(FEngine* InEngine)
 	return ReturnValue;
 }
 
+FEngine* Engine = nullptr;
+
 //hInstance 自己的实例
 //prevInstance 上次的实例
 //cmdLine 传递命令
@@ -83,12 +85,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 {
 	int ReturnValue = 0;
 
-	if (FEngine* Engine = FEngineFactory::CreateEngine())
+	Engine = FEngineFactory::CreateEngine();
+	if (Engine)
 	{
 		//初始化
 		Init(Engine, hInstance, prevInstance, cmdLine, showCmd);
 
-		MSG EngineMsg = { 0 };
+		MSG EngineMsg = { nullptr };
 
 		//渲染出图
 		while (EngineMsg.message != WM_QUIT)
@@ -101,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 			//PM_QS_PAINT 处理画图消息。
 			//PM_QS_POSTMESSAGE 处理所有被寄送的消息，包括计时器和热键。
 			//PM_QS_SENDMESSAGE 处理所有发送消息。
-			if (PeekMessage(&EngineMsg,0,0,0, PM_REMOVE))
+			if (PeekMessage(&EngineMsg, nullptr, 0, 0, PM_REMOVE))
 			{
 				TranslateMessage(&EngineMsg);
 				DispatchMessage(&EngineMsg);
