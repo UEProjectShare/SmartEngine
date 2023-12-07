@@ -2,7 +2,7 @@
 #include "EngineFactory.h"
 #include "Debug/Log/SimpleLog.h"
 
-int Init(FEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
+int Init(CEngine* InEngine, HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
 {
 #if defined(_WIN32)
 	const FWinMainCommandParameters WinMainParameters(hInstance, prevInstance, cmdLine, showCmd);
@@ -41,15 +41,15 @@ int Init(FEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd
 	return ReturnValue;
 }
 
-void Tick(FEngine* InEngine)
+void Tick(CEngine* InEngine)
 {
 	const float DeltaTime = 0.03f;
 	InEngine->Tick(DeltaTime);
 
-	Sleep(30);
+	//Sleep(30);
 }
 
-int Exit(FEngine* InEngine)
+int Exit(CEngine* InEngine)
 {
 	int ReturnValue = InEngine->PreExit();
 	if (ReturnValue != 0)
@@ -75,7 +75,7 @@ int Exit(FEngine* InEngine)
 	return ReturnValue;
 }
 
-FEngine* Engine = nullptr;
+CEngine* Engine = nullptr;
 
 //hInstance 自己的实例
 //prevInstance 上次的实例
@@ -91,7 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 		//初始化
 		Init(Engine, hInstance, prevInstance, cmdLine, showCmd);
 
-		MSG EngineMsg = { nullptr };
+		MSG EngineMsg = { 0 };
 
 		//渲染出图
 		while (EngineMsg.message != WM_QUIT)
@@ -104,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 			//PM_QS_PAINT 处理画图消息。
 			//PM_QS_POSTMESSAGE 处理所有被寄送的消息，包括计时器和热键。
 			//PM_QS_SENDMESSAGE 处理所有发送消息。
-			if (PeekMessage(&EngineMsg, nullptr, 0, 0, PM_REMOVE))
+			if (PeekMessage(&EngineMsg,0,0,0, PM_REMOVE))
 			{
 				TranslateMessage(&EngineMsg);
 				DispatchMessage(&EngineMsg);

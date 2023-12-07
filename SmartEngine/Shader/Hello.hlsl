@@ -1,5 +1,5 @@
 
-cbuffer ConstBuffer : register(b0)//b0->b14
+cbuffer ConstBuffer :register(b0)//b0->b14
 {
 	float4x4 World;
 }
@@ -26,7 +26,7 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	return Out;
 }
 
-float4 PixelShaderMain(MeshVertexOut MVOut) : SV_TARGET
+float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 {
 	return MVOut.Color;
 }

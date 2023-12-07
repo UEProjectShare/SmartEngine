@@ -8,10 +8,10 @@ FEngineFactory::FEngineFactory()
 
 }
 
-FEngine* FEngineFactory::CreateEngine()
+CEngine* FEngineFactory::CreateEngine()
 {
 #if defined(_WIN32)
-	return new FWindowsEngine();
+	return new CWindowsEngine();
 #elif defined(__linux__)
 
 #endif // DEBUG

@@ -1,9 +1,11 @@
 #pragma once
+#define CLOSE_DISABLE_DEBUG_INFOR 
 
 #include "../simple_library/public/simple_library.h"
 #include "Debug/Log/SimpleLog.h"
 
 #include <vector>
+#include <sstream>
 
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -24,4 +26,4 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-extern class FEngine* Engine;
+extern class CEngine* Engine;

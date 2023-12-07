@@ -14,7 +14,7 @@ void FShader::BuildShaders(const wstring& InFileName, const string& InEntryFunNa
 {
 	ComPtr<ID3DBlob> ErrorShaderMsg;
 	HRESULT R = D3DCompileFromFile(InFileName.c_str(),
-	nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		InEntryFunName.c_str(), InShadersVersion.c_str(),
 #if _DEBUG
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION
@@ -28,6 +28,6 @@ void FShader::BuildShaders(const wstring& InFileName, const string& InEntryFunNa
 		Engine_Log_Error("%s", static_cast<char*>(ErrorShaderMsg->GetBufferPointer()));
 	}
 
-	// ß∞‹æÕ±¿¿£¡À
+	//?????????
 	ANALYSIS_HRESULT(R);
 }
