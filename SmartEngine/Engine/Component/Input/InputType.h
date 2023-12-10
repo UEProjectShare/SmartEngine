@@ -12,5 +12,6 @@ struct FInputKey
 	FInputKey();
 
 	string KeyName;
+	
 	EPressState PressState;
 };

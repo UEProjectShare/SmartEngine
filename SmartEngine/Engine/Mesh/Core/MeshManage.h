@@ -3,10 +3,15 @@
 #include "../../Shader/Core/Shader.h"
 #include "MeshType.h"
 #include "Mesh.h"
+#include "../../Interface/DirectXDeviceInterfece.h"
+#include "../../Core/Viewport/ViewportInfo.h"
 
 class FRenderingResourcesUpdate;
 
-class CMeshManage : public CCoreMinimalObject,public IRenderingInterface
+class CMeshManage 
+	: public CCoreMinimalObject
+	, public IRenderingInterface
+	, public IDirectXDeviceInterface
 {
 public:
 	CMeshManage();
@@ -14,11 +19,13 @@ public:
 	void Init() override;
 
 	virtual void BuildMesh(const FMeshRenderingData* InRenderingData);
+	
+	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
 	void PreDraw(float DeltaTime) override;
-	
+
 	void Draw(float DeltaTime) override;
-	
+
 	void PostDraw(float DeltaTime) override;
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
@@ -75,8 +82,10 @@ protected:
 	ComPtr<ID3D12RootSignature>  RootSignature;
 	
 	ComPtr<ID3D12DescriptorHeap> CBVHeap;
-	
+
 	shared_ptr<FRenderingResourcesUpdate> ObjectConstants;
+	
+	shared_ptr<FRenderingResourcesUpdate> ViewportConstants;
 
 	ComPtr<ID3D12PipelineState> PSO;
 
@@ -85,7 +94,7 @@ protected:
 	FShader PixelShader;
 
 	vector<D3D12_INPUT_ELEMENT_DESC> InputElementDesc;
-
+	
 	UINT VertexSizeInBytes;
 	
 	UINT VertexStrideInBytes;
@@ -97,8 +106,4 @@ protected:
 	UINT IndexSize;
 
 	XMFLOAT4X4 WorldMatrix;
-	
-	XMFLOAT4X4 ViewMatrix;
-	
-	XMFLOAT4X4 ProjectMatrix;
 };

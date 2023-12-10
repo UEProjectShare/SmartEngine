@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "../../Config/EngineRenderConfig.h"
 
 CMesh::CMesh()
 {

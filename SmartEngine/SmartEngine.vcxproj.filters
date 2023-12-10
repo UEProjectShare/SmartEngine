@@ -171,9 +171,6 @@
     <ClCompile Include="Engine\Core\Camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Viewport.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\World.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -211,6 +208,33 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Rendering\Enigne\DirectX\DirectX12RenderingEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Input\Input.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Viewport\ViewportInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Viewport\ViewportTransformation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Interface\DirectXDeviceInterfece.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Interface\OpenGLDeviceInterfece.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\Buffer\ConstructBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Enigne\Metal\MetalRenderingEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Enigne\OpenGL\OpenGLESRenderingEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Enigne\Vulkan\VulkanRenderingEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -425,9 +449,6 @@
     <ClInclude Include="Engine\Core\Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Viewport.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\World.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -468,6 +489,36 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\Enigne\DirectX\DirectX12RenderingEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Input\Input.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Viewport\ViewportInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Viewport\ViewportTransformation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\CameraType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Interface\DirectXDeviceInterfece.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Interface\OpenGLDeviceInterfece.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\Buffer\ConstructBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Enigne\Metal\MetalRenderingEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Enigne\OpenGL\OpenGLESRenderingEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Enigne\Vulkan\VulkanRenderingEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

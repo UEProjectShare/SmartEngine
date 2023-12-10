@@ -28,6 +28,6 @@ void FShader::BuildShaders(const wstring& InFileName, const string& InEntryFunNa
 		Engine_Log_Error("%s", static_cast<char*>(ErrorShaderMsg->GetBufferPointer()));
 	}
 
-	//?????????
+	// ß∞‹æÕ±¿¿£¡À
 	ANALYSIS_HRESULT(R);
 }

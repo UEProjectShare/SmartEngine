@@ -5,10 +5,11 @@
 #include "../../Rendering/Enigne/Core/RenderingEngine.h"
 
 class CDirectXRenderingEngine;
+class CWorld;
 
 class CWindowsEngine : public CEngine
 {
-	friend class IRenderingInterface;
+	friend class IDirectXDeviceInterface;
 public:
 	CWindowsEngine();
 	
@@ -34,7 +35,9 @@ public:
 
 protected:
 	HWND MainWindowsHandle;//Ö÷windows¾ä±ú
-
+	
 	CDirectXRenderingEngine* RenderingEngine;
+	
+	CWorld* World;
 };
 #endif

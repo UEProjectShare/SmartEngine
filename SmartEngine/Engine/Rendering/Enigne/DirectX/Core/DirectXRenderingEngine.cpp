@@ -93,6 +93,11 @@ int CDirectXRenderingEngine::PostInit()
 	return 0;
 }
 
+void CDirectXRenderingEngine::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
+{
+	MeshManage->UpdateCalculations(DeltaTime, ViewportInfo);
+}
+
 void CDirectXRenderingEngine::Tick(float DeltaTime)
 {
 	//重置录制相关的内存，为下一帧做准备
@@ -218,7 +223,7 @@ void CDirectXRenderingEngine::WaitGPUCommandQueueComplete()
 		//CREATE_EVENT_INITIAL_SET  0x00000002
 		//CREATE_EVENT_MANUAL_RESET 0x00000001
 		//ResetEvents
-		const HANDLE EventEX = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
+		HANDLE EventEX = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
 
 		//GPU完成后会通知我们的Handle
 		ANALYSIS_HRESULT(Fence->SetEventOnCompletion(CurrentFenceIndex, EventEX));
@@ -262,7 +267,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	D3D_FEATURE_LEVEL_11_0 目标功能级别支持Direct3D 11.0包含 shader model 5.
 	*/
 
-	HRESULT D3dDeviceResult = D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3dDevice));
+	HRESULT D3dDeviceResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3dDevice));
 	if (FAILED(D3dDeviceResult))
 	{
 		//warp
