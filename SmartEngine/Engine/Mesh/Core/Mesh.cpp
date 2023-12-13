@@ -1,26 +1,29 @@
 #include "Mesh.h"
 #include "../../Config/EngineRenderConfig.h"
+#include "../../Component/TransformationComponent.h"
 
-CMesh::CMesh()
+GMesh::GMesh()
+	: GActorObject()
+{
+	
+}
+
+void GMesh::Init()
 {
 }
 
-void CMesh::Init()
+void GMesh::BuildMesh(const FMeshRenderingData* InRenderingData)
 {
 }
 
-void CMesh::BuildMesh(const FMeshRenderingData* InRenderingData)
+void GMesh::PreDraw(float DeltaTime)
 {
 }
 
-void CMesh::PreDraw(float DeltaTime)
+void GMesh::Draw(float DeltaTime)
 {
 }
 
-void CMesh::Draw(float DeltaTime)
-{
-}
-
-void CMesh::PostDraw(float DeltaTime)
+void GMesh::PostDraw(float DeltaTime)
 {
 }

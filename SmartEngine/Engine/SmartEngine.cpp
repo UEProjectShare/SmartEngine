@@ -104,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 			//PM_QS_PAINT 处理画图消息。
 			//PM_QS_POSTMESSAGE 处理所有被寄送的消息，包括计时器和热键。
 			//PM_QS_SENDMESSAGE 处理所有发送消息。
-			if (PeekMessage(&EngineMsg,0,0,0, PM_REMOVE))
+			if (PeekMessage(&EngineMsg, 0, 0, 0, PM_REMOVE))
 			{
 				TranslateMessage(&EngineMsg);
 				DispatchMessage(&EngineMsg);

@@ -2,9 +2,9 @@
 
 #include "Core/Mesh.h"
 
-class CConeMesh : public CMesh
+class GConeMesh : public GMesh
 {
-	typedef CMesh Super;
+	typedef GMesh Super;
 public:
 	void Init() override;
 

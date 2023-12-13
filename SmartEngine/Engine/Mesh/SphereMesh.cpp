@@ -1,28 +1,28 @@
 #include "SphereMesh.h"
 #include "Core/MeshType.h"
 
-void CSphereMesh::Init()
+void GSphereMesh::Init()
 {
 	Super::Init();
 
 
 }
 
-void CSphereMesh::BuildMesh(const FMeshRenderingData* InRenderingData)
+void GSphereMesh::BuildMesh(const FMeshRenderingData* InRenderingData)
 {
 	Super::BuildMesh(InRenderingData);
 
 
 }
 
-void CSphereMesh::Draw(float DeltaTime)
+void GSphereMesh::Draw(float DeltaTime)
 {
 	Super::Draw(DeltaTime);
 
 
 }
 
-void CSphereMesh::CreateMesh(FMeshRenderingData& MeshData, float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+void GSphereMesh::CreateMesh(FMeshRenderingData& MeshData, float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
 	const float ThetaValue = XM_2PI / InHeightSubdivision;
 	const float BetaValue = XM_PI / InAxialSubdivision;

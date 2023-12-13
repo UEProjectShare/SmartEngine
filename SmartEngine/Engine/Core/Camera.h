@@ -1,6 +1,6 @@
 #pragma once
 #include "Viewport/Viewport.h"
-#include "CoreObject/CoreMinimalObject.h"
+#include "../Actor/Core/ActorObject.h"
 #include "../CodeReflection/CodeReflectionMacroTag.h"
 #include "../Interface/DirectXDeviceInterfece.h"
 
@@ -9,20 +9,17 @@ struct FInputKey;
 class CTransformationComponent;
 class CInputComponent;
 
-class CCamera : public CCoreMinimalObject
+class GCamera : public GActorObject
 	, public FViewport
 	, public IDirectXDeviceInterface
 {
 	CVARIABLE()
-	CTransformationComponent* TransformationComponent;
-
-	CVARIABLE()
 	CInputComponent* InputComponent;
 public:
-	CCamera();
+	GCamera();
 
 	void BeginInit() override;
-	
+
 	void Tick(float DeltaTime) override;
 
 	virtual void ExecuteKeyboard(const FInputKey& InputKey);
@@ -46,8 +43,6 @@ protected:
 	void RotateAroundZAxis(float InRotateDegrees) const;
 public:
 	FORCEINLINE CInputComponent* GetInputComponent() const { return InputComponent; }
-	
-	FORCEINLINE CTransformationComponent* GetTransformationComponent() const { return TransformationComponent; }
 
 protected:
 	POINT LastMousePosition;

@@ -2,9 +2,9 @@
 
 #include "Core/Mesh.h"
 
-class CPlaneMesh : public CMesh
+class GPlaneMesh : public GMesh
 {
-	typedef CMesh Super;
+	typedef GMesh Super;
 public:
 	void Init() override;
 

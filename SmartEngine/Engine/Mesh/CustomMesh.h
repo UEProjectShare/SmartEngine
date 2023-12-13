@@ -2,9 +2,9 @@
 
 #include "Core/Mesh.h"
 
-class CCustomMesh : public CMesh
+class GCustomMesh : public GMesh
 {
-	typedef CMesh Super;
+	typedef GMesh Super;
 public:
 	void Init() override;
 
@@ -12,7 +12,7 @@ public:
 
 	void Draw(float DeltaTime) override;
 
-	void CreateMesh(FMeshRenderingData& MeshData, const string &InPath);
+	void CreateMesh(FMeshRenderingData& MeshData, const string& InPath);
 
-	static bool LoadObjFromBuff(char *InBuff,uint32_t InBuffSize, FMeshRenderingData &MeshData);
+	static bool LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FMeshRenderingData& MeshData);
 };

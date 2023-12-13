@@ -23,16 +23,16 @@ public:
 
 	CVARIABLE(xxx, www)
 	FCaptureOnMouseWheelDelegate OnMouseWheelDelegate;
-public:
+	
 	void BeginInit() override;
 
 	void Tick(float DeltaTime) override;
 
 	virtual void OnMouseButtonDown(int X, int Y);
-
+	
 	virtual void OnMouseButtonUp(int X, int Y);
-
+	
 	virtual void OnMouseMove(int X, int Y);
-
-	virtual void OnMouseWheel(int X, int Y, float InDelta);
+	
+	virtual void OnMouseWheel(int X, int Y,float InDelta);
 };

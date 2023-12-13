@@ -73,15 +73,35 @@ int CDirectXRenderingEngine::PostInit()
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
 		//构建Mesh
-		//CBoxMesh* Box = CBoxMesh::CreateMesh();
-		//MeshManage->CreatePlaneMesh(5, 5, 30, 30);
-		//MeshManage->CreatePlaneMesh(4.f, 3.f, 20, 20);
+		if (const GMesh* BoxMesh = MeshManage->CreateBoxMesh(4.f, 3.f, 1.5f))
+		{
+			BoxMesh->SetPosition(XMFLOAT3(4,3,5));
+			BoxMesh->SetRotation(fvector_3d(60.f, 1.f, 20.f));
+		}
+		
+		MeshManage->CreatePlaneMesh(4.f, 3.f, 20, 20);
+		if (const GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 20, 20))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(1,2,4));
+			SphereMesh->SetScale(fvector_3d(3.f, 3.f,3.f));
+		}
+
+		if (const GMesh* CylinderMesh = MeshManage->CreateCylinderMesh(1.f, 1.f, 5.f, 20, 20))
+		{
+			CylinderMesh->SetPosition(XMFLOAT3(1, -2, -4));
+		}
+
+		if (const GMesh* ConeMesh = MeshManage->CreateConeMesh(1.f, 5.f, 20, 20))
+		{
+			ConeMesh->SetPosition(XMFLOAT3(-1, 1, 9));
+			ConeMesh->SetRotation(fvector_3d(90.f, 1.f, 20.f));
+		}
+
 		string MeshObjPath = "../SmartEngine/Content/SunMesh.obj";
 		MeshManage->CreateMesh(MeshObjPath);
-		//	CSphereMesh* SphereMesh = CSphereMesh::CreateMesh(2.f, 20, 20);
-		//	CCylinderMesh* CylinderMesh = CCylinderMesh::CreateMesh(1.f,1.f,5.f,20,20);
-		//	CConeMesh* ConeMesh = CConeMesh::CreateMesh(1.f, 5.f, 20, 20);
 	}
+	
+	MeshManage->BuildMesh();
 
 	ANALYSIS_HRESULT(GraphicsCommandList->Close());
 
@@ -115,8 +135,8 @@ void CDirectXRenderingEngine::Tick(float DeltaTime)
 
 	//需要每帧执行
 	//绑定矩形框
-	GraphicsCommandList->RSSetViewports(1, &ViewprotInfo);
-	GraphicsCommandList->RSSetScissorRects(1, &ViewprotRect);
+	GraphicsCommandList->RSSetViewports(1, &ViewportInfo);
+	GraphicsCommandList->RSSetScissorRects(1, &ViewportRect);
 
 	//清除画布
 	GraphicsCommandList->ClearRenderTargetView(GetCurrentSwapBufferView(),
@@ -211,10 +231,11 @@ UINT CDirectXRenderingEngine::GetDXGISampleQuality() const
 
 void CDirectXRenderingEngine::WaitGPUCommandQueueComplete()
 {
-	CurrentFenceIndex++;
+	//https://zhuanlan.zhihu.com/p/129665235?from_voters_page=true
+	CurrentFenceIndex++;//CPU传完命令并关闭后，将当前围栏值+1
 
 	//向GUP设置新的隔离点 等待GPU处理玩信号
-	ANALYSIS_HRESULT(CommandQueue->Signal(Fence.Get(), CurrentFenceIndex));
+	ANALYSIS_HRESULT(CommandQueue->Signal(Fence.Get(), CurrentFenceIndex));//当GPU处理完CPU传入的命令后，将fence接口中的围栏值+1，即fence->GetCompletedValue()+1
 
 	if (Fence->GetCompletedValue() < CurrentFenceIndex)
 	{
@@ -223,13 +244,13 @@ void CDirectXRenderingEngine::WaitGPUCommandQueueComplete()
 		//CREATE_EVENT_INITIAL_SET  0x00000002
 		//CREATE_EVENT_MANUAL_RESET 0x00000001
 		//ResetEvents
-		HANDLE EventEX = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
+		const HANDLE EventEX = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);//创建事件
 
 		//GPU完成后会通知我们的Handle
-		ANALYSIS_HRESULT(Fence->SetEventOnCompletion(CurrentFenceIndex, EventEX));
+		ANALYSIS_HRESULT(Fence->SetEventOnCompletion(CurrentFenceIndex, EventEX));//当围栏达到CurrentFence值（即执行到Signal（）指令修改了围栏值）时触发的eventHandle事件
 
 		//等待GPU,阻塞主线程
-		WaitForSingleObject(EventEX, INFINITE);
+		WaitForSingleObject(EventEX, INFINITE);//等待GPU命中围栏，激发事件（阻塞当前线程直到事件触发，注意此Enent需先设置再等待，如果没有Set就Wait，就死锁了，Set永远不会调用，所以也就没线程可以唤醒这个线程）
 		CloseHandle(EventEX);
 	}
 }
@@ -466,18 +487,18 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 
 	//这些会覆盖原先windows画布
 	//描述视口尺寸
-	ViewprotInfo.TopLeftX = 0;
-	ViewprotInfo.TopLeftY = 0;
-	ViewprotInfo.Width = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
-	ViewprotInfo.Height = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
-	ViewprotInfo.MinDepth = 0.f;
-	ViewprotInfo.MaxDepth = 1.f;
+	ViewportInfo.TopLeftX = 0;
+	ViewportInfo.TopLeftY = 0;
+	ViewportInfo.Width = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
+	ViewportInfo.Height = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
+	ViewportInfo.MinDepth = 0.f;
+	ViewportInfo.MaxDepth = 1.f;
 
 	//矩形
-	ViewprotRect.left = 0;
-	ViewprotRect.top = 0;
-	ViewprotRect.right = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
-	ViewprotRect.bottom = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
+	ViewportRect.left = 0;
+	ViewportRect.top = 0;
+	ViewportRect.right = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
+	ViewportRect.bottom = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
 
 	WaitGPUCommandQueueComplete();
 }

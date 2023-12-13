@@ -6,16 +6,16 @@
 struct FInputKey;
 class CTransformationComponent;
 class CInputComponent;
-class CCamera;
+class GCamera;
 
 class CWorld : public CCoreMinimalObject
 {
 public:
 	CWorld();
 
-	CCamera* GetCamera() const { return Camera; }
+	GCamera* GetCamera() const { return Camera; }
 
 protected:
 	CVARIABLE()
-	CCamera* Camera;
+	GCamera* Camera;
 };

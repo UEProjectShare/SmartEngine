@@ -1,27 +1,27 @@
 #include "CylinderMesh.h"
 #include "Core/MeshType.h"
 
-void CCylinderMesh::Init()
+void GCylinderMesh::Init()
 {
 	Super::Init();
 
 }
 
-void CCylinderMesh::BuildMesh(const FMeshRenderingData* InRenderingData)
+void GCylinderMesh::BuildMesh(const FMeshRenderingData* InRenderingData)
 {
 	Super::BuildMesh(InRenderingData);
 
 
 }
 
-void CCylinderMesh::Draw(float DeltaTime)
+void GCylinderMesh::Draw(float DeltaTime)
 {
 	Super::Draw(DeltaTime);
 
 
 }
 
-void CCylinderMesh::CreateMesh(FMeshRenderingData& MeshData, float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+void GCylinderMesh::CreateMesh(FMeshRenderingData& MeshData, float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
 	//半径间隔
 	const float RadiusInterval = (InTopRadius - InBottomRadius) / InHeightSubdivision;
@@ -95,7 +95,7 @@ void CCylinderMesh::CreateMesh(FMeshRenderingData& MeshData, float InTopRadius, 
 		}
 
 		//添加中点
-		MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f),XMFLOAT4(Colors::White)));
+		MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White)));
 	
 		//绘制index模型
 		const float CenterPoint = MeshData.VertexData.size() - 1;
