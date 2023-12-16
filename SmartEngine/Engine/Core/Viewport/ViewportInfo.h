@@ -4,6 +4,8 @@
 struct FViewportInfo
 {
 	//定义摄像机位置,UP，Right,Look
+	XMFLOAT4 ViewPosition;
+
 	XMFLOAT4X4 ViewMatrix;
 
 	//可视范围 可视角度

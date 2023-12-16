@@ -37,10 +37,11 @@ public:
 	
 	DXGI_FORMAT GetDepthStencilFormat() const { return DepthStencilFormat; }
 	
-	UINT GetDXGISampleCount()const;
+	UINT GetDXGISampleCount() const;
 	
-	UINT GetDXGISampleQuality()const;
-	
+	UINT GetDXGISampleQuality() const;
+
+	CMeshManage* GetMeshManage() const { return MeshManage; }
 protected:
 	void WaitGPUCommandQueueComplete();
 

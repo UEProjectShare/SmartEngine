@@ -130,10 +130,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actor\Core\ActorObject.cpp" />
+    <ClCompile Include="Engine\Actor\Light\ParallelLight.cpp" />
     <ClCompile Include="Engine\Component\Core\Component.cpp" />
     <ClCompile Include="Engine\Component\InputComponent.cpp" />
     <ClCompile Include="Engine\Component\Input\Input.cpp" />
     <ClCompile Include="Engine\Component\Input\InputType.cpp" />
+    <ClCompile Include="Engine\Component\Light\Core\LightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Light\Core\LightConstantBuffer.cpp" />
+    <ClCompile Include="Engine\Component\Light\ParallelLightComponent.cpp" />
     <ClCompile Include="Engine\Component\TransformationComponent.cpp" />
     <ClCompile Include="Engine\Config\EngineRenderConfig.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
@@ -152,6 +156,9 @@
     <ClCompile Include="Engine\Math\EngineMath.cpp" />
     <ClCompile Include="Engine\Mesh\BoxMesh.cpp" />
     <ClCompile Include="Engine\Mesh\ConeMesh.cpp" />
+    <ClCompile Include="Engine\Mesh\Core\Material\Material.cpp" />
+    <ClCompile Include="Engine\Mesh\Core\Material\MaterialConstantBuffer.cpp" />
+    <ClCompile Include="Engine\Mesh\Core\Material\MaterialType.cpp" />
     <ClCompile Include="Engine\Mesh\Core\Mesh.cpp" />
     <ClCompile Include="Engine\Mesh\Core\MeshManage.cpp" />
     <ClCompile Include="Engine\Mesh\Core\MeshType.cpp" />
@@ -215,11 +222,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Actor\Core\ActorObject.h" />
+    <ClInclude Include="Engine\Actor\Light\ParallelLight.h" />
     <ClInclude Include="Engine\CodeReflection\CodeReflectionMacroTag.h" />
     <ClInclude Include="Engine\Component\Core\Component.h" />
     <ClInclude Include="Engine\Component\InputComponent.h" />
     <ClInclude Include="Engine\Component\Input\Input.h" />
     <ClInclude Include="Engine\Component\Input\InputType.h" />
+    <ClInclude Include="Engine\Component\Light\Core\LightComponent.h" />
+    <ClInclude Include="Engine\Component\Light\Core\LightConstantBuffer.h" />
+    <ClInclude Include="Engine\Component\Light\ParallelLightComponent.h" />
     <ClInclude Include="Engine\Component\TransformationComponent.h" />
     <ClInclude Include="Engine\Config\EngineRenderConfig.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
@@ -241,6 +252,9 @@
     <ClInclude Include="Engine\Math\EngineMath.h" />
     <ClInclude Include="Engine\Mesh\BoxMesh.h" />
     <ClInclude Include="Engine\Mesh\ConeMesh.h" />
+    <ClInclude Include="Engine\Mesh\Core\Material\Material.h" />
+    <ClInclude Include="Engine\Mesh\Core\Material\MaterialConstantBuffer.h" />
+    <ClInclude Include="Engine\Mesh\Core\Material\MaterialType.h" />
     <ClInclude Include="Engine\Mesh\Core\Mesh.h" />
     <ClInclude Include="Engine\Mesh\Core\MeshManage.h" />
     <ClInclude Include="Engine\Mesh\Core\MeshType.h" />
@@ -259,6 +273,7 @@
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\Geometry\RenderingData.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\PipelineState\DirectXPipelineState.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderingPipeline.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderingPipelineType.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.h" />
     <ClInclude Include="Engine\Rendering\Core\Rendering.h" />
     <ClInclude Include="Engine\Rendering\Core\RenderingResourcesUpdate.h" />

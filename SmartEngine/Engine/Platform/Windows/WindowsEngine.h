@@ -31,6 +31,8 @@ public:
 
 	CDirectXRenderingEngine* GetRenderingEngine() const { return RenderingEngine; }
 
+	class CMeshManage* GetMeshManage() const;
+
 	bool InitWindows(FWinMainCommandParameters InParameters);
 
 protected:

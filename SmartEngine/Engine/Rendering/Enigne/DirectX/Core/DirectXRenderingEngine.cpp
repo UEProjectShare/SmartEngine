@@ -12,6 +12,7 @@
 #include "../../../../Core/CoreObject/CoreMinimalObject.h"
 #include "../../../../Core/World.h"
 #include "../../../../Mesh/Core/MeshManage.h"
+#include "../../../../Mesh/Core/Material/Material.h"
 
 #if defined(_WIN32)
 #include "../../../../Core/WinMainCommandParameters.h"
@@ -73,32 +74,207 @@ int CDirectXRenderingEngine::PostInit()
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
 		//构建Mesh
-		if (const GMesh* BoxMesh = MeshManage->CreateBoxMesh(4.f, 3.f, 1.5f))
+
+		if (const GMesh* PlaneMesh = MeshManage->CreatePlaneMesh(4.f, 3.f, 20, 20))
 		{
-			BoxMesh->SetPosition(XMFLOAT3(4,3,5));
-			BoxMesh->SetRotation(fvector_3d(60.f, 1.f, 20.f));
-		}
-		
-		MeshManage->CreatePlaneMesh(4.f, 3.f, 20, 20);
-		if (const GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 20, 20))
-		{
-			SphereMesh->SetPosition(XMFLOAT3(1,2,4));
-			SphereMesh->SetScale(fvector_3d(3.f, 3.f,3.f));
+			PlaneMesh->SetPosition(XMFLOAT3(0.f, -2.f, 0.f));
+			PlaneMesh->SetScale(fvector_3d(10.f, 10.f, 10.f));
 		}
 
-		if (const GMesh* CylinderMesh = MeshManage->CreateCylinderMesh(1.f, 1.f, 5.f, 20, 20))
+		//兰伯特
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
 		{
-			CylinderMesh->SetPosition(XMFLOAT3(1, -2, -4));
+			SphereMesh->SetPosition(XMFLOAT3(-3.f, 2, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(EMaterialType::Lambert);
+			}
 		}
 
-		if (const GMesh* ConeMesh = MeshManage->CreateConeMesh(1.f, 5.f, 20, 20))
+		//半兰伯特
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
 		{
-			ConeMesh->SetPosition(XMFLOAT3(-1, 1, 9));
-			ConeMesh->SetRotation(fvector_3d(90.f, 1.f, 20.f));
+			SphereMesh->SetPosition(XMFLOAT3(3.f, 2, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					221.f / 255.f,
+					154.f / 255.f,
+					255.f / 255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
 		}
 
-		string MeshObjPath = "../SmartEngine/Content/SunMesh.obj";
-		MeshManage->CreateMesh(MeshObjPath);
+		//phong
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(9.f, 2, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				//模拟黄铜
+				InMaterial->SetBaseColor(fvector_4d(
+					191.f / 255.f,
+					173.f / 255.f,
+					111.f / 255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::Phong);
+
+				InMaterial->SetRoughness(0.8f);
+			}
+		}
+
+		//blinn-phong
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(9.f, 7, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					220.f / 255.f,
+					223.f / 255.f,
+					227.f / 255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::BlinnPhong);
+
+				InMaterial->SetRoughness(0.9f);
+			}
+		}
+
+		//菲尼尔
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(3.f, 7, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(EMaterialType::Fresnel);
+
+				InMaterial->SetRoughness(0.8f);
+			}
+		}
+
+		//Wrap 模拟皮肤
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(-3.f, 7, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					234.f/255.f,
+					154.f/255.f,
+					139.f/255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::Wrap);
+			}
+		}
+	
+		//Minnaert
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(-9.f, 7, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					0.9f,
+					0.9f,
+					1.0f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::Minnaert);
+
+				InMaterial->SetRoughness(0.95f);
+			}
+		}
+
+		//AnisotropyKajiyaKay
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(-9.f, 2, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(EMaterialType::AnisotropyKajiyaKay);
+			}
+		}
+
+		//OrenNayar
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(-9.f, 18, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					0.7f,
+					0.7f,
+					1.4f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::OrenNayar);
+
+				InMaterial->SetRoughness(0.7f);//如果是0 就是兰伯特
+			}
+		}
+
+		//Banded
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(-9.f, 12, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					0.7f,
+					0.7f,
+					1.4f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::Banded);
+			}
+		}
+
+		//GradualBanded
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(-3.f, 12, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					247.f / 255.f,
+					150.f / 255.f,
+					85.f  / 255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::GradualBanded);
+			}
+		}
+
+		//最终Banded
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(3.f, 12, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					213.f / 255.f,
+					132.f / 255.f,
+					234.f / 255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::FinalBanded);
+
+				InMaterial->SetRoughness(0.6f);
+			}
+		}
+
+		//back
+		if (GMesh* SphereMesh = MeshManage->CreateSphereMesh(2.f, 50, 50))
+		{
+			SphereMesh->SetPosition(XMFLOAT3(9.f, 12, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(
+					2.f / 255.f,
+					214.f / 255.f,
+					17.f / 255.f, 1.f));
+
+				InMaterial->SetMaterialType(EMaterialType::Back);
+
+				InMaterial->SetRoughness(0.2f);
+			}
+		}
 	}
 	
 	MeshManage->BuildMesh();
@@ -311,7 +487,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	ANALYSIS_HRESULT(D3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&Fence)));
 
 	//初始化命令对象
-////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
 	//INT Priority 
 	//D3D12_COMMAND_QUEUE_PRIORITY
 	//D3D12_COMMAND_QUEUE_PRIORITY_NORMAL
@@ -322,7 +498,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	QueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAGS::D3D12_COMMAND_QUEUE_FLAG_NONE;
 	ANALYSIS_HRESULT(D3dDevice->CreateCommandQueue(&QueueDesc, IID_PPV_ARGS(&CommandQueue)));
 
-//	ID3D12CommandAllocator Allocator();
+	//	ID3D12CommandAllocator Allocator();
 	ANALYSIS_HRESULT(D3dDevice->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(CommandAllocator.GetAddressOf())));
@@ -337,7 +513,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	ANALYSIS_HRESULT(GraphicsCommandList->Close());
 
 	//多重采样
-////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS QualityLevels;
 	QualityLevels.Format = BackBufferFormat;
 	QualityLevels.SampleCount = 4;
@@ -352,7 +528,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	M4XQualityLevels = QualityLevels.NumQualityLevels;
 
 	//交换链
-////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
 	SwapChain.Reset();
 	DXGI_SWAP_CHAIN_DESC SwapChainDesc;
 	SwapChainDesc.BufferDesc.Width = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
@@ -459,7 +635,7 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 	ClearValue.DepthStencil.Stencil = 0;
 	ClearValue.Format = DepthStencilFormat;
 
-	const CD3DX12_HEAP_PROPERTIES Properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_HEAP_PROPERTIES Properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	D3dDevice->CreateCommittedResource(
 		&Properties,
 		D3D12_HEAP_FLAG_NONE, &ResourceDesc,

@@ -38,9 +38,9 @@ public:
 	
 	virtual void MoveRight(float InValue);
 protected:
-	void RotateAroundYAxis(float InRotateDegrees) const;
+	void RotateAroundXAxis(float InRotateDegrees) const;
 	
-	void RotateAroundZAxis(float InRotateDegrees) const;
+	void RotateAroundYAxis(float InRotateDegrees);
 public:
 	FORCEINLINE CInputComponent* GetInputComponent() const { return InputComponent; }
 

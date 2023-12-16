@@ -50,7 +50,7 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	
 	void Draw(float DeltaTime);
 	
-	static void PostDraw(float DeltaTime);
+	void PostDraw(float DeltaTime);
 
 	void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
@@ -62,14 +62,28 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	//描述堆
 	void BuildDescriptorHeap();
 
-	//构建常量缓冲区
-	void BuildConstantBuffer();
+	//构建Mesh常量缓冲区
+	void BuildMeshConstantBuffer();
+
+	//构建Material常量缓冲区
+	void BuildMaterialConstantBuffer();
+
+	//构建Material常量缓冲区
+	void BuildLightConstantBuffer();
 
 	//该接口会有变化
-	UINT GetDrawObjectNumber();
+	UINT GetDrawMeshObjectNumber();
+
+	//该接口会有变化
+	UINT GetDrawMaterialObjectNumber() const;
+
+	//该接口会有变化
+	UINT GetDrawLightObjectNumber();
 
 	//构建我们的视口常量缓冲区视图
 	void BuildViewportConstantBufferView();
+	
+	void DrawLight(float DeltaTime);
 	
 	void DrawViewport(float DeltaTime);
 	
@@ -82,7 +96,11 @@ protected:
 	
 	FDirectXDescriptorHeap DescriptorHeap;
 
-	FConstantBufferViews ObjectConstantBufferViews;
+	FConstantBufferViews MeshConstantBufferViews;
+	
+	FConstantBufferViews MaterialConstantBufferViews;
 	
 	FConstantBufferViews ViewportConstantBufferViews;
+	
+	FConstantBufferViews LightConstantBufferViews;
 };

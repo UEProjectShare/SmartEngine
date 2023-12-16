@@ -139,8 +139,8 @@ void GCamera::OnMouseMove(int X, int Y)
 		{
 			case CameraRoaming:
 			{
-				RotateAroundYAxis(YRadians);
-				RotateAroundZAxis(XRadians);
+				RotateAroundXAxis(YRadians);
+				RotateAroundYAxis(XRadians);
 				break;
 			}	
 			case ObservationObject:
@@ -201,7 +201,7 @@ void GCamera::MoveRight(float InValue)
 	}
 }
 
-void GCamera::RotateAroundYAxis(float InRotateDegrees) const
+void GCamera::RotateAroundXAxis(float InRotateDegrees) const
 {
 	//拿到相机的方向
 	XMFLOAT3 RightVector = GetTransformationComponent()->GetRightVector();
@@ -209,7 +209,7 @@ void GCamera::RotateAroundYAxis(float InRotateDegrees) const
 	const XMFLOAT3 ForwardVector = GetTransformationComponent()->GetForwardVector();
 
 	//拿到关于Y的旋转矩阵
-	const XMMATRIX RotationY = XMMatrixRotationAxis(XMLoadFloat3(&GetTransformationComponent()->GetRightVector()),InRotateDegrees);
+	const XMMATRIX RotationY = XMMatrixRotationAxis(XMLoadFloat3(&GetTransformationComponent()->GetRightVector()), InRotateDegrees);
 
 	//计算各个方向和按照Z轴旋转后的最终效果
 	//XMStoreFloat3(&TransformationComponent->GetRightVector(), XMVector3TransformNormal(XMLoadFloat3(&RightVector), RotationY));
@@ -217,7 +217,7 @@ void GCamera::RotateAroundYAxis(float InRotateDegrees) const
 	XMStoreFloat3(&GetTransformationComponent()->GetForwardVector(), XMVector3TransformNormal(XMLoadFloat3(&ForwardVector), RotationY));
 }
 
-void GCamera::RotateAroundZAxis(float InRotateDegrees) const
+void GCamera::RotateAroundYAxis(float InRotateDegrees)
 {
 	//拿到相机的方向
 	const XMFLOAT3 RightVector = GetTransformationComponent()->GetRightVector();
@@ -225,7 +225,7 @@ void GCamera::RotateAroundZAxis(float InRotateDegrees) const
 	const XMFLOAT3 ForwardVector = GetTransformationComponent()->GetForwardVector();
 
 	//拿到关于Z的旋转矩阵
-	const XMMATRIX RotationZ = XMMatrixRotationZ(InRotateDegrees);
+	const XMMATRIX RotationZ = XMMatrixRotationY(InRotateDegrees);
 
 	//计算各个方向和按照Z轴旋转后的最终效果
 	XMStoreFloat3(&GetTransformationComponent()->GetRightVector(), XMVector3TransformNormal(XMLoadFloat3(&RightVector), RotationZ));

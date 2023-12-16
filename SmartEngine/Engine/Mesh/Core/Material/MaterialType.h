@@ -1,0 +1,19 @@
+#pragma once
+
+enum EMaterialType
+{
+	Lambert = 0,			//纸张
+	HalfLambert,			//粗糙表面
+	Phong,					//金属的效果
+	BlinnPhong,				//金属的效果
+	Wrap,					//模拟皮肤效果
+	Minnaert,				//做天鹅绒 月球
+	Banded,					//基础卡通效果
+	GradualBanded,			//渐变的卡通材质
+	FinalBanded,			//融合了很多效果的卡通材质
+	Back,					//做玉器效果
+	AnisotropyKajiyaKay,	//GDC 2004年 KajiyaKay 头发渲染模型
+	OrenNayar,				//GDC 模拟粗糙表面
+	Fresnel = 100,			//单独去看的效果，不算材质
+	Max,
+};

@@ -4,9 +4,6 @@
 #include "../simple_library/public/simple_library.h"
 #include "Debug/Log/SimpleLog.h"
 
-#include <vector>
-#include <sstream>
-
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")

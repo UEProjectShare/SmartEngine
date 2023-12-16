@@ -28,9 +28,14 @@ ComPtr<ID3D12Device> IDirectXDeviceInterface::GetD3dDevice()
 	return nullptr;
 }
 
+CMeshManage* IDirectXDeviceInterface::GetMeshManage()
+{
+	return GetEngine()->GetMeshManage();
+}
+
 ComPtr<ID3D12GraphicsCommandList> IDirectXDeviceInterface::GetGraphicsCommandList()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{

@@ -14,6 +14,8 @@ public:
 	ComPtr<ID3D12Fence> GetFence();
 	
 	ComPtr<ID3D12Device> GetD3dDevice();
+	
+	class CMeshManage* GetMeshManage();
 
 	ComPtr<ID3D12GraphicsCommandList> GetGraphicsCommandList();
 	

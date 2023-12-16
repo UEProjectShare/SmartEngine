@@ -27,8 +27,10 @@ void GSphereMesh::CreateMesh(FMeshRenderingData& MeshData, float InRadius, uint3
 	const float ThetaValue = XM_2PI / InHeightSubdivision;
 	const float BetaValue = XM_PI / InAxialSubdivision;
 
+	//添加顶部
 	MeshData.VertexData.push_back(FVertex(
-		XMFLOAT3(0.f, InRadius,0.f),XMFLOAT4(Colors::Red)));
+		XMFLOAT3(0.f, InRadius,0.f), XMFLOAT4(Colors::Red),
+		XMFLOAT3(0.0f, 1.0f, 0.0f)));
 
 	for (uint32_t i = 1; i < InAxialSubdivision; ++i)
 	{
@@ -47,20 +49,34 @@ void GSphereMesh::CreateMesh(FMeshRenderingData& MeshData, float InRadius, uint3
 				XMFLOAT4(Colors::White)));
 
 			const int TopIndex = MeshData.VertexData.size() - 1;
+			FVertex& InVertex = MeshData.VertexData[TopIndex];
 
-			const XMVECTOR Pos = XMLoadFloat3(&MeshData.VertexData[TopIndex].Position);
-			XMStoreFloat3(&MeshData.VertexData[TopIndex].Normal,XMVector3Normalize(Pos));
+			//存储位置
+			const XMVECTOR Pos = XMLoadFloat3(&InVertex.Position);
+			XMStoreFloat3(&InVertex.Normal, XMVector3Normalize(Pos));
+
+			//U方向的切线
+			//https://www.cnblogs.com/flytrace/p/3387748.html
+			InVertex.UTangent.x = -InRadius * sinf(Beta) * sinf(Theta);
+			InVertex.UTangent.y = 0.f;
+			InVertex.UTangent.z = InRadius * sinf(Beta) * cosf(Theta);
+
+			//存储切线
+			const XMVECTOR Tangent = XMLoadFloat3(&InVertex.UTangent);
+			XMStoreFloat3(&InVertex.UTangent, XMVector3Normalize(Tangent));
 		}
 	}
 
+	//添加底部
 	MeshData.VertexData.push_back(FVertex(
-		XMFLOAT3(0.f, -InRadius, 0.f), XMFLOAT4(Colors::Red)));
+		XMFLOAT3(0.f, -InRadius, 0.f), XMFLOAT4(Colors::Red),
+		XMFLOAT3(0.0f, -1.0f, 0.0f)));
 
 	//绘制北极
-	for (uint32_t Index = 1; Index <= InAxialSubdivision; ++Index)
+	for (uint32_t Index = 0; Index <= InAxialSubdivision; ++Index)
 	{
 		MeshData.IndexData.push_back(0);
-		MeshData.IndexData.push_back( Index >InAxialSubdivision ? (Index + 1) % InAxialSubdivision : Index + 1);
+		MeshData.IndexData.push_back(Index +1);
 		MeshData.IndexData.push_back(Index);
 	}
 

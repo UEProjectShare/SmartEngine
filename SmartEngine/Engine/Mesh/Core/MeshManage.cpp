@@ -89,7 +89,7 @@ T* CMeshManage::CreateMesh(ParamTypes && ...Params)
     MyMesh->BeginInit();
 
     //¹¹½¨mesh
-    RenderingPipeline.BuildMesh(MyMesh, MeshData);
+    RenderingPipeline.BuildMesh(MyMesh,MeshData);
 
     MyMesh->Init();
 
