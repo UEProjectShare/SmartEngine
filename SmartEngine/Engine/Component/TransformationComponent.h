@@ -6,17 +6,17 @@ class CTransformationComponent : public CComponent
 public:
 	CTransformationComponent();
 
-	void SetPosition(const XMFLOAT3& InNewPosition);
+	virtual void SetPosition(const XMFLOAT3 &InNewPosition);
 	
-	void SetRotation(const fvector_3d& InNewRotation);
+	virtual void SetRotation(const fvector_3d& InNewRotation);
 	
-	void SetScale(const fvector_3d& InNewScale);
+	virtual void SetScale(const fvector_3d& InNewScale);
 
-	void SetForwardVector(const XMFLOAT3& InForwardVector);
+	virtual void SetForwardVector(const XMFLOAT3& InForwardVector);
 	
-	void SetRightVector(const XMFLOAT3& InRightVector);
+	virtual void SetRightVector(const XMFLOAT3& InRightVector);
 	
-	void SetUPVector(const XMFLOAT3& InUPVector);
+	virtual void SetUPVector(const XMFLOAT3& InUPVector);
 	
 	XMFLOAT3 &GetPosition() { return Position; }
 	
@@ -24,11 +24,11 @@ public:
 	
 	fvector_3d GetScale() const { return fvector_3d(Scale.x, Scale.y, Scale.z); }
 
-	XMFLOAT3 &GetForwardVector() { return ForwardVector; }
+	XMFLOAT3& GetForwardVector() { return ForwardVector; }
 	
-	XMFLOAT3 &GetRightVector() { return RightVector; }
+	XMFLOAT3& GetRightVector() { return RightVector; }
 	
-	XMFLOAT3 &GetUPVector() { return UPVector; }
+	XMFLOAT3& GetUPVector() { return UPVector; }
 	
 	//½ÃÕýUp right look(fd) ·µ»Ø pos
 	void CorrectionVector(); 

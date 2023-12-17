@@ -159,13 +159,13 @@ int get_printf(char *buf, char *format, ...)
 
 int get_printf_s(char *out_buf, char *format, ...)
 {
-	char buf[8196 * 1024] = { 0 };
-	memset(buf, 0,sizeof(char) * 8196 * 1024);
+	char buf[SIMPLE_C_BUFF_SIZE] = { 0 };
+	memset(buf, 0,sizeof(char) * SIMPLE_C_BUFF_SIZE);
 	va_list args;
 	va_start(args, format);
-	_vsnprintf_s(buf, 8196 * 1024 - 1, 8196 * 1024, format, args);
+	_vsnprintf_s(buf, SIMPLE_C_BUFF_SIZE - 1, SIMPLE_C_BUFF_SIZE, format, args);
 	va_end(args);
-	buf[8196 * 1024 - 1] = 0;
+	buf[SIMPLE_C_BUFF_SIZE - 1] = 0;
 
 	strcat(out_buf, buf);
 	return strlen(out_buf) + 1;
@@ -364,13 +364,13 @@ int wget_printf(wchar_t *buf, wchar_t *format, ...)
 
 int wget_printf_s(wchar_t *out_buf, wchar_t *format, ...)
 {
-	wchar_t *buf[8196 * 1024] = { 0 };
-	wmemset(buf, 0, sizeof(wchar_t) * 8196 * 1024);
+	wchar_t *buf[SIMPLE_C_BUFF_SIZE] = { 0 };
+	wmemset(buf, 0, sizeof(wchar_t) * SIMPLE_C_BUFF_SIZE);
 	va_list args;
 	va_start(args, format);
-	_vsnwprintf_s(buf, 8196 * 1024 - 1, 8196 * 1024, format, args);
+	_vsnwprintf_s(buf, SIMPLE_C_BUFF_SIZE - 1, SIMPLE_C_BUFF_SIZE, format, args);
 	va_end(args);
-	buf[8196 * 1024 - 1] = 0;
+	buf[SIMPLE_C_BUFF_SIZE - 1] = 0;
 
 	wcscat(out_buf, buf);
 	return wcslen(out_buf) + 1;

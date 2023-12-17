@@ -8,7 +8,7 @@
 #include "../../Rendering/Core/DirectX/RenderingPipeline/RenderingPipeline.h"
 
 class FRenderingResourcesUpdate;
-
+class CMeshComponent;
 class CMeshManage 
 	: public CCoreMinimalObject
 	, public IRenderingInterface
@@ -24,45 +24,45 @@ public:
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
 	void PreDraw(float DeltaTime) override;
-
+	
 	void Draw(float DeltaTime) override;
-
+	
 	void PostDraw(float DeltaTime) override;
 	
-	GMesh* CreateBoxMesh(
+	CMeshComponent* CreateBoxMeshComponent(
 		float InHeight,
 		float InWidth,
 		float InDepth);
 	
-	GMesh* CreateConeMesh(
+	CMeshComponent* CreateConeMeshComponent(
 		float InRadius,
 		float InHeight,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
-	GMesh* CreateCylinderMesh(
+	CMeshComponent* CreateCylinderMeshComponent(
 		float InTopRadius,
 		float InBottomRadius,
 		float InHeight,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
-	GMesh* CreatePlaneMesh(
+	CMeshComponent* CreatePlaneMeshComponent(
 		float InHeight, 
 		float InWidth,
 		uint32_t InHeightSubdivide, 
 		uint32_t InWidthSubdivide);
 
-	GMesh* CreateSphereMesh(
+	CMeshComponent* CreateSphereMeshComponent(
 		float InRadius,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
-	GMesh* CreateMesh(string& InPath);
+	CMeshComponent* CreateMeshComponent(string& InPath);
 
 protected:
 	template<class T, typename ...ParamTypes>
-	T* CreateMesh(ParamTypes &&...Params);
+	T* CreateMeshComponent(ParamTypes &&...Params);
 	
 	FRenderingPipeline RenderingPipeline;
 };

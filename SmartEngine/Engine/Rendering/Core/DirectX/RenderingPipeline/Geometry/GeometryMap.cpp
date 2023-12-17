@@ -5,11 +5,15 @@
 #include "../../../../../Mesh/Core/Mesh.h"
 #include "../../../../../Mesh/Core/Material/MaterialConstantBuffer.h"
 #include "../../../../../Component/Light/Core/LightConstantBuffer.h"
+#include "../../../../../Component/Light/SpotLightComponent.h"
 #include "../../../../../Mesh/Core/Material/Material.h"
+#include "../../../../../Component/Mesh/Core/MeshComponent.h"
+#include "../../../../../Manage/LightManage.h"
+#include "../../../../../Component/Light/Core/LightComponent.h"
 
 FGeometryMap::FGeometryMap()
 {
-	Geometries.insert(pair<int, FGeometry>(0, FGeometry()));
+	Geometries.insert(pair<int,FGeometry>(0,FGeometry()));
 }
 
 void FGeometryMap::PreDraw(float DeltaTime)
@@ -90,9 +94,42 @@ void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 	
 	//更新灯光
 	FLightConstantBuffer LightConstantBuffer;
+	for (size_t i = 0 ; i < GetLightManage()->Lights.size(); i++)
 	{
+		if (CLightComponent* InLightComponent = GetLightManage()->Lights[i])
+		{
+			fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
+			LightConstantBuffer.SceneLights[i].LightIntensity = XMFLOAT3(LightIntensity.x, LightIntensity.y, LightIntensity.z);
+			LightConstantBuffer.SceneLights[i].LightDirection = InLightComponent->GetForwardVector();
+			
+			LightConstantBuffer.SceneLights[i].Position = InLightComponent->GetPosition();
+			LightConstantBuffer.SceneLights[i].LightType = InLightComponent->GetLightType();
+			
+			switch (InLightComponent->GetLightType())
+			{
+				case ELightType::PointLight:
+				case ELightType::SpotLight:
+				{
+					if (CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
+					{
+						LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
+						LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
+					}
+				
+					if (InLightComponent->GetLightType() == ELightType::SpotLight)
+					{
+						if (CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
+						{
+							LightConstantBuffer.SceneLights[i].ConicalInnerCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalInnerCorner());
+							LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
+						}
+					}
 
-	}
+					break;
+				}
+			}
+		}
+	}	
 	LightConstantBufferViews.Update(0, &LightConstantBuffer);
 
 	//更新视口
@@ -106,7 +143,7 @@ void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 	ViewportConstantBufferViews.Update(0, &ViewportTransformation);
 }
 
-void FGeometryMap::BuildMesh(GMesh* InMesh, const FMeshRenderingData& MeshData)
+void FGeometryMap::BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData)
 {
 	FGeometry& Geometry = Geometries[0];
 
@@ -245,7 +282,7 @@ void FGeometryMap::DrawMesh(float DeltaTime)
 		D3D12_VERTEX_BUFFER_VIEW VBV = Tmp.second.GetVertexBufferView();
 		D3D12_INDEX_BUFFER_VIEW IBV = Tmp.second.GetIndexBufferView();
 		
-		for (int i = 0; i < Tmp.second.DescribeMeshRenderingData.size(); i++)
+		for (size_t i = 0; i < Tmp.second.DescribeMeshRenderingData.size(); i++)
 		{
 			auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GetHeap()->GetGPUDescriptorHandleForHeapStart());
 			auto DesMaterialHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GetHeap()->GetGPUDescriptorHandleForHeapStart());
@@ -261,7 +298,8 @@ void FGeometryMap::DrawMesh(float DeltaTime)
 				&VBV);
 
 			//定义我们要绘制的哪种图元 点 线 面
-			GetGraphicsCommandList()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData.Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
+			GetGraphicsCommandList()->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(DisplayStatus));
 		
 			//模型起始地址偏移
 			DesMeshHandle.Offset(i, DescriptorOffset);
@@ -282,7 +320,7 @@ void FGeometryMap::DrawMesh(float DeltaTime)
 	}
 }
 
-bool FGeometry::bRenderingDataExistence(const GMesh* InKey) const
+bool FGeometry::bRenderingDataExistence(const CMeshComponent* InKey) const
 {
 	for (auto& Tmp : DescribeMeshRenderingData)
 	{
@@ -295,7 +333,7 @@ bool FGeometry::bRenderingDataExistence(const GMesh* InKey) const
 	return false;
 }
 
-void FGeometry::BuildMesh(GMesh* InMesh, const FMeshRenderingData& MeshData)
+void FGeometry::BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData)
 {
 	if (!bRenderingDataExistence(InMesh))
 	{

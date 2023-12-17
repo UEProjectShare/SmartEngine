@@ -6,17 +6,17 @@ GActorObject::GActorObject()
 	TransformationComponent = CreateObject<CTransformationComponent>(new CTransformationComponent());
 }
 
-void GActorObject::SetPosition(const XMFLOAT3& InNewPosition) const
+void GActorObject::SetPosition(const XMFLOAT3& InNewPosition)
 {
 	TransformationComponent->SetPosition(InNewPosition);
 }
 
-void GActorObject::SetRotation(const fvector_3d& InRotation) const
+void GActorObject::SetRotation(const fvector_3d& InRotation)
 {
 	TransformationComponent->SetRotation(InRotation);
 }
 
-void GActorObject::SetScale(const fvector_3d& InNewScale) const
+void GActorObject::SetScale(const fvector_3d& InNewScale)
 {
 	TransformationComponent->SetScale(InNewScale);
 }

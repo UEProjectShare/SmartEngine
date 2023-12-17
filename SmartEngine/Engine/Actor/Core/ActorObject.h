@@ -14,17 +14,17 @@ public:
 	
 	FORCEINLINE CTransformationComponent* GetTransformationComponent() const {return TransformationComponent;}
 	
-	void SetPosition(const XMFLOAT3& InNewPosition) const;
+	virtual void SetPosition(const XMFLOAT3& InNewPosition);
 	
-	void SetRotation(const fvector_3d& InRotation) const;
+	virtual void SetRotation(const fvector_3d& InRotation);
 	
-	void SetScale(const fvector_3d& InNewScale) const;
+	virtual void SetScale(const fvector_3d& InNewScale);
 	
 	XMFLOAT3& GetPosition() const;
 	
-	fvector_3d GetRotation()const;
+	fvector_3d GetRotation() const;
 	
-	fvector_3d GetScale()const;
+	fvector_3d GetScale() const;
 
 	XMFLOAT3& GetForwardVector() const;
 	

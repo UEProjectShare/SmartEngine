@@ -8,12 +8,9 @@ class GConeMesh : public GMesh
 public:
 	void Init() override;
 
-	void BuildMesh(const FMeshRenderingData* InRenderingData) override;
-
 	void Draw(float DeltaTime) override;
 
 	void CreateMesh(
-		FMeshRenderingData& MeshData,
 		float InRadius,
 		float InHeight,
 		uint32_t InAxialSubdivision,

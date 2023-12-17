@@ -15,14 +15,14 @@ public:
 		float in_m22);
 
 	//ÐÐÁÐÊ½
-	float Determinant();
+	float Determinant() const;
 public:
 	void operator+=(const fmatrix_2x2& a)
 	{
 		*this = *this + a;
 	}
 
-	fmatrix_2x2 operator+(const fmatrix_2x2& a)
+	fmatrix_2x2 operator+(const fmatrix_2x2& a) const
 	{
 		return fmatrix_2x2(
 			m11 + a.m11,
@@ -36,7 +36,7 @@ public:
 		*this = *this - a;
 	}
 
-	fmatrix_2x2 operator-(const fmatrix_2x2& a)
+	fmatrix_2x2 operator-(const fmatrix_2x2& a) const
 	{
 		return fmatrix_2x2(
 			m11 - a.m11,
@@ -78,7 +78,7 @@ public:
 		*this = *this * a;
 	}
 
-	fmatrix_2x2 operator*(const fmatrix_2x2& a)
+	fmatrix_2x2 operator*(const fmatrix_2x2& a)const
 	{
 		return fmatrix_2x2(
 			m11 * a.m11 + m12 * a.m21, m11 * a.m12 + m12 * a.m22,	

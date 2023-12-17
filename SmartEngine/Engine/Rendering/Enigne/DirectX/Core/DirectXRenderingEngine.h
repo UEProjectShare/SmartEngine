@@ -2,10 +2,13 @@
 #include "../../Core/RenderingEngine.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
 
+class CLightManage;
 class CMeshManage;
+class CWorld;
 class CDirectXRenderingEngine : public CRenderingEngine
 {
 	friend class IDirectXDeviceInterface;
+	friend class CWindowsEngine;
 public:
 	CDirectXRenderingEngine();
 	
@@ -42,6 +45,8 @@ public:
 	UINT GetDXGISampleQuality() const;
 
 	CMeshManage* GetMeshManage() const { return MeshManage; }
+	
+	CLightManage* GetLightManage() const { return LightManage; }
 protected:
 	void WaitGPUCommandQueueComplete();
 
@@ -49,7 +54,11 @@ protected:
 	
 	void PostInitDirect3D();
 	
+	CLightManage* LightManage;
+	
 	CMeshManage* MeshManage;
+	
+	CWorld* World;
 	
 	UINT64 CurrentFenceIndex;
 	

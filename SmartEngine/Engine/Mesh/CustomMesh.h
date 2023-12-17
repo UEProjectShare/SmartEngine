@@ -8,11 +8,7 @@ class GCustomMesh : public GMesh
 public:
 	void Init() override;
 
-	void BuildMesh(const FMeshRenderingData* InRenderingData) override;
-
 	void Draw(float DeltaTime) override;
 
-	void CreateMesh(FMeshRenderingData& MeshData, const string& InPath);
-
-	static bool LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FMeshRenderingData& MeshData);
+	void CreateMesh(string &InPath);
 };

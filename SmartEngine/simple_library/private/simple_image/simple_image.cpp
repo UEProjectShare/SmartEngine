@@ -57,7 +57,7 @@ namespace SimpleImage
 	{
 		InData.resize(InImageInfo.Height * InImageInfo.Width * (int)InImageInfo.Channel);
 	
-		return InData.size() > (int)InImageInfo.Channel;
+		return InData.size() > (size_t)InImageInfo.Channel;
 	}
 
 	bool SaveImageToDisk(const FImageInfo& InImageInfo, const std::wstring& InSavePath, const std::vector<unsigned char>& InData)

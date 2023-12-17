@@ -2,7 +2,8 @@
 #include "../../../../../Interface/DirectXDeviceInterfece.h"
 #include "../../../RenderingResourcesUpdate.h"
 
-class GMesh;
+class CMeshComponent;
+
 //提供渲染内容的接口
 struct FRenderingData : public IDirectXDeviceInterface_Struct
 {
@@ -29,5 +30,5 @@ public:
 
 	XMFLOAT4X4 WorldMatrix;
 
-	GMesh* Mesh;//key
+	CMeshComponent* Mesh;//key
 };

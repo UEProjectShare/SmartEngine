@@ -1,17 +1,17 @@
 #include "MeshManage.h"
 #include "../../Config/EngineRenderConfig.h"
-#include "../BoxMesh.h"
-#include "../ConeMesh.h"
-#include "../CustomMesh.h"
-#include "../CylinderMesh.h"
-#include "../SphereMesh.h"
-#include "../PlaneMesh.h"
 #include "ObjectTransformation.h"
 #include "../../Rendering/Core/RenderingResourcesUpdate.h"
 #include "../../Rendering/Enigne/DirectX/Core/DirectXRenderingEngine.h"
 #include "../../Rendering/Core/Buffer/ConstructBuffer.h"
 #include "../../Math/EngineMath.h"
 #include "../../Core/Viewport/ViewportTransformation.h"
+#include "../../Component/Mesh/BoxMeshComponent.h"
+#include "../../Component/Mesh/ConeMeshComponent.h"
+#include "../../Component/Mesh/CustomMeshComponent.h"
+#include "../../Component/Mesh/CylinderMeshComponent.h"
+#include "../../Component/Mesh/PlaneMeshComponent.h"
+#include "../../Component/Mesh/SphereMeshComponent.h"
 
 CMeshManage::CMeshManage()
 {
@@ -47,49 +47,47 @@ void CMeshManage::PreDraw(float DeltaTime)
     RenderingPipeline.PreDraw(DeltaTime);
 }
 
-GMesh* CMeshManage::CreateSphereMesh(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+CMeshComponent* CMeshManage::CreateSphereMeshComponent(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMesh<GSphereMesh>(InRadius, InAxialSubdivision, InHeightSubdivision);
+    return CreateMeshComponent<CSphereMeshComponent>(InRadius, InAxialSubdivision, InHeightSubdivision);
 }
 
-GMesh* CMeshManage::CreateMesh(string& InPath)
+CMeshComponent* CMeshManage::CreateMeshComponent(string& InPath)
 {
-    return CreateMesh<GCustomMesh>(InPath);
+    return CreateMeshComponent<CCustomMeshComponent>(InPath);
 }
 
-GMesh* CMeshManage::CreateBoxMesh(float InHeight, float InWidth, float InDepth)
+CMeshComponent* CMeshManage::CreateBoxMeshComponent(float InHeight, float InWidth, float InDepth)
 {
-    return CreateMesh<GBoxMesh>(InHeight, InWidth, InDepth);
+    return CreateMeshComponent<CBoxMeshComponent>(InHeight, InWidth, InDepth);
 }
 
-GMesh* CMeshManage::CreateConeMesh(float InRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+CMeshComponent* CMeshManage::CreateConeMeshComponent(float InRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMesh<GConeMesh>(InRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
+    return CreateMeshComponent<CConeMeshComponent>(InRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
 }
 
-GMesh* CMeshManage::CreateCylinderMesh(float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+CMeshComponent* CMeshManage::CreateCylinderMeshComponent(float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMesh<GCylinderMesh>(InTopRadius, InBottomRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
+    return CreateMeshComponent<CCylinderMeshComponent>(InTopRadius, InBottomRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
 }
 
-GMesh* CMeshManage::CreatePlaneMesh(float InHeight, float InWidth, uint32_t InHeightSubdivide, uint32_t InWidthSubdivide)
+CMeshComponent* CMeshManage::CreatePlaneMeshComponent(float InHeight, float InWidth, uint32_t InHeightSubdivide, uint32_t InWidthSubdivide)
 {
-    return CreateMesh<GPlaneMesh>(InHeight, InWidth, InHeightSubdivide, InWidthSubdivide);
+    return CreateMeshComponent<CPlaneMeshComponent>(InHeight, InWidth, InHeightSubdivide, InWidthSubdivide);
 }
 
 template<class T, typename ...ParamTypes>
-T* CMeshManage::CreateMesh(ParamTypes && ...Params)
+T* CMeshManage::CreateMeshComponent(ParamTypes && ...Params)
 {
-    T* MyMesh = new T();
+    T* MyMesh = CreateObject<T>(new T());//NewObject
 
     //提取模型资源
     FMeshRenderingData MeshData;
     MyMesh->CreateMesh(MeshData, forward<ParamTypes>(Params)...);
 
-    MyMesh->BeginInit();
-
     //构建mesh
-    RenderingPipeline.BuildMesh(MyMesh,MeshData);
+    RenderingPipeline.BuildMesh(MyMesh, MeshData);
 
     MyMesh->Init();
 

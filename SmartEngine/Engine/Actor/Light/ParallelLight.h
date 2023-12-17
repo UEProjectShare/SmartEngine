@@ -1,13 +1,14 @@
 #pragma once
-#include "../Core/ActorObject.h"
+#include "Core/Light.h"
 #include "../../Component/Light/ParallelLightComponent.h"
 
 //G -> Game
-class GParallelLight : public GActorObject
+class GParallelLight : public GLight
 {
-	CVARIABLE()
-	CParallelLightComponent* ParallelLightComponent;
+	typedef GLight Super;
+
 public:
+	GParallelLight();
 
-
+	void Tick(float DeltaTime) override;
 };

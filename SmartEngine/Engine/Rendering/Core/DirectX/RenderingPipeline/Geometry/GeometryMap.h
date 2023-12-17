@@ -10,9 +10,9 @@ struct FGeometry : public IDirectXDeviceInterface_Struct
 {
 	friend struct FGeometryMap;
 
-	bool bRenderingDataExistence(const GMesh* InKey) const;
+	bool bRenderingDataExistence(const CMeshComponent* InKey) const;
 	
-	void BuildMesh(GMesh* InMesh, const FMeshRenderingData& MeshData);
+	void BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
 
 	//构建模型
 	void Build();
@@ -54,7 +54,7 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 
 	void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
-	void BuildMesh(GMesh* InMesh, const FMeshRenderingData& MeshData);
+	void BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
 
 	//构建模型
 	void Build();

@@ -8,12 +8,9 @@ class GCylinderMesh : public GMesh
 public:
 	void Init() override;
 
-	void BuildMesh(const FMeshRenderingData* InRenderingData) override;
-
 	void Draw(float DeltaTime) override;
 
 	void CreateMesh(
-		FMeshRenderingData& MeshData,
 		float InTopRadius, 
 		float InBottomRadius,
 		float InHeight,

@@ -6,14 +6,14 @@
 #include "RootSignature/DirectXRootSignature.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
 
-class GMesh;
+class CMeshComponent;
 //提供渲染内容的接口
 class FRenderingPipeline : public IDirectXDeviceInterface
 {
 public:
 	FRenderingPipeline();
 
-	void BuildMesh(GMesh* InMesh, const FMeshRenderingData& MeshData);
+	void BuildMesh(CMeshComponent *InMesh,const FMeshRenderingData& MeshData);
 
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 

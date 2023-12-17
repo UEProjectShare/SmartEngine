@@ -40,7 +40,7 @@ public:
 protected:
 	void RotateAroundXAxis(float InRotateDegrees) const;
 	
-	void RotateAroundYAxis(float InRotateDegrees);
+	void RotateAroundYAxis(float InRotateDegrees) const;
 public:
 	FORCEINLINE CInputComponent* GetInputComponent() const { return InputComponent; }
 
@@ -59,4 +59,6 @@ protected:
 	float A;
 	
 	float B;//Theta
+
+	class CMeshComponent* SphereMesh;
 };

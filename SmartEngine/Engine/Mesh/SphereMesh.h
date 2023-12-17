@@ -8,9 +8,7 @@ class GSphereMesh : public GMesh
 public:
 	void Init() override;
 
-	void BuildMesh(const FMeshRenderingData* InRenderingData) override;
-
 	void Draw(float DeltaTime) override;
 
-	void CreateMesh(FMeshRenderingData& MeshData,float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision);
+	void CreateMesh(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision);
 };

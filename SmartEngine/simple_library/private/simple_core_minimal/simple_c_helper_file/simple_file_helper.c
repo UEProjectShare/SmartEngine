@@ -185,6 +185,41 @@ bool open_url(const char* url)
 	return open_url_w(path);
 }
 
+bool open_url_by_param(const char* url, const char* param)
+{
+	//¿í×Ö·û×ªÎªÕ­×Ö·û
+	wchar_t path[1024] = { 0 };
+	char_to_wchar_t(path, 1024, url);
+
+	wchar_t my_param[1024] = { 0 };
+	char_to_wchar_t(my_param, 1024, param);
+	return open_url_by_param_w(path, my_param);
+}
+
+bool open_by_operation(const char* in_operation, const char* url, const char* param)
+{
+	wchar_t my_operation[1024] = { 0 };
+	char_to_wchar_t(my_operation, 1024, in_operation);
+
+	//¿í×Ö·û×ªÎªÕ­×Ö·û
+	wchar_t path[1024] = { 0 };
+	char_to_wchar_t(path, 1024, url);
+
+	wchar_t my_param[1024] = { 0 };
+	char_to_wchar_t(my_param, 1024, param);
+
+	return open_by_operation_w(my_operation,path, my_param);
+}
+
+bool open_explore(const char* url)
+{
+	//¿í×Ö·û×ªÎªÕ­×Ö·û
+	wchar_t path[1024] = { 0 };
+	char_to_wchar_t(path, 1024, url);
+
+	return open_explore_w(path);
+}
+
 bool get_file_buf(const char *path, char *buf)
 {
 	FILE *f = NULL;
@@ -311,12 +346,27 @@ bool load_data_from_disk_w(const wchar_t* path, char* buf)
 
 bool open_url_w(const wchar_t* url)
 {
+	return open_by_operation_w(L"open", url, NULL);;
+}
+
+bool open_url_by_param_w(const wchar_t* url, const wchar_t* param)
+{
+	return open_by_operation_w(L"open", url, param);;
+}
+
+bool open_by_operation_w(const wchar_t* in_operation, const wchar_t* url, const wchar_t* param)
+{
 	return check_ShellExecute_ret(ShellExecute(NULL,
-		L"open",
+		in_operation,
 		url,
-		NULL,
+		param,
 		NULL,
 		SW_SHOWNORMAL));
+}
+
+bool open_explore_w(const wchar_t* url)
+{
+	return open_by_operation_w(L"explore", url,NULL);;
 }
 
 unsigned int get_file_size_by_filename_w(const wchar_t* filename)

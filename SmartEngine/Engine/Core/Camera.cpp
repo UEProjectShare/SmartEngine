@@ -32,6 +32,7 @@ void GCamera::BeginInit()
 void GCamera::Tick(float DeltaTime)
 {
 	BuildViewMatrix(DeltaTime);
+
 }
 
 void GCamera::ExecuteKeyboard(const FInputKey& InputKey)
@@ -217,7 +218,7 @@ void GCamera::RotateAroundXAxis(float InRotateDegrees) const
 	XMStoreFloat3(&GetTransformationComponent()->GetForwardVector(), XMVector3TransformNormal(XMLoadFloat3(&ForwardVector), RotationY));
 }
 
-void GCamera::RotateAroundYAxis(float InRotateDegrees)
+void GCamera::RotateAroundYAxis(float InRotateDegrees) const
 {
 	//拿到相机的方向
 	const XMFLOAT3 RightVector = GetTransformationComponent()->GetRightVector();

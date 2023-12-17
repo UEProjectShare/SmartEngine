@@ -32,7 +32,7 @@ char* fvector_3d::to_string(char* buff)
 	return buff;
 }
 
-float fvector_3d::dot(const fvector_3d& a)
+float fvector_3d::dot(const fvector_3d& a)const
 {
 	return a.x * x + a.y * y + z * a.z;
 }

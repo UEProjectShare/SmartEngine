@@ -6,7 +6,7 @@
 
 class CDirectXRenderingEngine;
 class CWorld;
-
+class CMeshManage;
 class CWindowsEngine : public CEngine
 {
 	friend class IDirectXDeviceInterface;
@@ -24,14 +24,16 @@ public:
 	void Tick(float DeltaTime) override;
 
 	int PreExit() override;
-
+	
 	int Exit() override;
-
+	
 	int PostExit() override;
 
 	CDirectXRenderingEngine* GetRenderingEngine() const { return RenderingEngine; }
-
-	class CMeshManage* GetMeshManage() const;
+	
+	CMeshManage* GetMeshManage() const;
+	
+	CWorld* GetWorld() const { return World; }
 
 	bool InitWindows(FWinMainCommandParameters InParameters);
 

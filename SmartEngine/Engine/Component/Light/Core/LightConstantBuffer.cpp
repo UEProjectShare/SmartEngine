@@ -1,7 +1,14 @@
 #include "LightConstantBuffer.h"
+#include "LightType.h"
 
 FLightConstantBuffer::FLightConstantBuffer()
-	: LightIntensity(1.f, 1.f, 1.f)
-	, LightDirection(0.f,-1.f,0.f)
+{
+	memset(&SceneLights, 0, sizeof(SceneLights));
+}
+
+FLight::FLight()
+	: StartAttenuation(1.f)
+	, EndAttenuation(10.f)
+	, LightType(static_cast<int>(ELightType::DirectionalLight))
 {
 }
