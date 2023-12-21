@@ -1,9 +1,9 @@
 #include "ConstantBufferViews.h"
 
-void FConstantBufferViews::CreateConstant(UINT ObjectSize, UINT ObjectCount)
+void FConstantBufferViews::CreateConstant(UINT ObjectSize, UINT ObjectCount, bool bConstBuffer)
 {
 	Constant = make_shared<FRenderingResourcesUpdate>();
-	Constant->Init(GetD3dDevice().Get(), ObjectSize, ObjectCount);
+	Constant->Init(GetD3dDevice().Get(), ObjectSize, ObjectCount, bConstBuffer);
 }
 
 void FConstantBufferViews::Update(int Index, const void* InData) const

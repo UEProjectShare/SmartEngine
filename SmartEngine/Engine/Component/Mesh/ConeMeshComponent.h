@@ -1,5 +1,5 @@
 #pragma once
-#include "ShellMeshComponent.h"
+#include "Core/ShellMeshComponent.h"
 
 class CConeMeshComponent : public CShellMeshComponent
 {

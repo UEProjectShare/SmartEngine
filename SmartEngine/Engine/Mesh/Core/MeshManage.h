@@ -58,6 +58,25 @@ public:
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
+	CMeshComponent* CreatePyramidMeshComponent(
+		EPyramidNumberSides InPyramidNumberSidesType, 
+		uint32_t InHeightSubdivide,
+		uint32_t InSize);
+
+	CMeshComponent *CreatePipeMeshComponent(
+		float InTopRadius,
+		float InBottomRadius,
+		float InHeight,
+		float InThickness,
+		uint32_t InAxialSubdivision,
+		uint32_t InHeightSubdivision);
+
+	CMeshComponent* CreateTorusMeshComponent(
+		float InRadius,
+		float InSectionRadius,
+		uint32_t InAxialSubdivision,
+		uint32_t InHeightSubdivision);
+
 	CMeshComponent* CreateMeshComponent(string& InPath);
 
 protected:

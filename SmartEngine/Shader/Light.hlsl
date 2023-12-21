@@ -34,7 +34,7 @@ float3 GetLightDirection(Light L, float3 InObjectWorldLocation)
 	return L.LightDirection;
 }
 
-float4 AttenuationPointLights1(Light L, float Distance)
+float4 AttenuationPointLights1(Light L,float Distance)
 {
 	float4 LightStrength = float4(1.f, 1.f, 1.f, 1.f);
 
@@ -43,17 +43,17 @@ float4 AttenuationPointLights1(Light L, float Distance)
 	return LightStrength * (Distance / AttenuationRange);
 }
 
-float4 AttenuationPointLights2(Light L, float Distance, float C, float I, float Q)
+float4 AttenuationPointLights2(Light L,float Distance,float C,float I,float Q)
 {
 	float4 LightStrength = float4(1.f, 1.f, 1.f, 1.f);
 	return (1.f / (C + I * Distance + pow(Q, 2.f) * Distance)) * LightStrength;
 }
 
-float4 ComputeLightStrength(Light L, float3 InObjectPointNormal, float3 InObjectWorldLocation, float3 NormalizeLightDirection)
+float4 ComputeLightStrength(Light L,float3 InObjectPointNormal,float3 InObjectWorldLocation, float3 NormalizeLightDirection)
 {
 	if (L.LightType == 0)
 	{
-		return float4(1.f, 1.f, 1.f, 1.f);
+		return float4(1.f, 1.f, 1.f, 1.f) * float4(L.LightIntensity, 1.f);
 	}
 	else if (L.LightType == 1) //spot
 	{
@@ -100,11 +100,8 @@ float4 ComputeLightStrength(Light L, float3 InObjectPointNormal, float3 InObject
 			float4 LightStrength = float4(1.f, 1.f, 1.f, 1.f) * float4(L.LightIntensity, 1.f);
 			
 			float Theta1 = acos(DotValue);
-			if (Theta1 == 0.f)
-			{
-				return LightStrength;
-			}
-			else if (Theta1 <= L.ConicalInnerCorner)
+			
+			if (Theta1 <= L.ConicalInnerCorner)
 			{
 				return LightStrength;
 			}
@@ -125,5 +122,5 @@ float4 ComputeLightStrength(Light L, float3 InObjectPointNormal, float3 InObject
 		}
 	}
 
-	return float4( 0.f, 0.f, 0.f, 1.f );
+	return float4( 0.f,0.f,0.f,1.f );
 }

@@ -30,7 +30,14 @@ typedef struct
 	char paths[8196][1024];//MAX_PATH
 }def_c_paths;
 
+typedef struct
+{
+	int index;
+	wchar_t paths[8196][1024];//MAX_PATH
+}def_c_paths_w;
+
 void init_def_c_paths(def_c_paths *c_paths);
+void init_def_c_paths_w(def_c_paths_w* c_paths);
 
 int copy_file(char *Src, char *Dest);
 

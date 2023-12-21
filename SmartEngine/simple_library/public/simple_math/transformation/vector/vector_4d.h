@@ -18,12 +18,9 @@ struct fvector_4d
 
 	}
 
-	fvector_4d(float a,float b,float c,float d)
-		:x(a)
-		,y(b)
-		,z(c)
-		,w(d)
-	{}
+	fvector_4d(float in_value);
+
+	fvector_4d(float a, float b, float c, float d);
 
 	fvector_4d operator+(const fvector_4d& a) const
 	{
@@ -94,4 +91,6 @@ struct fvector_4d
 	static fvector_4d cross_product(const fvector_4d& a, const fvector_4d& b);
 
 	static float dot(const fvector_4d& a, const fvector_4d& b);
+
+	char *to_string(char* buff) const;
 };

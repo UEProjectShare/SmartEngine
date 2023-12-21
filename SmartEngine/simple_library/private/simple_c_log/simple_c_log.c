@@ -101,7 +101,9 @@ bool log_wirte(enum e_error error, char *format, ...)
 	if (p != NULL)
 	{
 		FILE* hfile = NULL;
-#if _WIN64 || _WIN32
+#if _WIN64
+
+#elif _WIN32
 		if ((hfile = fopen(p, "a+")) != NULL)
 		{
 			char buf[8196 * 1024] = { 0 };

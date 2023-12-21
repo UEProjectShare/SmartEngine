@@ -90,6 +90,11 @@ namespace math_utils
         return fabsf(f1 - f2) <= epsilon;
     }
 
+    bool scalar_neare_qual_int(int i1, int i2, int epsilon)
+    {
+        return abs(i1 - i2) <= epsilon;
+    }
+
     fmatrix_4x4 matrix_perspective(
         float in_fov_radian,
         float aspect_ratio, 
@@ -184,5 +189,19 @@ namespace math_utils
             sin(radian),    cos(radian),    0.f,    0.f,
             0.f,            0.f,            1.f,    0.f, 
             0.f,            0.f,            0.f,    1.f);
+    }
+
+    fmatrix_4x4 matrix_rotation_axis(const fvector_3d& axis, const float angle)
+    {
+        fvector_3d n = axis;
+        n.normalize();
+
+        float radian = angle_to_radian(angle);
+
+        return fmatrix_4x4(
+            n.x * n.x * (1.f-  cos(radian)) + cos(radian),        n.x * n.y * (1.f - cos(radian)) - n.z * sin(radian),  n.x * n.z * (1.f - cos(radian)) + n.y * sin(radian),  0.f,
+            n.x * n.y * (1.f - cos(radian)) + n.z * sin(radian),  n.y * n.y * (1.f - cos(radian)) + cos(radian),        n.y * n.z * (1.f - cos(radian)) - n.x * sin(radian),  0.f,
+            n.x * n.z * (1.f - cos(radian)) - n.y * sin(radian),  n.z * n.y * (1.f - cos(radian)) + n.x * sin(radian),  n.z * n.z * (1.f - cos(radian)) + cos(radian),        0.f,
+            0.f,                                                  0.f,                                                  0.f,                                                  1.f);
     }
 }

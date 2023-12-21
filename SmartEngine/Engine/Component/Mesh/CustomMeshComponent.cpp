@@ -6,7 +6,7 @@ CCustomMeshComponent::CCustomMeshComponent()
 
 }
 
-void CCustomMeshComponent::CreateMesh(FMeshRenderingData& MeshData, string& InPath)
+void CCustomMeshComponent::CreateMesh(FMeshRenderingData& MeshData, const string& InPath)
 {
 	//拿到文件大小
 	const unsigned int FileSize = get_file_size_by_filename(InPath.c_str());

@@ -8,7 +8,7 @@ public:
 	
 	~FRenderingResourcesUpdate();
 
-	void Init(ID3D12Device* InDevice, UINT InElemetSize, UINT InElemetCount);
+	void Init(ID3D12Device* InDevice, UINT InElemetSize, UINT InElemetCount, bool bConstBuffer = true);
 
 	void Update(int Index, const void* InData) const;
 

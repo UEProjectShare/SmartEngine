@@ -1,12 +1,12 @@
 #pragma once
-#include "ShellMeshComponent.h"
+#include "Core/MeshComponent.h"
 
-class CCustomMeshComponent : public CShellMeshComponent
+class CCustomMeshComponent : public CMeshComponent
 {
 public:
 	CCustomMeshComponent();
 
-	void CreateMesh(FMeshRenderingData& MeshData, string& InPath);
+	void CreateMesh(FMeshRenderingData& MeshData, const string& InPath);
 
 	static bool LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FMeshRenderingData& MeshData);
 };

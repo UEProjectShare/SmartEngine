@@ -14,7 +14,7 @@ void CSphereMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadi
 	//添加顶部
 	MeshData.VertexData.push_back(FVertex(
 		XMFLOAT3(0.f, InRadius, 0.f), XMFLOAT4(Colors::Red),
-		XMFLOAT3(0.0f, 1.0f, 0.0f)));
+		XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.5f, 0.0f)));
 
 	for (uint32_t i = 1; i < InAxialSubdivision; ++i)
 	{
@@ -44,6 +44,9 @@ void CSphereMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadi
 			InVertex.UTangent.y = 0.f;
 			InVertex.UTangent.z = InRadius * sinf(Beta) * cosf(Theta);
 
+			InVertex.TexCoord.x = Theta / XM_2PI;
+			InVertex.TexCoord.y = Beta / XM_PI;
+
 			//存储切线
 			const XMVECTOR Tangent = XMLoadFloat3(&InVertex.UTangent);
 			XMStoreFloat3(&InVertex.UTangent, XMVector3Normalize(Tangent));
@@ -53,7 +56,7 @@ void CSphereMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadi
 	//添加底部
 	MeshData.VertexData.push_back(FVertex(
 		XMFLOAT3(0.f, -InRadius, 0.f), XMFLOAT4(Colors::Red),
-		XMFLOAT3(0.0f, -1.0f, 0.0f)));
+		XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.f, 0.5f)));
 
 	//绘制北极
 	for (uint32_t Index = 0; Index <= InAxialSubdivision; ++Index)

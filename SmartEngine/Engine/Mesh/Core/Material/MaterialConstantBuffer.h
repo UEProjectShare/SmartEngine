@@ -7,15 +7,13 @@ struct FMaterialConstantBuffer
 
 	int MaterialType;// 4
 	
-	int Reserved1;
+	float Roughness;
 	
-	int Reserved2;
+	int BaseColorIndex;
 	
 	int Reserved3;
 
 	XMFLOAT4 BaseColor;
-	
-	float	 Roughness;
 	
 	XMFLOAT4X4 TransformInformation;
 };

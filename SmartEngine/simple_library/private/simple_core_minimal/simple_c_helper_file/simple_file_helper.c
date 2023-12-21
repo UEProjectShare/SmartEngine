@@ -65,6 +65,12 @@ void init_def_c_paths(def_c_paths *c_paths)
 	memset(c_paths->paths,0,sizeof(c_paths->paths) - 1);
 }
 
+void init_def_c_paths_w(def_c_paths_w* c_paths)
+{
+	c_paths->index = 0;
+	memset(c_paths->paths, 0, sizeof(c_paths->paths) - 1);
+}
+
 int copy_file(char *Src, char *Dest)
 {
 	//当前的缓存 缓存1MB大小，如果超过就会出问题 这个会在std C课程里面继续扩展

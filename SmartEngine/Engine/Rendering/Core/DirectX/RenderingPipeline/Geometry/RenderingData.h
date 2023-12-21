@@ -29,6 +29,8 @@ public:
 	DXGI_FORMAT IndexFormat;
 
 	XMFLOAT4X4 WorldMatrix;
+	
+	XMFLOAT4X4 TextureTransform;
 
 	CMeshComponent* Mesh;//key
 };

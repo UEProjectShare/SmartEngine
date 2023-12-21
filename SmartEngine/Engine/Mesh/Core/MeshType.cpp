@@ -8,9 +8,10 @@ FVertex::FVertex(const XMFLOAT3& InPos, const XMFLOAT4& InColor)
 
 }
 
-FVertex::FVertex(const XMFLOAT3& InPos, const XMFLOAT4& InColor, const XMFLOAT3& InNormal)
+FVertex::FVertex(const XMFLOAT3& InPos, const XMFLOAT4& InColor, const XMFLOAT3& InNormal, const XMFLOAT2& InTexCoord)
 	: Position(InPos)
 	, Color(InColor)
 	, Normal(InNormal)
+	, TexCoord(InTexCoord)
 {
 }

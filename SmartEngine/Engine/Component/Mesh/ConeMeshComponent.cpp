@@ -6,7 +6,10 @@ CConeMeshComponent::CConeMeshComponent()
 
 }
 
-void CConeMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+void CConeMeshComponent::CreateMesh(
+	FMeshRenderingData& MeshData,
+	float InRadius, float InHeight,
+	uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
 	//半径间隔
 	const float RadiusInterval = -InRadius / static_cast<float>(InHeightSubdivision);
@@ -16,27 +19,48 @@ void CConeMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadius
 	const float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
 
 	//构建顶部
-	MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, 0.5f * InHeight, 0.f), XMFLOAT4(Colors::White)));
+	MeshData.VertexData.push_back(
+		FVertex(
+			XMFLOAT3(0.f, 0.5f * InHeight, 0.f), 
+			XMFLOAT4(Colors::White),
+			XMFLOAT3(0.f, 1.f, 0.f)));
 
-	uint32_t Index = MeshData.VertexData.size();
+	//uint32_t Index = MeshData.VertexData.size();
 
-	for (uint32_t i = 0; i < InHeightSubdivision; ++i)
+	for (uint32_t i = 0; i <= InHeightSubdivision; ++i)
 	{
-		float Y = 0.5f * InHeight - HeightInterval * i;
+		const float Y = 0.5f * InHeight - HeightInterval * i;
 		const float Radius = i * RadiusInterval;
 		for (uint32_t j = 0; j <= InAxialSubdivision; ++j)
 		{
+			const float c = cosf(j * BetaValue);
+			const float s = sinf(j * BetaValue);
 			MeshData.VertexData.push_back(FVertex(
 				XMFLOAT3(
-					Radius * cosf(j * BetaValue),//x
+					Radius * c,//x
 					Y,//y
-					Radius * sinf(j * BetaValue)), //z
+					Radius * s), //z
 				XMFLOAT4(Colors::White)));
+
+			FVertex &Vertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+			Vertex.UTangent = XMFLOAT3(-s, Y, c);
+
+			const float dr = InRadius;
+			XMFLOAT3 bitangent(dr * c, -InHeight, dr * s);
+			
+			XMVECTOR T = XMLoadFloat3(&Vertex.UTangent);
+			XMVECTOR B = XMLoadFloat3(&bitangent);
+			XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
+			XMStoreFloat3(&Vertex.Normal, N);
 		}
 	}
 
 	//添加中点
-	MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, -0.5f * InHeight, 0.f), XMFLOAT4(Colors::White)));
+	MeshData.VertexData.push_back(
+		FVertex(
+			XMFLOAT3(0.f, -0.5f * InHeight, 0.f),
+			XMFLOAT4(Colors::White),
+			XMFLOAT3(0.f, -1.f, 0.f)));
 
 	//绘制index模型
 	for (uint32_t i = 0; i < InAxialSubdivision; ++i)
@@ -49,7 +73,7 @@ void CConeMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadius
 	float BaseIndex = 1;
 	const float VertexCircleNum = InAxialSubdivision + 1;
 	//绘制腰围
-	for (uint32_t i = 0; i < InHeightSubdivision - 2; ++i)
+	for (uint32_t i = 0; i <= InHeightSubdivision - 1; ++i)
 	{
 		for (uint32_t j = 0; j < InAxialSubdivision; ++j)
 		{
@@ -62,6 +86,25 @@ void CConeMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadius
 			MeshData.IndexData.push_back(BaseIndex + (i + 1) * VertexCircleNum + j);
 			MeshData.IndexData.push_back(BaseIndex + i * VertexCircleNum + j + 1);
 			MeshData.IndexData.push_back(BaseIndex + (i + 1) * VertexCircleNum + j + 1);
+		}
+	}
+
+	//添加南极点
+	{
+		const int i = InHeightSubdivision;
+
+		const float Y = 0.5f * InHeight - HeightInterval * i;
+		const float Radius = i * RadiusInterval;
+		for (uint32_t j = 0; j <= InAxialSubdivision; ++j)
+		{
+			const float c = cosf(j * BetaValue);
+			const float s = sinf(j * BetaValue);
+			MeshData.VertexData.push_back(FVertex(
+				XMFLOAT3(
+					Radius * c,//x
+					Y,//y
+					Radius * s), //z
+				XMFLOAT4(Colors::White), XMFLOAT3(0.f,-1.f,0.f)));
 		}
 	}
 

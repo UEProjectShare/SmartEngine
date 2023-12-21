@@ -28,6 +28,36 @@ void remove_all_char_end(char *str, char sub_str)
 	}
 }
 
+void replace_string_inline(
+	char* str, 
+	const char* sub_char_a,
+	const char* sub_char_b)
+{
+	int str_size = strlen(str);
+	int sub_char_a_size = strlen(sub_char_a);
+	int sub_char_b_size = strlen(sub_char_b);
+
+	int index = find_string(str, sub_char_a, 0);
+	if (index != -1)
+	{
+		char buff1[8196] = { 0 };
+		char buff2[8196] = { 0 };
+
+		int end_size = str_size + (index - 1);
+		strcpy(buff1, &str[index + sub_char_a_size]);
+
+		memset(&str[index], 0, end_size);
+
+		get_printf_s(buff2, "%s%s%s", str, sub_char_b, buff1);
+
+		memset(str, 0, str_size * sizeof(wchar_t));
+
+		strcpy(str, buff2);
+
+		replace_string_inline(str, sub_char_a, sub_char_b);
+	}
+}
+
 void remove_char_start(char *str, char sub_str)
 {
 	int len = strlen(str) + 1;
@@ -96,7 +126,7 @@ void replace_char_inline(char *str, const char sub_char_a, const char sub_char_b
 	}
 }
 
-int get_printf(char *buf, char *format, ...)
+int get_printf(char *buf, const char *format, ...)
 {
 	va_list param_list;
 	va_start(param_list, format);
@@ -157,7 +187,7 @@ int get_printf(char *buf, char *format, ...)
 	return strlen(buf) + 1;
 }
 
-int get_printf_s(char *out_buf, char *format, ...)
+int get_printf_s(char *out_buf, const char *format, ...)
 {
 	char buf[SIMPLE_C_BUFF_SIZE] = { 0 };
 	memset(buf, 0,sizeof(char) * SIMPLE_C_BUFF_SIZE);
@@ -171,7 +201,7 @@ int get_printf_s(char *out_buf, char *format, ...)
 	return strlen(out_buf) + 1;
 }
 
-int get_printf_s_s(int buffer_size, char *out_buf, char *format, ...)
+int get_printf_s_s(int buffer_size, char *out_buf, const char *format, ...)
 {
 	char *buf = (char*)malloc(buffer_size);
 	memset(buf, 0, sizeof(char) *buffer_size);
@@ -297,7 +327,35 @@ void wreplace_wchar_inline(wchar_t *str, const wchar_t sub_char_a, const wchar_t
 	}
 }
 
-int wget_printf(wchar_t *buf, wchar_t *format, ...)
+void wreplace_string_inline(
+	wchar_t* str, 
+	const wchar_t* sub_char_a,
+	const wchar_t* sub_char_b)
+{
+	int str_size = wcslen(str);
+	int sub_char_a_size = wcslen(sub_char_a);
+	int sub_char_b_size = wcslen(sub_char_b);
+
+	int index = wfind_string(str, sub_char_a, 0);
+	if (index != -1)
+	{
+		wchar_t buff1[8196] = { 0 };
+		wchar_t buff2[8196] = { 0 };
+
+		int end_size = str_size  + (index - 1);
+		wcscpy(buff1, &str[index + sub_char_a_size]);
+
+		memset(&str[index], 0, end_size * sizeof(wchar_t));
+
+		wget_printf_s(buff2, L"%s%s%s", str, sub_char_b, buff1);
+
+		memset(str, 0, str_size * sizeof(wchar_t));
+
+		wcscpy(str, buff2);
+	}
+}
+
+int wget_printf(wchar_t *buf, const wchar_t *format, ...)
 {
 	va_list param_list;
 	va_start(param_list, format);
@@ -362,7 +420,7 @@ int wget_printf(wchar_t *buf, wchar_t *format, ...)
 	return wcslen(buf) + 1;
 }
 
-int wget_printf_s(wchar_t *out_buf, wchar_t *format, ...)
+int wget_printf_s(wchar_t *out_buf,const wchar_t *format, ...)
 {
 	wchar_t *buf[SIMPLE_C_BUFF_SIZE] = { 0 };
 	wmemset(buf, 0, sizeof(wchar_t) * SIMPLE_C_BUFF_SIZE);
@@ -376,7 +434,7 @@ int wget_printf_s(wchar_t *out_buf, wchar_t *format, ...)
 	return wcslen(out_buf) + 1;
 }
 
-int wget_printf_s_s(int buffer_size, wchar_t *out_buf, wchar_t *format, ...)
+int wget_printf_s_s(int buffer_size, wchar_t *out_buf, const wchar_t *format, ...)
 {
 	int size = buffer_size / sizeof(wchar_t);
 	wchar_t *buf = (wchar_t*)malloc(buffer_size);

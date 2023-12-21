@@ -1,10 +1,60 @@
 #include "Material.h"
-
+#include "../../../Math/EngineMath.h"
 CMaterial::CMaterial()
-	: BaseColor(0.5f, 0.5f, 0.5f,1.f)
+	: bDirty(true)
+	, MaterialIndex(-1)
+	, BaseColor(0.5f, 0.5f, 0.5f, 1.f)
 	, Roughness(0.2f)
 	, MaterialType(EMaterialType::Lambert)
 	, MaterialDisplayStatus(EMaterialDisplayStatusType::TriangleDisplay)
+	, MaterialTransform(EngineMath::IdentityMatrix4x4())
 {
 
+}
+
+void CMaterial::SetMaterialDisplayStatus(EMaterialDisplayStatusType InDisplayStatus)
+{
+	MaterialDisplayStatus = InDisplayStatus;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetBaseColor(const fvector_4d& InBaseColor)
+{
+	BaseColor = InBaseColor;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetMaterialType(const EMaterialType& InMaterialType)
+{
+	MaterialType = InMaterialType;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetRoughness(const float InNewRoughness)
+{
+	Roughness = InNewRoughness;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetBaseColor(const std::string& InAssetFilename)
+{
+	BaseColorIndexKey = InAssetFilename;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetDirty(bool bNewDirty)
+{
+	bDirty = bNewDirty;
+}
+
+void CMaterial::SetMaterialIndex(int InNewIndex)
+{
+	MaterialIndex = InNewIndex;
+
+	SetDirty(true);
 }

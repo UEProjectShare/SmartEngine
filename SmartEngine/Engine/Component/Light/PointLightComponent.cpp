@@ -7,7 +7,7 @@ CPointLightComponent::CPointLightComponent()
 	: Super()
 {
 	//读取模型资源
-	string MeshPath = "../SmartEngine/Content/PointMesh.obj";
+	string MeshPath = "../SmartEngine/Asset/PointMesh.obj";
 	SetLightMesh(GetMeshManage()->CreateMeshComponent(MeshPath));
 
 	//设置太阳为线框模式

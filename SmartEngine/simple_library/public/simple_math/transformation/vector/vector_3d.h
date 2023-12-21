@@ -10,6 +10,7 @@ struct fvector_3d
 
 public:
 	fvector_3d();
+	fvector_3d(float in_value);
 	fvector_3d(int in_a, int in_b, int in_c);
 	fvector_3d(float in_a, float in_b, float in_c);
 
@@ -35,7 +36,7 @@ public:
 		*this = *this + a;
 	}
 
-	//?ò??????????×?
+	//向量不能这么做
 	void operator+=(const float& a)
 	{
 		x += a;
@@ -43,7 +44,7 @@ public:
 		z += a;
 	}
 
-	//?ò??????????×?
+	//向量不能这么做
 	void operator-=(const float& a)
 	{
 		x -= a;
@@ -90,11 +91,22 @@ public:
 	fvector_3d operator*=(const fvector_3d& a)
 	{
 		*this = *this * a;
+
+		return *this;
 	}
 
 	fvector_3d operator/=(const fvector_3d& a)
 	{
 		*this = *this / a;
+
+		return *this;
+	}
+
+	fvector_3d operator/=(const float& a)
+	{
+		*this = *this / a;
+
+		return *this;
 	}
 
 	fvector_3d operator^(const fvector_3d& a)const
@@ -103,4 +115,8 @@ public:
 	}
 
 	float dot(const fvector_3d& a)const;
+
+	void normalize();
+
+	static fvector_3d cross_product(const fvector_3d& a, const fvector_3d& b);
 };

@@ -9,6 +9,9 @@
 #include "../../../../Mesh/ConeMesh.h"
 #include "../../../../Mesh/PlaneMesh.h"
 #include "../../../../Mesh/CustomMesh.h"
+#include "../../../../Mesh/PyramidMesh.h"
+#include "../../../../Mesh/PipeMesh.h"
+#include "../../../../Mesh/TorusMesh.h"
 #include "../../../../Core/CoreObject/CoreMinimalObject.h"
 #include "../../../../Core/World.h"
 #include "../../../../Mesh/Core/MeshManage.h"
@@ -81,43 +84,114 @@ int CDirectXRenderingEngine::PostInit()
 
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
-		//点灯光生成
-		/*if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		////灯光生成
+		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		{
-			PointLight->SetPosition(XMFLOAT3(0.f, 5.f, -10.f));
-			PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-			
-			PointLight->SetLightIntensity(fvector_3d(10.f, 10.f, 10.f));
-			PointLight->SetEndAttenuation(50.f);
-		}*/
+			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
+			ParallelLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+		
+			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
+		}
+		////点灯光生成
+		//if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		//{
+		//	PointLight->SetPosition(XMFLOAT3(40.f, -6.f, -10.f));
+		//	PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+		//	
+		//	PointLight->SetLightIntensity(fvector_3d(4.f,4.f,4.f));
+		//	PointLight->SetEndAttenuation(190.f);
+		//}
 
 		//聚灯光生成
-		if (GSpotLight* SpotLight = World->CreateActorObject<GSpotLight>())
-		{
-			SpotLight->SetPosition(XMFLOAT3(0.f, 10.f, 10.f));
-			SpotLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-		
-			SpotLight->SetLightIntensity(fvector_3d(1.3f,1.3f, 1.3f));
-			//SpotLight->SetStartAttenuation(1.f);
-			SpotLight->SetEndAttenuation(130.f);
+		//if (GSpotLight* SpotLight = World->CreateActorObject<GSpotLight>())
+		//{
+		//	SpotLight->SetPosition(XMFLOAT3(0.f, 10.f, 10.f));
+		//	SpotLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+		//
+		//	SpotLight->SetLightIntensity(fvector_3d(1.3f,1.3f, 1.3f));
+		//	//SpotLight->SetStartAttenuation(1.f);
+		//	SpotLight->SetEndAttenuation(130.f);
+		//
+		//	SpotLight->SetConicalInnerCorner(40.f);
+		//	SpotLight->SetConicalOuterCorner(60.f);
+		//}	
 
-			SpotLight->SetConicalInnerCorner(40.f);
-			SpotLight->SetConicalOuterCorner(60.f);
+		//甜甜圈
+		if (GTorusMesh* InTorusMesh = World->CreateActorObject<GTorusMesh>())
+		{
+			InTorusMesh->CreateMesh(6.f,2.f,40.f, 40.f);
+			InTorusMesh->SetPosition(XMFLOAT3(-22.f, -8, 20.f));
+			if (CMaterial* InMaterial = (*InTorusMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
 		}
 
-		/*//灯光生成
-		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
+		//三楞锥
+		if (GPyramidMesh* InPyramidMesh = World->CreateActorObject<GPyramidMesh>())
 		{
-			ParallelLight->SetPosition(XMFLOAT3(0.f, -10.f, 0.f));
-			ParallelLight->SetRotation(fvector_3d(0.f,0.f,0.f));
+			InPyramidMesh->CreateMesh(EPyramidNumberSides::Pyramid_3, 1);
+			InPyramidMesh->SetPosition(XMFLOAT3(-1.f, -8, 20.f));
+			InPyramidMesh->SetRotation(fvector_3d(0.f,90.f,0.f));
+			if (CMaterial* InMaterial = (*InPyramidMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(4.f, 0.f, 0.f, 1.f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
 		}
-		
-		//灯光生成
-		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
+
+		//Pipe模型
+		if (GPipeMesh* InPipeMesh = World->CreateActorObject<GPipeMesh>())
 		{
-			ParallelLight->SetPosition(XMFLOAT3(0.f, -10.f, 10.f));
-			ParallelLight->SetRotation(fvector_3d(-90.f, 0.f, 0.f));
-		}*/
+			InPipeMesh->CreateMesh(3.f,3.f,6.f,1.f,20.f,20.f);
+			InPipeMesh->SetPosition(XMFLOAT3(-9.f, -9, 20.f));
+			if (CMaterial* InMaterial = (*InPipeMesh->GetMaterials())[0])
+			{
+				//InMaterial->SetBaseColor(fvector_4d(5.f));
+				//InMaterial->SetMaterialDisplayStatus(EMaterialDisplayStatusType::WireframeDisplay);
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		//锥形
+		if (GConeMesh* InConeMesh = World->CreateActorObject<GConeMesh>())
+		{
+			InConeMesh->CreateMesh(2.f,3.f,20.f, 20.f);
+
+			InConeMesh->SetPosition(XMFLOAT3(7.f, -11.f, 20.f));
+			InConeMesh->SetScale(fvector_3d(1.f, 1.f, 1.f));
+			if (CMaterial* InMaterial = (*InConeMesh->GetMaterials())[0])
+			{
+			//	InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
+		{
+			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
+
+			InBoxMesh->SetPosition(XMFLOAT3(22.f, -10.f, 20.f));
+			InBoxMesh->SetScale(fvector_3d(1.f, 1.f, 1.f));
+			if (CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
+			{
+			//	InMaterial->SetBaseColor(fvector_4d(0.5f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		if (GCylinderMesh* InCylinderMesh = World->CreateActorObject<GCylinderMesh>())
+		{
+			InCylinderMesh->CreateMesh(2.f, 2.f, 5.f, 20.f, 20.f);
+
+			InCylinderMesh->SetPosition(XMFLOAT3(14.f, -10.f, 20.f));
+			InCylinderMesh->SetScale(fvector_3d(1.f, 1.f, 1.f));
+			if (CMaterial* InMaterial = (*InCylinderMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(0.5f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
 
 		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
 		{
@@ -125,13 +199,18 @@ int CDirectXRenderingEngine::PostInit()
 
 			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -12.f, 0.f));
 			InPlaneMesh->SetScale(fvector_3d(50.f, 50.f, 50.f));
+			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::Lambert);
+			}
 		}
 
-		//兰伯特
+		/*//兰伯特
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
 		{
 			SphereMesh->CreateMesh(2.f, 50, 50);
-			SphereMesh->SetPosition(XMFLOAT3(-3.f, 2, 0.f));
+			SphereMesh->SetPosition(XMFLOAT3(-3.f,2,0.f));
 			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
 			{
 				InMaterial->SetMaterialType(EMaterialType::Lambert);
@@ -381,6 +460,49 @@ int CDirectXRenderingEngine::PostInit()
 			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
 			{
 				InMaterial->SetMaterialType(EMaterialType::Normal);
+			}
+		}*/
+
+		//显示BaseColor贴图1
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		{
+			SphereMesh->CreateMesh(2.f, 50, 50);
+			SphereMesh->SetPosition(XMFLOAT3(-9.f, -3, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, -90.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor("Wood");
+				InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetRoughness(4.f);
+				InMaterial->SetMaterialType(EMaterialType::OrenNayar);
+			}
+		}
+
+		//显示BaseColor贴图2
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		{
+			SphereMesh->CreateMesh(2.f, 50, 50);
+			SphereMesh->SetPosition(XMFLOAT3(-3.f, -3, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, -90.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor("../SmartEngine/Asset/Texture/MMOARPG.dds");
+				InMaterial->SetBaseColor(fvector_4d(0.7f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		//显示BaseColor贴图2
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		{
+			SphereMesh->CreateMesh(2.f, 50, 50);
+			SphereMesh->SetPosition(XMFLOAT3(3.f, -3, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, -90.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor("Texture'/Project/Texture/Earth.Earth'");
+				InMaterial->SetBaseColor(fvector_4d(0.7f));
+				InMaterial->SetMaterialType(EMaterialType::Phong);
 			}
 		}
 	}
@@ -707,6 +829,7 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 	}
 	DepthStencilBuffer.Reset();
 
+	//自适应屏幕变大
 	SwapChain->ResizeBuffers(
 		FEngineRenderConfig::GetRenderConfig()->SwapChainCount,
 		FEngineRenderConfig::GetRenderConfig()->ScreenWidth,

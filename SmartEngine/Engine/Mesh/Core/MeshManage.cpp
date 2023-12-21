@@ -12,6 +12,9 @@
 #include "../../Component/Mesh/CylinderMeshComponent.h"
 #include "../../Component/Mesh/PlaneMeshComponent.h"
 #include "../../Component/Mesh/SphereMeshComponent.h"
+#include "../../Component/Mesh/PyramidMeshComponent.h"
+#include "../../Component/Mesh/PipeMeshComponent.h"
+#include "../../Component/Mesh/TorusMeshComponent.h"
 
 CMeshManage::CMeshManage()
 {
@@ -50,6 +53,21 @@ void CMeshManage::PreDraw(float DeltaTime)
 CMeshComponent* CMeshManage::CreateSphereMeshComponent(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
     return CreateMeshComponent<CSphereMeshComponent>(InRadius, InAxialSubdivision, InHeightSubdivision);
+}
+
+CMeshComponent* CMeshManage::CreatePyramidMeshComponent(EPyramidNumberSides InPyramidNumberSidesType, uint32_t InHeightSubdivide, uint32_t InSize)
+{
+    return CreateMeshComponent<CPyramidMeshComponent>(InPyramidNumberSidesType, InHeightSubdivide, InSize);
+}
+
+CMeshComponent* CMeshManage::CreatePipeMeshComponent(float InTopRadius, float InBottomRadius, float InHeight, float InThickness, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+{
+    return CreateMeshComponent<CPipeMeshComponent>(InTopRadius, InBottomRadius, InHeight,InThickness, InAxialSubdivision, InHeightSubdivision);
+}
+
+CMeshComponent* CMeshManage::CreateTorusMeshComponent(float InRadius, float InSectionRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+{
+    return CreateMeshComponent<CTorusMeshComponent>(InRadius, InSectionRadius,InAxialSubdivision, InHeightSubdivision);
 }
 
 CMeshComponent* CMeshManage::CreateMeshComponent(string& InPath)

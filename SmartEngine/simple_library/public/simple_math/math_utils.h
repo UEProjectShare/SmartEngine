@@ -32,6 +32,8 @@ namespace math_utils
 
 	//判定bool是不是在一定范围内
 	bool scalar_neare_qual_float(float f1, float f2, float epsilon);
+	bool scalar_neare_qual_int(int i1, int i2, int epsilon);
+
 	fmatrix_4x4 matrix_perspective(float in_fov_radian, float aspect_ratio, float near_z, float far_z);
 
 	//看向目标
@@ -44,4 +46,7 @@ namespace math_utils
 	fmatrix_4x4 matrix_rotation_y(const float angle);
 	fmatrix_4x4 matrix_rotation_x(const float angle);
 	fmatrix_4x4 matrix_rotation_z(const float angle);
+
+	//任意轴旋转
+	fmatrix_4x4 matrix_rotation_axis(const fvector_3d &axis,const float angle);
 }
