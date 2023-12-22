@@ -33,18 +33,14 @@ void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
    
     RootParam[4].InitAsShaderResourceView(4, 1);
 
-    //静态采样方式
-    std::vector<CD3DX12_STATIC_SAMPLER_DESC> SamplerDescs;
-
-    SamplerDescs.push_back(
-        CD3DX12_STATIC_SAMPLER_DESC(0,
-            D3D12_FILTER_MIN_MAG_MIP_POINT));
+    //构建静态采样
+    StaticSamplerObject.BuildStaticSampler();
 
     const CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(
         5,
         RootParam,
-        SamplerDescs.size(),//采样数量
-        SamplerDescs.data(),//采样PTR
+        StaticSamplerObject.GetSize(),//采样数量
+        StaticSamplerObject.GetData(),//采样PTR
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     //创建

@@ -33,8 +33,9 @@ public:
 	void BuildTextureConstantBuffer(ID3D12DescriptorHeap* InHeap, int Offset = 0);
 
 	FORCEINLINE UINT Size() const { return TexturesMapping.size(); }
-
+	
 	std::unique_ptr<FRenderingTexture>* FindRenderingTexture(const std::string& InKey);
+	
 protected:
-	std::unordered_map<std::wstring, std::unique_ptr<FRenderingTexture>> TexturesMapping;
+	std::map<std::wstring, std::unique_ptr<FRenderingTexture>> TexturesMapping;
 };

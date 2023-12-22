@@ -1,42 +1,4 @@
 #include "Material.hlsl"
-#include "Light.hlsl"
-
-SamplerState SimpleTextureState  : register(s0);
-Texture2D    SimpleTexture2DMap[TEXTURE2D_MAP_NUM] : register(t3);
-
-cbuffer ObjectConstBuffer : register(b0)//b0->b14
-{
-	float4x4 WorldMatrix;
-	float4x4 ObjectTextureTransform;
-	uint MaterialIndex;
-	uint RR1;
-	uint RR2;
-	uint RR3;
-};
-
-cbuffer ViewportConstBuffer : register(b1)//b0->b14
-{
-	float4 ViewportPosition;
-	float4x4 ViewProjectionMatrix;
-};
-
-cbuffer LightConstBuffer : register(b2)//b0->b14
-{
-	Light SceneLights[16];
-};
-
-struct MaterialConstBuffer
-{
-	int MaterialType;
-	float MaterialRoughness;
-	int BaseColorIndex;
-	float v2;
-
-	float4 BaseColor;
-	float4x4 TransformInformation;
-};
-
-StructuredBuffer<MaterialConstBuffer> Materials : register(t4, Space1);
 
 struct MeshVertexIn
 {
@@ -68,7 +30,6 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 
 	//变换到齐次剪辑空间
 	Out.Position = mul(Out.WorldPosition, ViewProjectionMatrix);
-	Out.Color.rgb = MV.Normal.rgb;
 
 	if (MatConstBuffer.MaterialType == 13)
 	{
@@ -81,7 +42,7 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	}
 	
 	//切线
-	Out.UTangent = MV.UTangent;
+	Out.UTangent = mul(MV.UTangent, (float3x3)WorldMatrix);
 
 	//uv坐标
 	float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
@@ -96,16 +57,8 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 	FMaterial Material;
 
-	if (MatConstBuffer.BaseColorIndex == -1)
-	{
-		Material.BaseColor = MatConstBuffer.BaseColor;
-	}
-	else
-	{
-		Material.BaseColor = 
-			SimpleTexture2DMap[MatConstBuffer.BaseColorIndex].Sample(SimpleTextureState, MVOut.TexCoord) 
-			* MatConstBuffer.BaseColor;
-	}
+	//获取BaseColor
+	Material.BaseColor = GetMaterialBaseColor(MatConstBuffer, MVOut.TexCoord);
 
 	//BaseColor
 	if (MatConstBuffer.MaterialType == 12)
@@ -124,10 +77,15 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 	float4 AmbientLight = { 0.15f, 0.15f, 0.25f, 1.0f };
 	float3 ModelNormal = normalize(MVOut.Normal);
 
+	//获取法线 如果设置了法线贴图就获取法线贴图
+	ModelNormal = GetMaterialNormals(MatConstBuffer, MVOut.TexCoord, ModelNormal, MVOut.UTangent);
+
 	float DotValue = 0;
 
 	float4 LightStrengths = { 0.f, 0.f, 0.f, 1.f };
-	float4 Specular = { 0.f, 0.f, 0.f, 1.f };
+
+	//拿到Specular
+	float4 Specular = GetMaterialSpecular(MatConstBuffer, MVOut.TexCoord);
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -159,26 +117,29 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 				float MaterialShininess = 1.f - saturate(MatConstBuffer.MaterialRoughness);
 				float M = MaterialShininess * 100.f;
 
-				Specular = (M + 2.0f) * pow(max(dot(ViewDirection, ReflectDirection), 0.f), M) / 3.1415926;
+				Specular *= saturate((M + 2.0f) * pow(max(dot(ViewDirection, ReflectDirection), 0.f), M) / 3.1415926);
 			}
-			else if (MatConstBuffer.MaterialType == 3)//blinn-phong 
+			//blinn-phong 
+			else if (MatConstBuffer.MaterialType == 3)
 			{
+				//当前的公式已经对blinn-phong 模型做了很大的变形
 				float3 ViewDirection = normalize(ViewportPosition.xyz - MVOut.WorldPosition.xyz);
 				float3 HalfDirection = normalize(ViewDirection + NormalizeLightDirection);
 
-				DotValue = pow(max(dot(ModelNormal, NormalizeLightDirection), 0.0), 2.f);
+				//先半兰博特化 再减去0.2f曝光的，再平方，变得更柔和
+				DotValue = pow(max(0.0,(dot(ModelNormal, NormalizeLightDirection) * 0.5f + 0.5f)-0.2f),2);
 
 				float MaterialShininess = 1.f - saturate(MatConstBuffer.MaterialRoughness);
 				float M = MaterialShininess * 100.f;
 
 				//c=(m+2.f/PI) 归一化系数 后面会详细讲解推导
-				Specular = (M + 2.0f) * pow(max(dot(ModelNormal, HalfDirection), 0.f), M) / 3.1415926;
+				Specular *= saturate((M + 2.0f) * pow(max(dot(HalfDirection, ModelNormal), 0.f), M) / 3.1415926);
 			}
 			else if (MatConstBuffer.MaterialType == 4)//Wrap 早期模拟皮肤的效果
 			{
 				//	float WrapValue = 1.f;//半兰伯特材质
 
-				float WrapValue = 1.6f;
+				float WrapValue = 2.6f;
 
 				float DiffuseReflection = dot(ModelNormal, NormalizeLightDirection);
 				DotValue = max((DiffuseReflection + WrapValue) / (1.f + WrapValue), 0.0);//[-1,1] => [0,1]
@@ -248,7 +209,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 						float MaterialShininess = 1.f - saturate(MatConstBuffer.MaterialRoughness);
 						float M = MaterialShininess * 60.f;
 
-						Specular = Specular + pow(max(dot(ViewDirection, ReflectDirection), 0.f), M) / 0.0314f;
+						Specular += saturate(pow(max(dot(ViewDirection, ReflectDirection), 0.f), M) / 0.0314f);
 					}
 				}
 			}
@@ -269,7 +230,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 					float MaterialShininess = 1.f - saturate(MatConstBuffer.MaterialRoughness);
 					float M = MaterialShininess * 100.f;
 
-					Specular = pow(max(dot(ViewDirection, ReflectDirection), 0.f), M);
+					Specular = saturate(pow(max(dot(ViewDirection, ReflectDirection), 0.f), M));
 				}
 
 				//模拟透射效果
@@ -283,8 +244,9 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 			else if (MatConstBuffer.MaterialType == 10)// kajiya-kay模型
 			{
 				//各项异性 - 讲解纹理的时候再补充
+				
 			}
-			else if (MatConstBuffer.MaterialType == 11)
+			else if (MatConstBuffer.MaterialType == 11)//OrenNayar
 			{
 				float3 ViewDirection = normalize(ViewportPosition.xyz - MVOut.WorldPosition.xyz);
 
@@ -292,7 +254,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 				float NormalView = saturate(dot(ModelNormal, ViewDirection));
 
 				float Phiri =
-					length(ViewDirection - ModelNormal * NormalView) *
+					length(ViewDirection - ModelNormal * NormalView) +
 					length(NormalizeLightDirection - ModelNormal * NormalLight);
 
 				float ACosNormalView = acos(NormalView);//[0,1]
@@ -310,7 +272,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 			}
 			//菲尼尔
 			else if (MatConstBuffer.MaterialType == 100)
-			{
+			{	
 				//另一种菲尼尔方法
 				float3 ViewDirection = normalize(ViewportPosition.xyz - MVOut.WorldPosition.xyz);
 				DotValue = pow(1.f - max(dot(ModelNormal, ViewDirection), 0.0), 2.f);
@@ -320,8 +282,13 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 				//Specular.xyz = FresnelSchlickMethod(F0, ModelNormal, ViewDirection, 3).xyz;
 			}
 
-			LightStrengths += LightStrength * DotValue * float4(SceneLights[i].LightIntensity, 1.f);
+			LightStrengths += saturate(LightStrength * DotValue * float4(SceneLights[i].LightIntensity,1.f));
 			LightStrengths.w = 1.f;
+
+			//把这些属性限制到 0-1
+			LightStrengths = saturate(LightStrengths);
+			Specular = saturate(Specular);
+			Material.BaseColor = saturate(Material.BaseColor);
 		}
 	}
 

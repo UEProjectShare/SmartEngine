@@ -4,6 +4,7 @@ CMaterial::CMaterial()
 	: bDirty(true)
 	, MaterialIndex(-1)
 	, BaseColor(0.5f, 0.5f, 0.5f, 1.f)
+	, SpecularColor(0.f, 0.f, 0.f)
 	, Roughness(0.2f)
 	, MaterialType(EMaterialType::Lambert)
 	, MaterialDisplayStatus(EMaterialDisplayStatusType::TriangleDisplay)
@@ -40,9 +41,30 @@ void CMaterial::SetRoughness(const float InNewRoughness)
 	SetDirty(true);
 }
 
+void CMaterial::SetSpecular(const std::string& InAssetFilename)
+{
+	SpecularIndexKey = InAssetFilename;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetSpecular(const fvector_3d& InVector)
+{
+	SpecularColor = InVector;
+
+	SetDirty(true);
+}
+
 void CMaterial::SetBaseColor(const std::string& InAssetFilename)
 {
 	BaseColorIndexKey = InAssetFilename;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetNormal(const std::string& InAssetFilename)
+{
+	NormalIndexKey = InAssetFilename;
 
 	SetDirty(true);
 }

@@ -393,6 +393,9 @@
     <ClCompile Include="simple_library\private\simple_math\transformation\vector\vector_color.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\StaticSampler\StaticSamplerObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.h">
@@ -834,6 +837,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_color.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\StaticSampler\StaticSamplerObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

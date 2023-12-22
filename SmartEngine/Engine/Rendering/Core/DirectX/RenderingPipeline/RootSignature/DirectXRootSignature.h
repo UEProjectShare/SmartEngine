@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../StaticSampler/StaticSamplerObject.h"
 
 //提供渲染内容的接口
 struct FDirectXRootSignature : public IDirectXDeviceInterface_Struct
@@ -15,6 +16,9 @@ struct FDirectXRootSignature : public IDirectXDeviceInterface_Struct
 	void PostDraw(float DeltaTime);
 
 	ID3D12RootSignature* GetRootSignature() const { return RootSignature.Get(); }
+
 private:
 	ComPtr<ID3D12RootSignature> RootSignature;
+	
+	FStaticSamplerObject StaticSamplerObject;
 };

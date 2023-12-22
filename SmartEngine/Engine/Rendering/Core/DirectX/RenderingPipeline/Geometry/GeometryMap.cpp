@@ -154,10 +154,13 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 		if (CMaterial* InMaterial = Materials[i])
 		{		
 			if (InMaterial->IsDirty())
-			{		
+			{
 				//BaseColor
 				const fvector_4d InBaseColor = InMaterial->GetBaseColor();
 				MaterialConstantBuffer.BaseColor = XMFLOAT4(InBaseColor.x, InBaseColor.y, InBaseColor.z, InBaseColor.w);
+
+				const fvector_3d InSpecularColor = InMaterial->GetSpecularColor();
+				MaterialConstantBuffer.SpecularColor = XMFLOAT3(InSpecularColor.x, InSpecularColor.y, InSpecularColor.z);
 
 				//粗糙度
 				MaterialConstantBuffer.Roughness = InMaterial->GetRoughness();
@@ -175,6 +178,27 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 					else
 					{
 						MaterialConstantBuffer.BaseColorIndex = -1;
+					}
+
+					//法线
+					if (const auto NormalTextureResourcesPtr = RenderingTextureResources->FindRenderingTexture(InMaterial->GetNormalIndexKey()))
+					{
+						MaterialConstantBuffer.NormalIndex = (*NormalTextureResourcesPtr)->RenderingTextureID;
+					}
+					else
+					{
+						MaterialConstantBuffer.NormalIndex = -1;
+					}
+
+
+					//高光
+					if (const auto SpecularTextureResourcesPtr = RenderingTextureResources->FindRenderingTexture(InMaterial->GetSpecularKey()))
+					{
+						MaterialConstantBuffer.SpecularIndex = (*SpecularTextureResourcesPtr)->RenderingTextureID;
+					}
+					else
+					{
+						MaterialConstantBuffer.SpecularIndex = -1;
 					}
 				}
 
@@ -262,7 +286,6 @@ void FGeometryMap::BuildMaterialShaderResourceView()
 
 	//收集材质
 	//正真更新Shader-Index
-	int ShaderIndex = 0;
 	for (auto& Tmp : Geometries)
 	{
 		for (size_t i = 0; i < Tmp.second.DescribeMeshRenderingData.size(); i++)
@@ -273,10 +296,9 @@ void FGeometryMap::BuildMaterialShaderResourceView()
 				for (size_t j = 0; j < InMaterials->size(); j++)
 				{
 					//做ShaderIndex所有
-					(*InMaterials)[j]->SetMaterialIndex(ShaderIndex);
+					(*InMaterials)[j]->SetMaterialIndex(Materials.size());
 
 					Materials.push_back((*InMaterials)[j]);
-					ShaderIndex++;
 				}
 			}
 		}

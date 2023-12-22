@@ -36,7 +36,7 @@
 
 CDirectXRenderingEngine::CDirectXRenderingEngine()
 	: CurrentFenceIndex(0)
-	, M4XQualityLevels(0)
+	, M4XQualityLevels(1)
 	, bMSAA4XEnabled(false)
 	, BackBufferFormat(DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
 	, DepthStencilFormat(DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT)
@@ -116,16 +116,16 @@ int CDirectXRenderingEngine::PostInit()
 		//	SpotLight->SetConicalOuterCorner(60.f);
 		//}	
 
-		//ÌðÌðÈ¦
-		if (GTorusMesh* InTorusMesh = World->CreateActorObject<GTorusMesh>())
-		{
-			InTorusMesh->CreateMesh(6.f,2.f,40.f, 40.f);
-			InTorusMesh->SetPosition(XMFLOAT3(-22.f, -8, 20.f));
-			if (CMaterial* InMaterial = (*InTorusMesh->GetMaterials())[0])
-			{
-				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-			}
-		}
+		////ÌðÌðÈ¦
+		//if (GTorusMesh* InTorusMesh = World->CreateActorObject<GTorusMesh>())
+		//{
+		//	InTorusMesh->CreateMesh(6.f,2.f,40.f, 40.f);
+		//	InTorusMesh->SetPosition(XMFLOAT3(-22.f, -8, 20.f));
+		//	if (CMaterial* InMaterial = (*InTorusMesh->GetMaterials())[0])
+		//	{
+		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+		//	}
+		//}
 
 		//ÈýÀã×¶
 		if (GPyramidMesh* InPyramidMesh = World->CreateActorObject<GPyramidMesh>())
@@ -206,7 +206,7 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
-		/*//À¼²®ÌØ
+		//À¼²®ÌØ
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
 		{
 			SphereMesh->CreateMesh(2.f, 50, 50);
@@ -247,7 +247,7 @@ int CDirectXRenderingEngine::PostInit()
 					111.f / 255.f, 1.f));
 
 				InMaterial->SetMaterialType(EMaterialType::Phong);
-
+				InMaterial->SetSpecular(fvector_3d(1.f));
 				InMaterial->SetRoughness(0.8f);
 			}
 		}
@@ -265,8 +265,8 @@ int CDirectXRenderingEngine::PostInit()
 					227.f / 255.f, 1.f));
 
 				InMaterial->SetMaterialType(EMaterialType::BlinnPhong);
-
-				InMaterial->SetRoughness(0.9f);
+				InMaterial->SetSpecular(fvector_3d(1.f));
+				InMaterial->SetRoughness(0.3f);
 			}
 		}
 
@@ -324,6 +324,7 @@ int CDirectXRenderingEngine::PostInit()
 			SphereMesh->SetPosition(XMFLOAT3(-9.f, 2, 0.f));
 			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
 			{
+				InMaterial->SetBaseColor("Hair");
 				InMaterial->SetMaterialType(EMaterialType::AnisotropyKajiyaKay);
 			}
 		}
@@ -357,7 +358,7 @@ int CDirectXRenderingEngine::PostInit()
 					0.7f,
 					0.7f,
 					1.4f, 1.f));
-
+				
 				InMaterial->SetMaterialType(EMaterialType::Banded);
 			}
 		}
@@ -373,7 +374,7 @@ int CDirectXRenderingEngine::PostInit()
 					247.f / 255.f,
 					150.f / 255.f,
 					85.f  / 255.f, 1.f));
-
+				
 				InMaterial->SetMaterialType(EMaterialType::GradualBanded);
 			}
 		}
@@ -391,7 +392,7 @@ int CDirectXRenderingEngine::PostInit()
 					234.f / 255.f, 1.f));
 
 				InMaterial->SetMaterialType(EMaterialType::FinalBanded);
-
+				InMaterial->SetSpecular(fvector_3d(1.f));
 				InMaterial->SetRoughness(0.6f);
 			}
 		}
@@ -409,7 +410,7 @@ int CDirectXRenderingEngine::PostInit()
 					17.f / 255.f, 1.f));
 
 				InMaterial->SetMaterialType(EMaterialType::Back);
-
+				InMaterial->SetSpecular(fvector_3d(1.f));
 				InMaterial->SetRoughness(0.2f);
 			}
 		}
@@ -461,7 +462,7 @@ int CDirectXRenderingEngine::PostInit()
 			{
 				InMaterial->SetMaterialType(EMaterialType::Normal);
 			}
-		}*/
+		}
 
 		//ÏÔÊ¾BaseColorÌùÍ¼1
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
@@ -472,6 +473,7 @@ int CDirectXRenderingEngine::PostInit()
 			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
 			{
 				InMaterial->SetBaseColor("Wood");
+				InMaterial->SetNormal("Wood_NRM");
 				InMaterial->SetBaseColor(fvector_4d(1.f));
 				InMaterial->SetRoughness(4.f);
 				InMaterial->SetMaterialType(EMaterialType::OrenNayar);
@@ -488,11 +490,12 @@ int CDirectXRenderingEngine::PostInit()
 			{
 				InMaterial->SetBaseColor("../SmartEngine/Asset/Texture/MMOARPG.dds");
 				InMaterial->SetBaseColor(fvector_4d(0.7f));
-				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+				InMaterial->SetNormal("MMOARPG_NRM");
+				InMaterial->SetMaterialType(EMaterialType::OrenNayar);
 			}
 		}
 
-		//ÏÔÊ¾BaseColorÌùÍ¼2
+		////ÏÔÊ¾BaseColorÌùÍ¼2
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
 		{
 			SphereMesh->CreateMesh(2.f, 50, 50);
@@ -502,7 +505,35 @@ int CDirectXRenderingEngine::PostInit()
 			{
 				InMaterial->SetBaseColor("Texture'/Project/Texture/Earth.Earth'");
 				InMaterial->SetBaseColor(fvector_4d(0.7f));
-				InMaterial->SetMaterialType(EMaterialType::Phong);
+				InMaterial->SetSpecular(fvector_3d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::BlinnPhong);
+			}
+		}
+
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		{
+			SphereMesh->CreateMesh(2.f, 100, 100);
+			SphereMesh->SetPosition(XMFLOAT3(9.f, -3, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, 90.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetNormal("Wood2_Nor");
+				//InMaterial->SetBaseColor("Wood2");
+				InMaterial->SetMaterialType(EMaterialType::BlinnPhong);
+			}
+		}
+
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		{
+			SphereMesh->CreateMesh(2.f, 100, 100);
+			SphereMesh->SetPosition(XMFLOAT3(15.f, -3, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, 90.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetNormal("Wood2_Nor");
+				//InMaterial->SetBaseColor("Wood2");
+				InMaterial->SetSpecular("Wood2_SPEC");
+				InMaterial->SetMaterialType(EMaterialType::BlinnPhong);
 			}
 		}
 	}
@@ -536,7 +567,7 @@ void CDirectXRenderingEngine::Tick(float DeltaTime)
 		GetCurrentSwapBuff(),
 		D3D12_RESOURCE_STATE_PRESENT,
 		D3D12_RESOURCE_STATE_RENDER_TARGET);
-
+	
 	GraphicsCommandList->ResourceBarrier(1, &ResourceBarrierPresent);
 
 	//ÐèÒªÃ¿Ö¡Ö´ÐÐ
@@ -783,6 +814,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	//¶àÖØ²ÉÑùÉèÖÃ
 	SwapChainDesc.SampleDesc.Count = GetDXGISampleCount();
 	SwapChainDesc.SampleDesc.Quality = GetDXGISampleQuality();
+
 	ANALYSIS_HRESULT(DXGIFactory->CreateSwapChain(
 		CommandQueue.Get(),
 		&SwapChainDesc, SwapChain.GetAddressOf()));
