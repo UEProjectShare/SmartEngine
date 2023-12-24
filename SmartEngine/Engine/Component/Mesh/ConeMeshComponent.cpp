@@ -29,7 +29,7 @@ void CConeMeshComponent::CreateMesh(
 
 	for (uint32_t i = 0; i <= InHeightSubdivision; ++i)
 	{
-		const float Y = 0.5f * InHeight - HeightInterval * i;
+		float Y = 0.5f * InHeight - HeightInterval * i;
 		const float Radius = i * RadiusInterval;
 		for (uint32_t j = 0; j <= InAxialSubdivision; ++j)
 		{
@@ -47,10 +47,10 @@ void CConeMeshComponent::CreateMesh(
 
 			const float dr = InRadius;
 			XMFLOAT3 bitangent(dr * c, -InHeight, dr * s);
-			
-			XMVECTOR T = XMLoadFloat3(&Vertex.UTangent);
-			XMVECTOR B = XMLoadFloat3(&bitangent);
-			XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
+
+			const XMVECTOR T = XMLoadFloat3(&Vertex.UTangent);
+			const XMVECTOR B = XMLoadFloat3(&bitangent);
+			const XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
 			XMStoreFloat3(&Vertex.Normal, N);
 		}
 	}
@@ -117,4 +117,17 @@ void CConeMeshComponent::CreateMesh(
 		MeshData.IndexData.push_back(BaseIndex + Index);
 		MeshData.IndexData.push_back(BaseIndex + Index + 1);
 	}
+}
+
+void CConeMeshComponent::BuildKey(size_t& OutHashKey, float InRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+{
+	const std::hash<float> FloatHash;
+	std::hash<int> IntHash;
+
+	OutHashKey = 2;
+	OutHashKey += FloatHash(InRadius);
+	OutHashKey += FloatHash(InHeight);
+
+	OutHashKey += IntHash._Do_hash(InAxialSubdivision);
+	OutHashKey += IntHash._Do_hash(InHeightSubdivision);
 }

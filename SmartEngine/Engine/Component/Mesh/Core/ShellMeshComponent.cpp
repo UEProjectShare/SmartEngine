@@ -6,7 +6,7 @@ CShellMeshComponent::CShellMeshComponent()
 
 }
 
-void CShellMeshComponent::DrawQuadrilateral(FMeshRenderingData& MeshData,const fvector_4id& InDrawPoint, bool bReversal)
+void CShellMeshComponent::DrawQuadrilateral(FMeshRenderingData& MeshData, const fvector_4id& InDrawPoint, bool bReversal)
 {
 	if (!bReversal)
 	{
@@ -36,7 +36,7 @@ void CShellMeshComponent::DrawQuadrilateral(FMeshRenderingData& MeshData,const f
 
 fvector_4id CShellMeshComponent::GetQuadrilateralDrawPointTypeA(int InRowsand, int InColumns, int GroupLayer, int Offset)
 {
-	return { InColumns * GroupLayer + InRowsand,					 //A
+	return { InColumns * GroupLayer + InRowsand,				 //A
 			(InColumns + 1) * GroupLayer + InRowsand,			 //B
 			(InColumns + 1) * GroupLayer + InRowsand + Offset,	 //C
 			InColumns * GroupLayer + InRowsand + Offset };		 //D

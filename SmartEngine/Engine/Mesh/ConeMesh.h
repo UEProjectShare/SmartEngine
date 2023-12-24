@@ -6,6 +6,8 @@ class GConeMesh : public GMesh
 {
 	typedef GMesh Super;
 public:
+	GConeMesh();
+
 	void Init() override;
 
 	void Draw(float DeltaTime) override;

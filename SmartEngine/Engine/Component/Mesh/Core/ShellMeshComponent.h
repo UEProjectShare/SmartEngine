@@ -7,7 +7,7 @@ public:
 	CShellMeshComponent();
 
 protected:
-	void DrawQuadrilateral(FMeshRenderingData& MeshData,const fvector_4id &InDrawPoint, bool bReversal = false);
+	void DrawQuadrilateral(FMeshRenderingData& MeshData, const fvector_4id& InDrawPoint, bool bReversal = false);
 
 	//专门用来绘制拥有row和colum明显的
 	//比如在输入点的时候先绘制一圈row 到下一层再绘制一圈row

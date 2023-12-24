@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/ShellMeshComponent.h"
 
-class CPipeMeshComponent :public CShellMeshComponent
+class CPipeMeshComponent : public CShellMeshComponent
 {
 public:
 	CPipeMeshComponent();
@@ -14,6 +14,12 @@ public:
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
+	void BuildKey(size_t& OutHashKey, float InTopRadius,
+		float InBottomRadius,
+		float InHeight,
+		float InThickness,
+		uint32_t InAxialSubdivision,
+		uint32_t InHeightSubdivision);
 protected:
 
 	//¹¹½¨°ë¾¶µã

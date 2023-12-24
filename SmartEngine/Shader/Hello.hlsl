@@ -1,4 +1,5 @@
 #include "Material.hlsl"
+#include "PBR.hlsl"
 
 struct MeshVertexIn
 {
@@ -24,6 +25,9 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
 
 	MeshVertexOut Out;
+
+	//颜色
+	Out.Color = MV.Color;
 
 	//世界坐标
 	Out.WorldPosition = mul(float4(MV.Position, 1.f), WorldMatrix);
@@ -60,10 +64,13 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 	//获取BaseColor
 	Material.BaseColor = GetMaterialBaseColor(MatConstBuffer, MVOut.TexCoord);
 
+	//拿到Specular
+	float4 Specular = GetMaterialSpecular(MatConstBuffer, MVOut.TexCoord);
+
 	//BaseColor
 	if (MatConstBuffer.MaterialType == 12)
 	{
-		return Material.BaseColor;
+		return Material.BaseColor * Specular + Material.BaseColor + 0.1f;
 	}
 	else if (MatConstBuffer.MaterialType == 13)
 	{
@@ -84,16 +91,14 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 	float4 LightStrengths = { 0.f, 0.f, 0.f, 1.f };
 
-	//拿到Specular
-	float4 Specular = GetMaterialSpecular(MatConstBuffer, MVOut.TexCoord);
 
 	for (int i = 0; i < 16; i++)
 	{
 		if (length(SceneLights[i].LightIntensity.xyz) > 0.f)
 		{
-			float3 NormalizeLightDirection = normalize(GetLightDirection(SceneLights[i], MVOut.WorldPosition));
+			float3 NormalizeLightDirection = normalize(GetLightDirection(SceneLights[i], MVOut.WorldPosition.xyz));
 
-			float4 LightStrength = ComputeLightStrength(SceneLights[i], ModelNormal, MVOut.WorldPosition, NormalizeLightDirection);
+			float4 LightStrength = ComputeLightStrength(SceneLights[i], ModelNormal, MVOut.WorldPosition.xyz, NormalizeLightDirection);
 
 			//兰伯特
 			if (MatConstBuffer.MaterialType == 0)
@@ -270,6 +275,43 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 				DotValue = NormalLight * (A + B * max(0, Phiri) * sin(Alpha) * tan(Beta));
 			}
+			else if (MatConstBuffer.MaterialType == 20)//PBR
+			{
+				float3 L = NormalizeLightDirection;	
+				float3 V = normalize(ViewportPosition.xyz - MVOut.WorldPosition.xyz);
+				float3 H = normalize(V + L);
+				float3 N = ModelNormal;
+
+				float PI = 3.1415926;
+
+				float Roughness = 0.2f;
+				float3 Metallic = 0.2f;
+				
+				float4 D = GetDistributionGGX(N, H, Roughness);
+
+				float3 F0 = 0.04f;
+				F0 = lerp(F0, MatConstBuffer.BaseColor.rgb, Metallic);
+				float4 F = float4(FresnelSchlickMethod(F0, N, V, 5), 1.0f);
+
+				float4 G = GSmith(N, V, L, Roughness);
+
+
+				float4 Kd = 1 - F;
+				Kd *= 1 - float4(Metallic, 1.f);
+
+				float3 Diffuse = Kd.rgb * GetDiffuseLambert(MatConstBuffer.BaseColor.rgb);
+
+				float NoV = saturate(dot(N, V));
+				float NoL = saturate(dot(N, L));
+
+				float4 Value = (D * F * G) / (4 * (NoV * NoL));
+				Specular = float4(Value.rgb, 1.f);
+
+				float3 Radiance = LightStrength.xyz;
+				float3 MyColor = (Diffuse + Specular.xyz) * NoL * Radiance;
+
+				return float4(MyColor.xyz, 1.0f);
+			}
 			//菲尼尔
 			else if (MatConstBuffer.MaterialType == 100)
 			{	
@@ -297,5 +339,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 		+ Specular * Material.BaseColor)+ //高光
 		AmbientLight * Material.BaseColor; //间接光
 	
+	MVOut.Color.a = Material.BaseColor.a;
+
 	return MVOut.Color;
 }

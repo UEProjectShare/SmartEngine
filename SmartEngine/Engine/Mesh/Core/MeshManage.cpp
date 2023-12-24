@@ -15,6 +15,7 @@
 #include "../../Component/Mesh/PyramidMeshComponent.h"
 #include "../../Component/Mesh/PipeMeshComponent.h"
 #include "../../Component/Mesh/TorusMeshComponent.h"
+#include "../../Core/Construction/MeshConstruction.h"
 
 CMeshManage::CMeshManage()
 {
@@ -50,64 +51,47 @@ void CMeshManage::PreDraw(float DeltaTime)
     RenderingPipeline.PreDraw(DeltaTime);
 }
 
-CMeshComponent* CMeshManage::CreateSphereMeshComponent(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+CMeshComponent* CMeshManage::CreateSphereMeshComponent(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision, bool bReverse)
 {
-    return CreateMeshComponent<CSphereMeshComponent>(InRadius, InAxialSubdivision, InHeightSubdivision);
+    return MeshConstruction::CreateMeshComponent<CSphereMeshComponent>(this, InRadius, InAxialSubdivision, InHeightSubdivision, bReverse);
 }
 
 CMeshComponent* CMeshManage::CreatePyramidMeshComponent(EPyramidNumberSides InPyramidNumberSidesType, uint32_t InHeightSubdivide, uint32_t InSize)
 {
-    return CreateMeshComponent<CPyramidMeshComponent>(InPyramidNumberSidesType, InHeightSubdivide, InSize);
+    return MeshConstruction::CreateMeshComponent<CPyramidMeshComponent>(this, InPyramidNumberSidesType, InHeightSubdivide, InSize);
 }
 
 CMeshComponent* CMeshManage::CreatePipeMeshComponent(float InTopRadius, float InBottomRadius, float InHeight, float InThickness, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMeshComponent<CPipeMeshComponent>(InTopRadius, InBottomRadius, InHeight,InThickness, InAxialSubdivision, InHeightSubdivision);
+    return MeshConstruction::CreateMeshComponent<CPipeMeshComponent>(this, InTopRadius, InBottomRadius, InHeight,InThickness, InAxialSubdivision, InHeightSubdivision);
 }
 
 CMeshComponent* CMeshManage::CreateTorusMeshComponent(float InRadius, float InSectionRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMeshComponent<CTorusMeshComponent>(InRadius, InSectionRadius,InAxialSubdivision, InHeightSubdivision);
+    return MeshConstruction::CreateMeshComponent<CTorusMeshComponent>(this, InRadius, InSectionRadius,InAxialSubdivision, InHeightSubdivision);
 }
 
 CMeshComponent* CMeshManage::CreateMeshComponent(string& InPath)
 {
-    return CreateMeshComponent<CCustomMeshComponent>(InPath);
+    return MeshConstruction::CreateMeshComponent<CCustomMeshComponent>(this, InPath);
 }
 
 CMeshComponent* CMeshManage::CreateBoxMeshComponent(float InHeight, float InWidth, float InDepth)
 {
-    return CreateMeshComponent<CBoxMeshComponent>(InHeight, InWidth, InDepth);
+    return MeshConstruction::CreateMeshComponent<CBoxMeshComponent>(this, InHeight, InWidth, InDepth);
 }
 
 CMeshComponent* CMeshManage::CreateConeMeshComponent(float InRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMeshComponent<CConeMeshComponent>(InRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
+    return MeshConstruction::CreateMeshComponent<CConeMeshComponent>(this, InRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
 }
 
 CMeshComponent* CMeshManage::CreateCylinderMeshComponent(float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-    return CreateMeshComponent<CCylinderMeshComponent>(InTopRadius, InBottomRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
+    return MeshConstruction::CreateMeshComponent<CCylinderMeshComponent>(this, InTopRadius, InBottomRadius, InHeight, InAxialSubdivision, InHeightSubdivision);
 }
 
 CMeshComponent* CMeshManage::CreatePlaneMeshComponent(float InHeight, float InWidth, uint32_t InHeightSubdivide, uint32_t InWidthSubdivide)
 {
-    return CreateMeshComponent<CPlaneMeshComponent>(InHeight, InWidth, InHeightSubdivide, InWidthSubdivide);
-}
-
-template<class T, typename ...ParamTypes>
-T* CMeshManage::CreateMeshComponent(ParamTypes && ...Params)
-{
-    T* MyMesh = CreateObject<T>(new T());//NewObject
-
-    //提取模型资源
-    FMeshRenderingData MeshData;
-    MyMesh->CreateMesh(MeshData, forward<ParamTypes>(Params)...);
-
-    //构建mesh
-    RenderingPipeline.BuildMesh(MyMesh, MeshData);
-
-    MyMesh->Init();
-
-    return MyMesh;
+    return MeshConstruction::CreateMeshComponent<CPlaneMeshComponent>(this,InHeight, InWidth, InHeightSubdivide, InWidthSubdivide);
 }

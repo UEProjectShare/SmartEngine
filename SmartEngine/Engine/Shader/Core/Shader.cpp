@@ -30,6 +30,9 @@ void FShader::BuildShaders(
 	if (ErrorShaderMsg)
 	{
 		Engine_Log_Error("%s", static_cast<char*>(ErrorShaderMsg->GetBufferPointer()));
+
+		//弹出日志
+		//open_url(get_log_filename());
 	}
 
 	//失败就崩溃了

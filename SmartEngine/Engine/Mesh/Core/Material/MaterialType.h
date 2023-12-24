@@ -21,6 +21,8 @@ enum EMaterialType
 	Normal,					//显示法线
 	WorldNormal,			//显示世界法线
 
+	PBR = 20,				//基于物理的显示
+
 	Fresnel = 100,			//单独去看的效果，不算材质
 	Max,
 };

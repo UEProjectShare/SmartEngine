@@ -2,6 +2,13 @@
 #include "Core/MeshType.h"
 #include "PlaneMesh.h"
 #include "../Mesh/Core/MeshManage.h"
+#include "../Core/Construction/MacroConstruction.h"
+#include "../Component/Mesh/PyramidMeshComponent.h"
+
+GPyramidMesh::GPyramidMesh()
+{
+	SetMeshComponent(ConstructionObject<CPyramidMeshComponent>());
+}
 
 void GPyramidMesh::Init()
 {
@@ -19,5 +26,5 @@ void GPyramidMesh::Draw(float DeltaTime)
 
 void GPyramidMesh::CreateMesh(EPyramidNumberSides InPyramidNumberSidesType, uint32_t InHeightSubdivide, uint32_t InSize)
 {
-	SetMeshComponent(GetMeshManage()->CreatePyramidMeshComponent(InPyramidNumberSidesType, InHeightSubdivide, InSize));
+	CREATE_RENDER_DATA(CPyramidMeshComponent, InPyramidNumberSidesType, InHeightSubdivide, InSize);
 }

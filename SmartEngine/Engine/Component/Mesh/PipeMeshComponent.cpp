@@ -67,7 +67,7 @@ void CPipeMeshComponent::BuildRadiusPoint(
 
 				MyVertex.UTangent = XMFLOAT3(-BetaValueSin, 0.0f, BetaValueCos);
 
-				float D = InBottomRadius - InTopRadius;
+				const float D = InBottomRadius - InTopRadius;
 				XMFLOAT3 Bitangent(D * BetaValueCos, -InHeight, D * BetaValueSin);
 
 				const XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
@@ -136,7 +136,7 @@ void CPipeMeshComponent::CreateMesh(
 	{
 		for (uint32_t i = 0; i < 1; ++i)
 		{
-			float Y = 0.5f * InHeight - HeightInterval * i;
+			const float Y = 0.5f * InHeight - HeightInterval * i;
 
 			//计算出内外圈半径
 			float OuterRadius = InTopRadius + i * RadiusInterval;
@@ -228,4 +228,18 @@ void CPipeMeshComponent::CreateMesh(
 			DrawQuadrilateral(MeshData, DrawPoint,true);
 		}
 	}
+}
+
+void CPipeMeshComponent::BuildKey(size_t& OutHashKey, float InTopRadius, float InBottomRadius, float InHeight, float InThickness, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+{
+	const std::hash<float> FloatHash;
+	std::hash<int> IntHash;
+
+	OutHashKey = 5;
+	OutHashKey += FloatHash(InHeight);
+	OutHashKey += FloatHash(InBottomRadius);
+	OutHashKey += FloatHash(InTopRadius);
+
+	OutHashKey += IntHash._Do_hash(InAxialSubdivision);
+	OutHashKey += IntHash._Do_hash(InHeightSubdivision);
 }

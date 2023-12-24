@@ -1,5 +1,6 @@
 #pragma once
 #include "../../TransformationComponent.h"
+#include "MeshComponentType.h"
 
 class CMaterial;
 struct FMeshRenderingData;
@@ -14,7 +15,13 @@ public:
 
 	virtual void BuildMesh(const FMeshRenderingData* InRenderingData);
 	
+	void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
+	
 	UINT GetMaterialNum()const;
 
+	EMeshRenderLayerType GetRenderLayerType()const { return MeshRenderLayerType; }
+
 	vector<CMaterial*>* GetMaterials() { return &Materials; }
+
+	EMeshRenderLayerType MeshRenderLayerType;
 };

@@ -27,8 +27,19 @@ public:
 	//绑定顶点着色器和像素着色器
 	void BindShader(const FShader& InVertexShader, const FShader& InPixelShader);
 
+	//构建参数
+	void BuildParam();
+
 	//BuildPSO
-	void Build();
+	void Build(int InPSOType);
+	
+	//绘制的时候调用
+	void ResetPSO(int InPSOType);
+	
+	void SetFillMode(bool bWireframe);
+
+	//渲染目标
+	void SetRenderTarget(int Index,const D3D12_RENDER_TARGET_BLEND_DESC &InRenderTargetBlend);
 
 	//按键捕获
 private:

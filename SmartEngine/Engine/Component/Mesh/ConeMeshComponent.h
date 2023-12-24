@@ -12,4 +12,10 @@ public:
 		float InHeight,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
+
+	void BuildKey(size_t& OutHashKey,
+		float InRadius,
+		float InHeight,
+		uint32_t InAxialSubdivision,
+		uint32_t InHeightSubdivision);
 };

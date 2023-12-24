@@ -20,7 +20,7 @@ float3 GetLightDirection(Light L, float3 InObjectWorldLocation)
 {
 	if (L.LightType == 0)
 	{
-		return L.LightDirection;
+		return -L.LightDirection;
 	}
 	else if (L.LightType == 1)
 	{
@@ -40,7 +40,7 @@ float4 AttenuationPointLights1(Light L,float Distance)
 
 	float AttenuationRange = L.EndAttenuation - L.StartAttenuation;
 
-	return LightStrength * (Distance / AttenuationRange);
+	return LightStrength * (1 - Distance / AttenuationRange);
 }
 
 float4 AttenuationPointLights2(Light L,float Distance,float C,float I,float Q)

@@ -6,6 +6,8 @@ class GCustomMesh : public GMesh
 {
 	typedef GMesh Super;
 public:
+	GCustomMesh();
+
 	void Init() override;
 
 	void Draw(float DeltaTime) override;

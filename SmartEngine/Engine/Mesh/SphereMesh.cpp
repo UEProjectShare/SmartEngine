@@ -1,6 +1,13 @@
 #include "SphereMesh.h"
 #include "Core/MeshType.h"
 #include "../Mesh/Core/MeshManage.h"
+#include "../Core/Construction/MacroConstruction.h"
+#include "../Component/Mesh/SphereMeshComponent.h"
+
+GSphereMesh::GSphereMesh()
+{
+	SetMeshComponent(ConstructionObject<CSphereMeshComponent>());
+}
 
 void GSphereMesh::Init()
 {
@@ -16,7 +23,7 @@ void GSphereMesh::Draw(float DeltaTime)
 
 }
 
-void GSphereMesh::CreateMesh(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+void GSphereMesh::CreateMesh(float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision, bool bReverse)
 {
-	SetMeshComponent(GetMeshManage()->CreateSphereMeshComponent(InRadius, InAxialSubdivision, InHeightSubdivision));
+	CREATE_RENDER_DATA(CSphereMeshComponent, InRadius, InAxialSubdivision, InHeightSubdivision, bReverse);
 }

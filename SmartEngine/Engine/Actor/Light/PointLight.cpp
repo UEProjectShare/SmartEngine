@@ -5,15 +5,17 @@ GPointLight::GPointLight()
 	: Super()
 {
 	SetLightComponent(CreateObject<CPointLightComponent>(new CPointLightComponent()));
+	time = 0.f;
 }
 
 void GPointLight::Tick(float DeltaTime)
 {
-	//fvector_3d v3 = GetRotation();
+	time += DeltaTime;
 
-	////v3.x += DeltaTime * 40.f;
-	////v3.y += DeltaTime * 40.f;
-	//////v3.z += DeltaTime * 100.f;
+	XMFLOAT3 v3 = GetPosition();
 
-	//SetRotation(v3);
+	v3.x -= cos(time)* 0.3f;
+	//v3.z += DeltaTime * 100.f;
+
+	SetPosition(v3);
 }

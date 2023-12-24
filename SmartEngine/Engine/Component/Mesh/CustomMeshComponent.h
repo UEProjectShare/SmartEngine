@@ -9,4 +9,6 @@ public:
 	void CreateMesh(FMeshRenderingData& MeshData, const string& InPath);
 
 	static bool LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FMeshRenderingData& MeshData);
+
+	void BuildKey(size_t& OutHashKey, const std::string& InPath);
 };

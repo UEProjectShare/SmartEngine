@@ -112,3 +112,11 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 
 	return false;
 }
+
+void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPath)
+{
+	const std::hash<string> FloatHash;
+	
+	OutHashKey = 3;
+	OutHashKey += FloatHash(InPath);
+}

@@ -10,4 +10,6 @@ public:
 	GPointLight();
 
 	void Tick(float DeltaTime) override;
+	
+	float time;
 };

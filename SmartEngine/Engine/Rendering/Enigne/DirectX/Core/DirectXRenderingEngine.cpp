@@ -85,30 +85,30 @@ int CDirectXRenderingEngine::PostInit()
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
 		////灯光生成
-		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
-		{
-			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
-			ParallelLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-		
-			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
-		}
-		////点灯光生成
-		//if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		//if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		//{
-		//	PointLight->SetPosition(XMFLOAT3(40.f, -6.f, -10.f));
-		//	PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-		//	
-		//	PointLight->SetLightIntensity(fvector_3d(4.f,4.f,4.f));
-		//	PointLight->SetEndAttenuation(190.f);
+		//	ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
+		//	ParallelLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+		//	ParallelLight->SetScale(fvector_3d(1));
+		//	ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
 		//}
+		//点灯光生成
+		if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		{
+			PointLight->SetPosition(XMFLOAT3(0.f, -6.f, 10.f));
+			PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+			
+			PointLight->SetLightIntensity(fvector_3d(0.9f));
+			PointLight->SetEndAttenuation(190.f);
+		}
 
 		//聚灯光生成
 		//if (GSpotLight* SpotLight = World->CreateActorObject<GSpotLight>())
 		//{
-		//	SpotLight->SetPosition(XMFLOAT3(0.f, 10.f, 10.f));
+		//	SpotLight->SetPosition(XMFLOAT3(0.f, 10.f, -10.f));
 		//	SpotLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
 		//
-		//	SpotLight->SetLightIntensity(fvector_3d(1.3f,1.3f, 1.3f));
+		//	SpotLight->SetLightIntensity(fvector_3d(1.f));
 		//	//SpotLight->SetStartAttenuation(1.f);
 		//	SpotLight->SetEndAttenuation(130.f);
 		//
@@ -117,25 +117,27 @@ int CDirectXRenderingEngine::PostInit()
 		//}	
 
 		////甜甜圈
-		//if (GTorusMesh* InTorusMesh = World->CreateActorObject<GTorusMesh>())
-		//{
-		//	InTorusMesh->CreateMesh(6.f,2.f,40.f, 40.f);
-		//	InTorusMesh->SetPosition(XMFLOAT3(-22.f, -8, 20.f));
-		//	if (CMaterial* InMaterial = (*InTorusMesh->GetMaterials())[0])
-		//	{
-		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-		//	}
-		//}
+		if (GTorusMesh* InTorusMesh = World->CreateActorObject<GTorusMesh>())
+		{
+			InTorusMesh->CreateMesh(6.f,2.f,40.f, 40.f);
+			InTorusMesh->SetPosition(XMFLOAT3(-22.f, -8, 20.f));
+			InTorusMesh->SetScale(fvector_3d(1.f));
+			if (CMaterial* InMaterial = (*InTorusMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
 
 		//三楞锥
 		if (GPyramidMesh* InPyramidMesh = World->CreateActorObject<GPyramidMesh>())
 		{
 			InPyramidMesh->CreateMesh(EPyramidNumberSides::Pyramid_3, 1);
 			InPyramidMesh->SetPosition(XMFLOAT3(-1.f, -8, 20.f));
-			InPyramidMesh->SetRotation(fvector_3d(0.f,90.f,0.f));
+			InPyramidMesh->SetRotation(fvector_3d(0.f, 90.f, 0.f));
+			InPyramidMesh->SetScale(fvector_3d(1.f));
 			if (CMaterial* InMaterial = (*InPyramidMesh->GetMaterials())[0])
 			{
-				InMaterial->SetBaseColor(fvector_4d(4.f, 0.f, 0.f, 1.f));
+				InMaterial->SetBaseColor(fvector_4d(4.f,0.f,0.f,1.f));
 				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
 			}
 		}
@@ -145,6 +147,7 @@ int CDirectXRenderingEngine::PostInit()
 		{
 			InPipeMesh->CreateMesh(3.f,3.f,6.f,1.f,20.f,20.f);
 			InPipeMesh->SetPosition(XMFLOAT3(-9.f, -9, 20.f));
+			InPipeMesh->SetScale(fvector_3d(1.f));
 			if (CMaterial* InMaterial = (*InPipeMesh->GetMaterials())[0])
 			{
 				//InMaterial->SetBaseColor(fvector_4d(5.f));
@@ -172,7 +175,7 @@ int CDirectXRenderingEngine::PostInit()
 			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
 
 			InBoxMesh->SetPosition(XMFLOAT3(22.f, -10.f, 20.f));
-			InBoxMesh->SetScale(fvector_3d(1.f, 1.f, 1.f));
+			InBoxMesh->SetScale(fvector_3d(1));
 			if (CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
 			{
 			//	InMaterial->SetBaseColor(fvector_4d(0.5f));
@@ -185,7 +188,7 @@ int CDirectXRenderingEngine::PostInit()
 			InCylinderMesh->CreateMesh(2.f, 2.f, 5.f, 20.f, 20.f);
 
 			InCylinderMesh->SetPosition(XMFLOAT3(14.f, -10.f, 20.f));
-			InCylinderMesh->SetScale(fvector_3d(1.f, 1.f, 1.f));
+			InCylinderMesh->SetScale(fvector_3d(1.f));
 			if (CMaterial* InMaterial = (*InCylinderMesh->GetMaterials())[0])
 			{
 				InMaterial->SetBaseColor(fvector_4d(0.5f));
@@ -198,7 +201,7 @@ int CDirectXRenderingEngine::PostInit()
 			InPlaneMesh->CreateMesh(4.f, 3.f, 20, 20);
 
 			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -12.f, 0.f));
-			InPlaneMesh->SetScale(fvector_3d(50.f, 50.f, 50.f));
+			InPlaneMesh->SetScale(fvector_3d(50.f, 1.f, 50.f));
 			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
 			{
 				InMaterial->SetBaseColor(fvector_4d(1.f));
@@ -536,6 +539,57 @@ int CDirectXRenderingEngine::PostInit()
 				InMaterial->SetMaterialType(EMaterialType::BlinnPhong);
 			}
 		}
+
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//PBR模型
+		{
+			SphereMesh->CreateMesh(2.f, 100, 100);
+			SphereMesh->SetPosition(XMFLOAT3(15.f, 2, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::PBR);
+			}
+		}
+
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//透明
+		{
+			SphereMesh->SetMeshRenderLayerType(EMeshRenderLayerType::RENDERLAYER_TRANSPARENT);
+
+			SphereMesh->CreateMesh(2.f, 100, 100);
+			SphereMesh->SetPosition(XMFLOAT3(15.f, 7, 0.f));
+			SphereMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor("TransparentContent");
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		{
+			SphereMesh->CreateMesh(2.f, 100, 100,true);
+			SphereMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
+			//SphereMesh->SetRotation(fvector_3d(0.f, 90.f, 0.f));
+			SphereMesh->SetScale(fvector_3d(4000.f));
+			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor("EpicQuadPanorama_CC");
+				InMaterial->SetSpecular(fvector_3d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::BaseColor);
+			}
+		}
+
+		/*if (GMesh* CylinderMesh = MeshManage->CreateCylinderMesh(1.f, 1.f, 5.f, 20, 20))
+		{
+			CylinderMesh->SetPosition(XMFLOAT3(1, -2, -4));
+		}
+
+		if (GMesh* ConeMesh = MeshManage->CreateConeMesh(1.f, 5.f, 20, 20))
+		{
+			ConeMesh->SetPosition(XMFLOAT3(-1, 1, 9));
+			ConeMesh->SetRotation(fvector_3d(90.f, 1.f, 20.f));
+		}*/
 	}
 	
 	MeshManage->BuildMesh();
@@ -898,7 +952,7 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 	ClearValue.DepthStencil.Stencil = 0;
 	ClearValue.Format = DepthStencilFormat;
 
-	const CD3DX12_HEAP_PROPERTIES Properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_HEAP_PROPERTIES Properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	D3dDevice->CreateCommittedResource(
 		&Properties,
 		D3D12_HEAP_FLAG_NONE, &ResourceDesc,

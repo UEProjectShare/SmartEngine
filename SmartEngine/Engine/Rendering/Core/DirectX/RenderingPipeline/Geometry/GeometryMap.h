@@ -12,14 +12,18 @@ struct FGeometry : public IDirectXDeviceInterface_Struct
 {
 	friend struct FGeometryMap;
 
-	bool bRenderingDataExistence(const CMeshComponent* InKey) const;
+	static bool IsRenderingDataExistence(const CMeshComponent* InKey);
+
+	void BuildMesh(const size_t InMeshHash,CMeshComponent* InMesh, const FMeshRenderingData& MeshData,int InKey);
 	
-	void BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
+	void DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData, int InKey);
+	
+	bool FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData,int InRenderLayerIndex = -1);
 
 	//构建模型
 	void Build();
 
-	UINT GetDrawObjectNumber() const { return DescribeMeshRenderingData.size(); }
+	UINT GetDrawObjectNumber() const;
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
 	
@@ -38,15 +42,16 @@ protected:
 	ComPtr<ID3D12Resource> IndexBufferTmpPtr;
 
 	FMeshRenderingData MeshRenderingData;
-
-	//DescribeMeshRenderingData
-	vector<FRenderingData> DescribeMeshRenderingData;
 };
 
 //提供渲染内容的接口
 struct FGeometryMap : public IDirectXDeviceInterface_Struct
 {
+	friend class FRenderLayer;
+
 	FGeometryMap();
+	
+	~FGeometryMap();
 
 	void PreDraw(float DeltaTime);
 	
@@ -58,7 +63,11 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 
 	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 
-	void BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
+	void BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
+	
+	void DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData);
+	
+	bool FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData, int InRenderLayerIndex = -1);
 
 	void LoadTexture() const;
 

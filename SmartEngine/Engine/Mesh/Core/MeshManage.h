@@ -56,7 +56,8 @@ public:
 	CMeshComponent* CreateSphereMeshComponent(
 		float InRadius,
 		uint32_t InAxialSubdivision,
-		uint32_t InHeightSubdivision);
+		uint32_t InHeightSubdivision,
+		bool bReverse);
 
 	CMeshComponent* CreatePyramidMeshComponent(
 		EPyramidNumberSides InPyramidNumberSidesType, 
@@ -79,9 +80,8 @@ public:
 
 	CMeshComponent* CreateMeshComponent(string& InPath);
 
+	FRenderingPipeline& GetRenderingPipeline() {return RenderingPipeline;}
+
 protected:
-	template<class T, typename ...ParamTypes>
-	T* CreateMeshComponent(ParamTypes &&...Params);
-	
 	FRenderingPipeline RenderingPipeline;
 };

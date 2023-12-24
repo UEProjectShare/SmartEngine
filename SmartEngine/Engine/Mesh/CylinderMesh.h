@@ -6,6 +6,8 @@ class GCylinderMesh : public GMesh
 {
 	typedef GMesh Super;
 public:
+	GCylinderMesh();
+
 	void Init() override;
 
 	void Draw(float DeltaTime) override;

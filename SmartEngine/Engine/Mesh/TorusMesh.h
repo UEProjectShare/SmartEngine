@@ -2,10 +2,12 @@
 
 #include "Core/Mesh.h"
 
-class GTorusMesh :public GMesh
+class GTorusMesh : public GMesh
 {
 	typedef GMesh Super;
 public:
+	GTorusMesh();
+
 	void Init() override;
 
 	void Draw(float DeltaTime) override;

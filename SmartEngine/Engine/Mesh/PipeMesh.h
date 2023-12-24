@@ -5,7 +5,10 @@
 class GPipeMesh : public GMesh
 {
 	typedef GMesh Super;
+
 public:
+	GPipeMesh();
+
 	void Init() override;
 
 	void Draw(float DeltaTime) override;

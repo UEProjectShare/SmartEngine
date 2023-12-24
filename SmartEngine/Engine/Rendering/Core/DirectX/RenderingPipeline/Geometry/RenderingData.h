@@ -22,6 +22,12 @@ public:
 	
 	UINT IndexTypeSize;
 	
+	size_t MeshHash;
+	
+	int GeometryKey;
+	
+	int MeshObjectIndex;
+	
 	UINT GetVertexSizeInBytes() const { return VertexSize * VertexTypeSize; }
 	
 	UINT GetIndexSizeInBytes() const { return IndexSize * IndexTypeSize; }

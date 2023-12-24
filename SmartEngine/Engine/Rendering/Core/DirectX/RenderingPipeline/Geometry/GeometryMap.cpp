@@ -11,12 +11,20 @@
 #include "../../../../../Manage/LightManage.h"
 #include "../../../../../Component/Light/Core/LightComponent.h"
 #include "../../../RenderingTextureResourcesUpdate.h"
+#include "../RenderLayer/RenderLayerManage.h"
+
+UINT MeshObjectCount = 0;
 
 FGeometryMap::FGeometryMap()
 {
 	Geometries.insert(pair<int, FGeometry>(0, FGeometry()));
 
 	RenderingTextureResources = std::make_shared<FRenderingTextureResourcesUpdate>();
+}
+
+FGeometryMap::~FGeometryMap()
+{
+	MeshObjectCount = 0;
 }
 
 void FGeometryMap::PreDraw(float DeltaTime)
@@ -37,9 +45,6 @@ void FGeometryMap::Draw(float DeltaTime)
 
 	//绘制材质
 	DrawMaterial(DeltaTime);
-
-	//渲染模型
-	DrawMesh(DeltaTime);
 }
 
 void FGeometryMap::PostDraw(float DeltaTime)
@@ -49,58 +54,18 @@ void FGeometryMap::PostDraw(float DeltaTime)
 
 void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
-	XMMATRIX ViewMatrix = XMLoadFloat4x4(&ViewportInfo.ViewMatrix);
-	XMMATRIX ProjectMatrix = XMLoadFloat4x4(&ViewportInfo.ProjectMatrix);
-
-	for (auto& Tmp : Geometries)//暂时先这么写
-	{
-		for (size_t i = 0; i < Tmp.second.DescribeMeshRenderingData.size(); i++)
-		{
-			FRenderingData& InRenderingData = Tmp.second.DescribeMeshRenderingData[i];
-			
-			//构造模型的world
-			{
-				XMFLOAT3& Position = InRenderingData.Mesh->GetPosition();
-				fvector_3d Scale = InRenderingData.Mesh->GetScale();
-
-				XMFLOAT3 RightVector = InRenderingData.Mesh->GetRightVector();
-				XMFLOAT3 UPVector = InRenderingData.Mesh->GetUPVector();
-				XMFLOAT3 ForwardVector = InRenderingData.Mesh->GetForwardVector();
-
-				InRenderingData.WorldMatrix = {
-					RightVector.x * Scale.x,	UPVector.x,				ForwardVector.x ,			0.f,
-					RightVector.y,				UPVector.y * Scale.y,	ForwardVector.y,			0.f,
-					RightVector.z,				UPVector.z ,			ForwardVector.z * Scale.z,	0.f,
-					Position.x,					Position.y,				Position.z,					1.f };
-			}
-
-			//更新模型位置
-			XMMATRIX ATRIXWorld = XMLoadFloat4x4(&InRenderingData.WorldMatrix);
-			XMMATRIX ATRIXTextureTransform = XMLoadFloat4x4(&InRenderingData.TextureTransform);
-			
-			FObjectTransformation ObjectTransformation;
-			XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));
-			XMStoreFloat4x4(&ObjectTransformation.TextureTransformation, XMMatrixTranspose(ATRIXTextureTransform));
-			
-			//收集材质Index
-			if (auto& InMater = (*InRenderingData.Mesh->GetMaterials())[0])
-			{
-				ObjectTransformation.MaterialIndex = InMater->GetMaterialIndex();
-			}
-
-			MeshConstantBufferViews.Update(i, &ObjectTransformation);
-		}
-	}
-
 	UpdateMaterialShaderResourceView(DeltaTime, ViewportInfo);
-	
+
+	const XMMATRIX ViewMatrix = XMLoadFloat4x4(&ViewportInfo.ViewMatrix);
+	const XMMATRIX ProjectMatrix = XMLoadFloat4x4(&ViewportInfo.ProjectMatrix);
+
 	//更新灯光
 	FLightConstantBuffer LightConstantBuffer;
 	for (size_t i = 0 ; i < GetLightManage()->Lights.size(); i++)
 	{
 		if (CLightComponent* InLightComponent = GetLightManage()->Lights[i])
 		{
-			fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
+			const fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
 			LightConstantBuffer.SceneLights[i].LightIntensity = XMFLOAT3(LightIntensity.x, LightIntensity.y, LightIntensity.z);
 			LightConstantBuffer.SceneLights[i].LightDirection = InLightComponent->GetForwardVector();
 			
@@ -112,7 +77,7 @@ void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 				case ELightType::PointLight:
 				case ELightType::SpotLight:
 				{
-					if (CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
+					if (const CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
 					{
 						LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
 						LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
@@ -120,7 +85,7 @@ void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 				
 					if (InLightComponent->GetLightType() == ELightType::SpotLight)
 					{
-						if (CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
+						if (const CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
 						{
 							LightConstantBuffer.SceneLights[i].ConicalInnerCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalInnerCorner());
 							LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
@@ -135,7 +100,7 @@ void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 	LightConstantBufferViews.Update(0, &LightConstantBuffer);
 
 	//更新视口
-	XMMATRIX ViewProject = XMMatrixMultiply(ViewMatrix, ProjectMatrix);
+	const XMMATRIX ViewProject = XMMatrixMultiply(ViewMatrix, ProjectMatrix);
 	FViewportTransformation ViewportTransformation;
 	XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, XMMatrixTranspose(ViewProject));
 	
@@ -215,11 +180,33 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 	}
 }
 
-void FGeometryMap::BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData)
+void FGeometryMap::BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData)
 {
-	FGeometry& Geometry = Geometries[0];
+	for (auto& Tmp : Geometries)
+	{
+		Tmp.second.BuildMesh(InMeshHash, InMesh, MeshData, Tmp.first);
+	}
+}
 
-	Geometry.BuildMesh(InMesh, MeshData);
+void FGeometryMap::DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData)
+{
+	for (auto& Tmp : Geometries)
+	{
+		Tmp.second.DuplicateMesh(InMesh, MeshData,Tmp.first);
+	}	
+}
+
+bool FGeometryMap::FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData, int InRenderLayerIndex)
+{
+	for (auto& Tmp : Geometries)
+	{
+		if (Tmp.second.FindMeshRenderingDataByHash(InHash, MeshData, InRenderLayerIndex))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void FGeometryMap::LoadTexture() const
@@ -278,19 +265,12 @@ void FGeometryMap::BuildMeshConstantBuffer()
 
 void FGeometryMap::BuildMaterialShaderResourceView()
 {
-	//创建常量缓冲区
-	MaterialConstantBufferViews.CreateConstant(
-		sizeof(FMaterialConstantBuffer), 
-		GetDrawMaterialObjectNumber(),
-		false);
-
 	//收集材质
 	//正真更新Shader-Index
-	for (auto& Tmp : Geometries)
+	for(const auto& Tmp : FRenderLayerManage::RenderLayers)
 	{
-		for (size_t i = 0; i < Tmp.second.DescribeMeshRenderingData.size(); i++)
+		for (const auto& InData : Tmp->RenderDatas)
 		{
-			const auto& InData = Tmp.second.DescribeMeshRenderingData[i];
 			if (const auto InMaterials = InData.Mesh->GetMaterials())
 			{
 				for (size_t j = 0; j < InMaterials->size(); j++)
@@ -303,6 +283,12 @@ void FGeometryMap::BuildMaterialShaderResourceView()
 			}
 		}
 	}
+
+	//创建常量缓冲区
+	MaterialConstantBufferViews.CreateConstant(
+		sizeof(FMaterialConstantBuffer),
+		GetDrawMaterialObjectNumber(),
+		false);
 }
 
 void FGeometryMap::BuildLightConstantBuffer()
@@ -327,16 +313,7 @@ UINT FGeometryMap::GetDrawMeshObjectNumber()
 
 UINT FGeometryMap::GetDrawMaterialObjectNumber() const
 {
-	UINT MaterialNum = 0;
-	for (auto& Tmp : Geometries)
-	{
-		for (auto& TmpSun : Tmp.second.DescribeMeshRenderingData)
-		{
-			MaterialNum += TmpSun.Mesh->GetMaterialNum();
-		}
-	}
-
-	return MaterialNum;
+	return Materials.size();
 }
 
 UINT FGeometryMap::GetDrawLightObjectNumber()
@@ -398,45 +375,7 @@ void FGeometryMap::DrawViewport(float DeltaTime)
 
 void FGeometryMap::DrawMesh(float DeltaTime)
 {
-	const UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	//模型构建
-	for (auto& Tmp : Geometries)
-	{
-		D3D12_VERTEX_BUFFER_VIEW VBV = Tmp.second.GetVertexBufferView();
-		D3D12_INDEX_BUFFER_VIEW IBV = Tmp.second.GetIndexBufferView();
-		
-		for (size_t i = 0; i < Tmp.second.DescribeMeshRenderingData.size(); i++)
-		{
-			auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GetHeap()->GetGPUDescriptorHandleForHeapStart());
-
-			const FRenderingData& InRenderingData = Tmp.second.DescribeMeshRenderingData[i];
-		
-			GetGraphicsCommandList()->IASetIndexBuffer(&IBV);
-
-			//绑定渲染流水线上的输入槽，可以在输入装配器阶段传入顶点数据
-			GetGraphicsCommandList()->IASetVertexBuffers(
-				0,//起始输入槽 0-15 
-				1,//k k+1 ... k+n-1 
-				&VBV);
-
-			//定义我们要绘制的哪种图元 点 线 面
-			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData.Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
-			GetGraphicsCommandList()->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(DisplayStatus));
-		
-			//模型起始地址偏移
-			DesMeshHandle.Offset(i, DescriptorOffset);
-			GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
-		
-			//真正的绘制
-			GetGraphicsCommandList()->DrawIndexedInstanced(
-				InRenderingData.IndexSize,//顶点数量
-				1,//绘制实例数量
-				InRenderingData.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
-				InRenderingData.VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
-				0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
-		}
-	}
+	
 }
 
 void FGeometryMap::DrawMaterial(float DeltaTime)
@@ -458,12 +397,114 @@ void FGeometryMap::DrawTexture(float DeltaTime)
 	GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(3, DesHandle);
 }
 
-bool FGeometry::bRenderingDataExistence(const CMeshComponent* InKey) const
+bool FGeometry::IsRenderingDataExistence(const CMeshComponent* InKey)
 {
-	for (auto& Tmp : DescribeMeshRenderingData)
+	if (const std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InKey->GetRenderLayerType()))
 	{
-		if (Tmp.Mesh == InKey)
+		for (const auto& Tmp : InRenderLayer->RenderDatas)
 		{
+			if (Tmp.Mesh == InKey)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void FGeometry::BuildMesh(
+	const size_t InMeshHash,
+	CMeshComponent* InMesh,
+	const FMeshRenderingData& MeshData, 
+	int InKey)
+{
+	if (!IsRenderingDataExistence(InMesh))
+	{
+		//找到对应层级
+		if (const std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
+		{
+			InRenderLayer->RenderDatas.push_back(FRenderingData());
+			FRenderingData& InRenderingData = InRenderLayer->RenderDatas[InRenderLayer->RenderDatas.size() - 1];
+
+			//基础注册
+			InRenderingData.MeshObjectIndex = MeshObjectCount++;
+			InRenderingData.Mesh = InMesh;
+			InRenderingData.MeshHash = InMeshHash;
+			InRenderingData.GeometryKey = InKey;
+
+			InRenderingData.IndexSize = MeshData.IndexData.size();
+			InRenderingData.VertexSize = MeshData.VertexData.size();
+
+			InRenderingData.IndexOffsetPosition = MeshRenderingData.IndexData.size();
+			InRenderingData.VertexOffsetPosition = MeshRenderingData.VertexData.size();
+
+			//高效的插入
+			//索引的合并
+			MeshRenderingData.IndexData.insert(
+				MeshRenderingData.IndexData.end(),
+				MeshData.IndexData.begin(),
+				MeshData.IndexData.end());
+
+			//顶点的合并
+			MeshRenderingData.VertexData.insert(
+				MeshRenderingData.VertexData.end(),
+				MeshData.VertexData.begin(),
+				MeshData.VertexData.end());
+		}
+	}
+}
+
+void FGeometry::DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData, int InKey)
+{
+	if (!IsRenderingDataExistence(InMesh))
+	{
+		if (const std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
+		{
+			InRenderLayer->RenderDatas.push_back(MeshData);
+			FRenderingData& InRenderingData = InRenderLayer->RenderDatas[InRenderLayer->RenderDatas.size() - 1];
+
+			//基础注册
+			InRenderingData.Mesh = InMesh;
+			InRenderingData.MeshObjectIndex = MeshObjectCount++;
+			InRenderingData.GeometryKey = InKey;
+		}
+	}
+}
+
+bool FGeometry::FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData, int InRenderLayerIndex)
+{
+	//寻找RenderData
+	auto FindMeshRenderingDataByHashSub = [&](const std::shared_ptr<FRenderLayer>& InRenderLayer) -> FRenderingData*
+	{
+		for (auto& SubTmp : InRenderLayer->RenderDatas)
+		{
+			if (SubTmp.MeshHash == InHash)
+			{
+				return &SubTmp;
+			}
+		}
+
+		return nullptr;
+	};
+
+	if (InRenderLayerIndex == -1)//开启暴力遍历
+	{
+		for (auto& Tmp : FRenderLayerManage::RenderLayers)
+		{
+			if (const FRenderingData* InRenderingData = FindMeshRenderingDataByHashSub(Tmp))
+			{
+				MeshData = *InRenderingData;
+				return true;
+			}
+		}
+	}
+	//精准寻找
+	else if (const std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer(InRenderLayerIndex))
+	{
+		if (const FRenderingData* InRenderingData = FindMeshRenderingDataByHashSub(InRenderLayer))
+		{
+			MeshData = *InRenderingData;
 			return true;
 		}
 	}
@@ -471,35 +512,20 @@ bool FGeometry::bRenderingDataExistence(const CMeshComponent* InKey) const
 	return false;
 }
 
-void FGeometry::BuildMesh(CMeshComponent* InMesh, const FMeshRenderingData& MeshData)
+UINT FGeometry::GetDrawObjectNumber() const
 {
-	if (!bRenderingDataExistence(InMesh))
+	return MeshObjectCount;
+
+	int Count = 0;
+	for (auto &Tmp : FRenderLayerManage::RenderLayers)
 	{
-		DescribeMeshRenderingData.push_back(FRenderingData());
-		FRenderingData& InRenderingData = DescribeMeshRenderingData[DescribeMeshRenderingData.size() - 1];
-	
-		//基础注册
-		InRenderingData.Mesh = InMesh;
-
-		InRenderingData.IndexSize = MeshData.IndexData.size();
-		InRenderingData.VertexSize = MeshData.VertexData.size();
-
-		InRenderingData.IndexOffsetPosition = MeshRenderingData.IndexData.size();
-		InRenderingData.VertexOffsetPosition = MeshRenderingData.VertexData.size();
-
-		//高效的插入
-		//索引的合并
-		MeshRenderingData.IndexData.insert(
-			MeshRenderingData.IndexData.end(),
-			MeshData.IndexData.begin(),
-			MeshData.IndexData.end());
-
-		//顶点的合并
-		MeshRenderingData.VertexData.insert(
-			MeshRenderingData.VertexData.end(),
-			MeshData.VertexData.begin(),
-			MeshData.VertexData.end());
+		for (auto &SubTmp : Tmp->RenderDatas)
+		{
+			Count++;
+		}
 	}
+
+	return Count;
 }
 
 void FGeometry::Build()

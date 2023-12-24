@@ -34,7 +34,7 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 
 			MyVertex.UTangent = XMFLOAT3(-BetaValueSin, 0.0f, BetaValueCos);
 
-			float dr = InBottomRadius-InTopRadius;
+			const float dr = InBottomRadius-InTopRadius;
 			XMFLOAT3 Bitangent(dr * BetaValueCos, -InHeight, dr * BetaValueSin);
 
 			XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
@@ -94,7 +94,7 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 		}
 
 		//添加中点
-		MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White),XMFLOAT3(0.f,1.f,0.f)));
+		MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White), XMFLOAT3(0.f,1.f,0.f)));
 
 		//绘制index模型
 		const float CenterPoint = MeshData.VertexData.size() - 1;
@@ -111,7 +111,7 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 	{
 		const uint32_t Index = MeshData.VertexData.size();
 
-		float Y = -0.5f * InHeight;
+		const float Y = -0.5f * InHeight;
 		for (uint32_t i = 0; i <= InAxialSubdivision; ++i)
 		{
 			MeshData.VertexData.push_back(FVertex(
@@ -134,4 +134,18 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 			MeshData.IndexData.push_back(Index + i + 1);
 		}
 	}
+}
+
+void CCylinderMeshComponent::BuildKey(size_t& OutHashKey, float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
+{
+	const std::hash<float> FloatHash;
+	std::hash<int> IntHash;
+
+	OutHashKey = 4;
+	OutHashKey += FloatHash(InHeight);
+	OutHashKey += FloatHash(InBottomRadius);
+	OutHashKey += FloatHash(InTopRadius);
+
+	OutHashKey += IntHash._Do_hash(InAxialSubdivision);
+	OutHashKey += IntHash._Do_hash(InHeightSubdivision);
 }

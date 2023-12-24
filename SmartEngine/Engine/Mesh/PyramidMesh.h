@@ -6,7 +6,10 @@
 class GPyramidMesh : public GMesh
 {
 	typedef GMesh Super;
+
 public:
+	GPyramidMesh();
+
 	void Init() override;
 
 	void Draw(float DeltaTime) override;
