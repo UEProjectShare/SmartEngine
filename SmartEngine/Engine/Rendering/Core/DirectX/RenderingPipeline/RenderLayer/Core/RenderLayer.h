@@ -3,6 +3,7 @@
 #include "../../../../../../Interface/DirectXDeviceInterfece.h"
 #include "../../../../../../Shader/Core/Shader.h"
 #include "../../Geometry/RenderingData.h"
+#include "../../../../../../Shader/Core/ShaderType.h"
 
 struct FDirectXPipelineState;
 struct FGeometryMap;
@@ -28,15 +29,17 @@ public:
 	
 	virtual void PostDraw(float DeltaTime);
 
-	virtual void BuildPSO() {}
+	virtual void BuildPSO();
 
 	void RegisterRenderLayer();
+
+	virtual void BuildShaderMacro(std::vector<ShaderType::FShaderMacro> &InMacro);
 
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
 	UINT GetRenderPriority() const { return RenderPriority; }
 	
-	virtual void BuildShader() = 0;
+	virtual void BuildShader() {};
 	
 	virtual int GetRenderLayerType() const = 0;
 protected:

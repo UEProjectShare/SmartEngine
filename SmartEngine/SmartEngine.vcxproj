@@ -135,6 +135,8 @@
     <ClCompile Include="Engine\Actor\Light\ParallelLight.cpp" />
     <ClCompile Include="Engine\Actor\Light\PointLight.cpp" />
     <ClCompile Include="Engine\Actor\Light\SpotLight.cpp" />
+    <ClCompile Include="Engine\Actor\Sky\Fog.cpp" />
+    <ClCompile Include="Engine\Actor\Sky\Sky.cpp" />
     <ClCompile Include="Engine\Component\Core\Component.cpp" />
     <ClCompile Include="Engine\Component\InputComponent.cpp" />
     <ClCompile Include="Engine\Component\Input\Input.cpp" />
@@ -158,6 +160,8 @@
     <ClCompile Include="Engine\Component\Mesh\PyramidMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh\SphereMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh\TorusMeshComponent.cpp" />
+    <ClCompile Include="Engine\Component\Sky\FogComponent.cpp" />
+    <ClCompile Include="Engine\Component\Sky\SkyConstantBuffer.cpp" />
     <ClCompile Include="Engine\Component\TransformationComponent.cpp" />
     <ClCompile Include="Engine\Config\EngineRenderConfig.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
@@ -209,9 +213,11 @@
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\Geometry\RenderingData.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\PipelineState\DirectXPipelineState.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderingPipeline.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderingPipelineType.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\Core\RenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayerManage.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\AlphaTestRenderLayer.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\BackgroundRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\TransparentRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.cpp" />
@@ -228,6 +234,7 @@
     <ClCompile Include="Engine\Rendering\Enigne\OpenGL\OpenGLESRenderingEngine.cpp" />
     <ClCompile Include="Engine\Rendering\Enigne\Vulkan\VulkanRenderingEngine.cpp" />
     <ClCompile Include="Engine\Shader\Core\Shader.cpp" />
+    <ClCompile Include="Engine\Shader\Core\ShaderType.cpp" />
     <ClCompile Include="Engine\SmartEngine.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_io_stream\simple_io_stream.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_channel\simple_channel.cpp" />
@@ -273,6 +280,8 @@
     <ClInclude Include="Engine\Actor\Light\ParallelLight.h" />
     <ClInclude Include="Engine\Actor\Light\PointLight.h" />
     <ClInclude Include="Engine\Actor\Light\SpotLight.h" />
+    <ClInclude Include="Engine\Actor\Sky\Fog.h" />
+    <ClInclude Include="Engine\Actor\Sky\Sky.h" />
     <ClInclude Include="Engine\CodeReflection\CodeReflectionMacroTag.h" />
     <ClInclude Include="Engine\Component\Core\Component.h" />
     <ClInclude Include="Engine\Component\InputComponent.h" />
@@ -297,6 +306,8 @@
     <ClInclude Include="Engine\Component\Mesh\PyramidMeshComponent.h" />
     <ClInclude Include="Engine\Component\Mesh\SphereMeshComponent.h" />
     <ClInclude Include="Engine\Component\Mesh\TorusMeshComponent.h" />
+    <ClInclude Include="Engine\Component\Sky\FogComponent.h" />
+    <ClInclude Include="Engine\Component\Sky\SkyConstantBuffer.h" />
     <ClInclude Include="Engine\Component\TransformationComponent.h" />
     <ClInclude Include="Engine\Config\EngineRenderConfig.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
@@ -357,6 +368,7 @@
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\Core\RenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayerManage.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\AlphaTestRenderLayer.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\BackgroundRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\TransparentRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.h" />
@@ -374,6 +386,7 @@
     <ClInclude Include="Engine\Rendering\Enigne\OpenGL\OpenGLESRenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\Enigne\Vulkan\VulkanRenderingEngine.h" />
     <ClInclude Include="Engine\Shader\Core\Shader.h" />
+    <ClInclude Include="Engine\Shader\Core\ShaderType.h" />
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.h" />
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_udp.h" />
     <ClInclude Include="simple_library\private\simple_channel\simple_net_drive\simple_net_drive_tcp.h" />

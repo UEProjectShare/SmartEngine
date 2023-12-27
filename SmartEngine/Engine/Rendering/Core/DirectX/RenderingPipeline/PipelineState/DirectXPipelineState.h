@@ -35,12 +35,18 @@ public:
 	
 	//绘制的时候调用
 	void ResetPSO(int InPSOType);
+
+	//只提供不透明层使用
+	void ResetPSO();
 	
 	void SetFillMode(bool bWireframe);
 
 	//渲染目标
-	void SetRenderTarget(int Index,const D3D12_RENDER_TARGET_BLEND_DESC &InRenderTargetBlend);
+	void SetRenderTarget(int Index, const D3D12_RENDER_TARGET_BLEND_DESC& InRenderTargetBlend);
 
+	void SetRasterizerState(const CD3DX12_RASTERIZER_DESC& InRasterizerDesc);
+	
+	void SetDepthStencilState(const CD3DX12_DEPTH_STENCIL_DESC& InDepthStencilDesc);
 	//按键捕获
 private:
 	void CaptureKeyboardKeys();

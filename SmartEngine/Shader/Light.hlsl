@@ -1,3 +1,4 @@
+#pragma once
 
 struct Light
 {
@@ -57,7 +58,7 @@ float4 ComputeLightStrength(Light L,float3 InObjectPointNormal,float3 InObjectWo
 	}
 	else if (L.LightType == 1) //spot
 	{
-		float4 LightStrength = float4(1.f, 1.f, 1.f, 1.f);
+		float4 LightStrength = float4(L.LightIntensity, 1.f);
 		float3 LightVector = L.Position - InObjectWorldLocation;;
 		float Distance = length(LightVector);
 
@@ -97,7 +98,7 @@ float4 ComputeLightStrength(Light L,float3 InObjectPointNormal,float3 InObjectWo
 			float DotValue = max(dot(NormalizeLightDirection, L.LightDirection), 0.f);
 			//float4 LightStrength = float4(1.f, 1.f, 1.f, 1.f) * pow(DotValue,1.f);
 			
-			float4 LightStrength = float4(1.f, 1.f, 1.f, 1.f) * float4(L.LightIntensity, 1.f);
+			float4 LightStrength = float4(L.LightIntensity, 1.f);
 			
 			float Theta1 = acos(DotValue);
 			

@@ -14,7 +14,7 @@ class FRenderingPipeline : public IDirectXDeviceInterface
 public:
 	FRenderingPipeline();
 
-	void BuildMesh(const size_t InMeshHash, CMeshComponent *InMesh,const FMeshRenderingData& MeshData);
+	void BuildMesh(const size_t InMeshHash, CMeshComponent *InMesh, const FMeshRenderingData& MeshData);
 	
 	void DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData);
 	
@@ -30,6 +30,7 @@ public:
 	
 	virtual void PostDraw(float DeltaTime);
 protected:
+
 	//‰÷»æ≤„º∂
 	FRenderLayerManage RenderLayer;
 

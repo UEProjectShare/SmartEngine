@@ -8,36 +8,32 @@ FDirectXRootSignature::FDirectXRootSignature()
 void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
 {
     //构建根签名
-    CD3DX12_ROOT_PARAMETER RootParam[5];
-
-    //ObjCBV描述表
-    CD3DX12_DESCRIPTOR_RANGE DescriptorRangeObjCBV;
-    DescriptorRangeObjCBV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-
-    //ViewportCBV描述表
-    CD3DX12_DESCRIPTOR_RANGE DescriptorRangeViewportCBV;
-    DescriptorRangeViewportCBV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-
-    //Light描述表
-    CD3DX12_DESCRIPTOR_RANGE DescriptorRangeLightCBV;
-    DescriptorRangeLightCBV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);
+    CD3DX12_ROOT_PARAMETER RootParam[7];
    
     //texture描述表
     CD3DX12_DESCRIPTOR_RANGE DescriptorRangeTextureSRV;
-    DescriptorRangeTextureSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, InTextureNum, 3);
-   
-    RootParam[0].InitAsDescriptorTable(1, &DescriptorRangeObjCBV);
-    RootParam[1].InitAsDescriptorTable(1, &DescriptorRangeViewportCBV);
-    RootParam[2].InitAsDescriptorTable(1, &DescriptorRangeLightCBV);
-    RootParam[3].InitAsDescriptorTable(1, &DescriptorRangeTextureSRV, D3D12_SHADER_VISIBILITY_PIXEL);
-   
-    RootParam[4].InitAsShaderResourceView(4, 1);
+    DescriptorRangeTextureSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, InTextureNum, 1);
+
+    CD3DX12_DESCRIPTOR_RANGE DescriptorRangeCubeMapSRV;
+    DescriptorRangeCubeMapSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+    RootParam[0].InitAsConstantBufferView(0);//对象
+    RootParam[1].InitAsConstantBufferView(1);//视口
+    RootParam[2].InitAsConstantBufferView(2);//灯光
+    RootParam[3].InitAsConstantBufferView(3);//雾
+
+    //t
+    RootParam[4].InitAsShaderResourceView(0, 1);//材质
+
+    //2D贴图
+    RootParam[5].InitAsDescriptorTable(1, &DescriptorRangeTextureSRV, D3D12_SHADER_VISIBILITY_PIXEL);
+    RootParam[6].InitAsDescriptorTable(1, &DescriptorRangeCubeMapSRV, D3D12_SHADER_VISIBILITY_PIXEL);
 
     //构建静态采样
     StaticSamplerObject.BuildStaticSampler();
 
     const CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(
-        5,
+        7,
         RootParam,
         StaticSamplerObject.GetSize(),//采样数量
         StaticSamplerObject.GetData(),//采样PTR

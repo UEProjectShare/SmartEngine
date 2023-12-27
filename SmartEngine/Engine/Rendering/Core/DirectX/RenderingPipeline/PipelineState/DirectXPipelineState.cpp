@@ -57,7 +57,7 @@ void FDirectXPipelineState::BuildParam()
 {
     //配置光栅化状态
     GPSDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    GPSDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;//以线框方式显示
+    GPSDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;//以固体方式显示
 
     //0000..0000
     GPSDesc.SampleMask = UINT_MAX;
@@ -96,6 +96,11 @@ void FDirectXPipelineState::ResetPSO(int InPSOType)
     GetGraphicsCommandList()->SetPipelineState(PSO[InPSOType].Get());
 }
 
+void FDirectXPipelineState::ResetPSO()
+{
+    ResetPSO(PipelineState);
+}
+
 void FDirectXPipelineState::SetFillMode(bool bWireframe)
 {
     GPSDesc.RasterizerState.FillMode = bWireframe ? D3D12_FILL_MODE_WIREFRAME : D3D12_FILL_MODE_SOLID;
@@ -104,6 +109,16 @@ void FDirectXPipelineState::SetFillMode(bool bWireframe)
 void FDirectXPipelineState::SetRenderTarget(int Index, const D3D12_RENDER_TARGET_BLEND_DESC& InRenderTargetBlend)
 {
     GPSDesc.BlendState.RenderTarget[Index] = InRenderTargetBlend;
+}
+
+void FDirectXPipelineState::SetRasterizerState(const CD3DX12_RASTERIZER_DESC& InRasterizerDesc)
+{
+    GPSDesc.RasterizerState = InRasterizerDesc;
+}
+
+void FDirectXPipelineState::SetDepthStencilState(const CD3DX12_DEPTH_STENCIL_DESC& InDepthStencilDesc)
+{
+    GPSDesc.DepthStencilState = InDepthStencilDesc;
 }
 
 void FDirectXPipelineState::CaptureKeyboardKeys()

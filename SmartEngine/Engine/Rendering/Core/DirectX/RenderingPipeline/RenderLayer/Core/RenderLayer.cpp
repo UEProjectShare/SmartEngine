@@ -18,6 +18,37 @@ void FRenderLayer::RegisterRenderLayer()
 	FRenderLayerManage::RenderLayers.push_back(this->shared_from_this());
 }
 
+void FRenderLayer::BuildShaderMacro(std::vector<ShaderType::FShaderMacro>& InMacro)
+{
+	 {
+		 ShaderType::FShaderMacro ShaderMacro;
+
+		 char TextureNumBuff[10] = { 0 };
+		 ShaderMacro.Name = "TEXTURE2D_MAP_NUM";
+		 ShaderMacro.Definition = _itoa(GeometryMap->GetDrawTexture2DResourcesNumber(), TextureNumBuff, 10);
+
+		 InMacro.push_back(ShaderMacro);
+	 }
+
+	 {
+		 ShaderType::FShaderMacro ShaderMacro;
+
+		 char TextureNumBuff[10] = { 0 };
+		 ShaderMacro.Name = "CUBE_MAP_NUM";
+		 ShaderMacro.Definition = _itoa(GeometryMap->GetDrawCubeMapResourcesNumber(), TextureNumBuff, 10);
+
+		 InMacro.push_back(ShaderMacro);
+	 }
+
+	 {
+		 ShaderType::FShaderMacro ShaderMacro;
+		 ShaderMacro.Name = "START_UP_FOG";
+		 ShaderMacro.Definition = GeometryMap->IsStartUPFog() ? "1": "0";
+
+		 InMacro.push_back(ShaderMacro);
+	 }
+}
+
 void FRenderLayer::Init(FGeometryMap* InGeometryMap, FDirectXPipelineState* InDirectXPipelineState)
 {
 	GeometryMap = InGeometryMap;
@@ -31,7 +62,8 @@ void FRenderLayer::PreDraw(float DeltaTime)
 
 void FRenderLayer::Draw(float DeltaTime)
 {
-	const UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	const UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
 
 	//模型构建
 	for (auto& InRenderingData : RenderDatas)
@@ -39,7 +71,8 @@ void FRenderLayer::Draw(float DeltaTime)
 		D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometries[InRenderingData.GeometryKey].GetVertexBufferView();
 		D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometries[InRenderingData.GeometryKey].GetIndexBufferView();
 
-		auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
+		const D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
+		//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
 
 		GetGraphicsCommandList()->IASetIndexBuffer(&IBV);
 		//	GetGraphicsCommandList()->OMSetBlendFactor();
@@ -54,8 +87,14 @@ void FRenderLayer::Draw(float DeltaTime)
 		GetGraphicsCommandList()->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(DisplayStatus));
 
 		//模型起始地址偏移
-		DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
-		GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
+		//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
+		//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
+		
+		//每个对象相对首地址的偏移
+		const D3D12_GPU_VIRTUAL_ADDRESS VAddress = 
+			FirstVirtualMeshAddress + InRenderingData.MeshObjectIndex * MeshOffset;
+
+		GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(0, VAddress);
 
 		//真正的绘制
 		GetGraphicsCommandList()->DrawIndexedInstanced(
@@ -72,6 +111,13 @@ void FRenderLayer::PostDraw(float DeltaTime)
 
 }
 
+void FRenderLayer::BuildPSO()
+{
+	BuildShader();
+
+	DirectXPipelineState->BuildParam();
+}
+
 void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
 	for (auto& InRenderingData : RenderDatas)//暂时先这么写
@@ -79,7 +125,7 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 		//构造模型的world
 		{
 			XMFLOAT3& Position = InRenderingData.Mesh->GetPosition();
-			fvector_3d Scale = InRenderingData.Mesh->GetScale();
+			const fvector_3d Scale = InRenderingData.Mesh->GetScale();
 
 			XMFLOAT3 RightVector = InRenderingData.Mesh->GetRightVector();
 			XMFLOAT3 UPVector = InRenderingData.Mesh->GetUPVector();

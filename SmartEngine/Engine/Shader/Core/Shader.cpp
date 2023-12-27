@@ -29,6 +29,7 @@ void FShader::BuildShaders(
 
 	if (ErrorShaderMsg)
 	{
+		char* p = static_cast<char*>(ErrorShaderMsg->GetBufferPointer());
 		Engine_Log_Error("%s", static_cast<char*>(ErrorShaderMsg->GetBufferPointer()));
 
 		//µ¯³öÈÕÖ¾

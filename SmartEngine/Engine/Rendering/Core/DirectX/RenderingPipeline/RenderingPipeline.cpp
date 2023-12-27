@@ -40,12 +40,12 @@ void FRenderingPipeline::BuildPipeline()
 	//读取贴图纹理
 	GeometryMap.LoadTexture();
 
-	//构建根签名
-	RootSignature.BuildRootSignature(GeometryMap.GetDrawTextureResourcesNumber());
-	DirectXPipelineState.BindRootSignature(RootSignature.GetRootSignature());
+	//构建雾气
+	GeometryMap.BuildFog();
 
-	//渲染每个层级的Shader
-	RenderLayer.BuildShader();
+	//构建根签名
+	RootSignature.BuildRootSignature(GeometryMap.GetDrawTexture2DResourcesNumber());
+	DirectXPipelineState.BindRootSignature(RootSignature.GetRootSignature());
 
 	//构建模型
 	GeometryMap.Build();
@@ -68,8 +68,8 @@ void FRenderingPipeline::BuildPipeline()
 	//构建贴图
 	GeometryMap.BuildTextureConstantBuffer();
 
-	//构建PSO参数
-	DirectXPipelineState.BuildParam();
+	//构建雾气常量缓冲区
+	GeometryMap.BuildFogConstantBuffer();
 
 	//通过层级来构建PSO
 	RenderLayer.BuildPSO();

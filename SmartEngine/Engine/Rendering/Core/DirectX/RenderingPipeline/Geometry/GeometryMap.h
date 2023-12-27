@@ -7,12 +7,14 @@
 #include "../../../../../Core/Viewport/ViewportInfo.h"
 
 class CMaterial;
+struct FRenderingTexture;
+class CFogComponent;
 
 struct FGeometry : public IDirectXDeviceInterface_Struct
 {
 	friend struct FGeometryMap;
 
-	static bool IsRenderingDataExistence(const CMeshComponent* InKey);
+	bool IsRenderingDataExistence(const CMeshComponent* InKey);
 
 	void BuildMesh(const size_t InMeshHash,CMeshComponent* InMesh, const FMeshRenderingData& MeshData,int InKey);
 	
@@ -63,6 +65,8 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 
 	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 
+	void BuildFog();
+	
 	void BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
 	
 	void DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData);
@@ -80,6 +84,9 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	//构建Mesh常量缓冲区
 	void BuildMeshConstantBuffer();
 
+	//构建雾气常量缓冲区
+	void BuildFogConstantBuffer();
+
 	//构建Material常量缓冲区
 	void BuildMaterialShaderResourceView();
 
@@ -95,14 +102,21 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	//该接口会有变化
 	UINT GetDrawLightObjectNumber();
 	
-	//贴图数量
-	UINT GetDrawTextureResourcesNumber() const;
+	//2D贴图数量
+	UINT GetDrawTexture2DResourcesNumber() const;
+
+	//CubeMap贴图数量
+	UINT GetDrawCubeMapResourcesNumber() const;
 
 	//构建我们的贴图SRV视图
-	void BuildTextureConstantBuffer();
+	void BuildTextureConstantBuffer() const;
 
 	//构建我们的视口常量缓冲区视图
 	void BuildViewportConstantBufferView();
+	
+	bool IsStartUPFog() const;
+	
+	std::unique_ptr<FRenderingTexture>* FindRenderingTexture(const std::string& InKey) const;
 	
 	void DrawLight(float DeltaTime);
 	
@@ -114,7 +128,9 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	
 	void DrawTexture(float DeltaTime);
 	
-	ID3D12DescriptorHeap* GetHeap()const {return DescriptorHeap.GetHeap();}
+	void DrawFog(float DeltaTime);
+	
+	ID3D12DescriptorHeap* GetHeap() const {return DescriptorHeap.GetHeap();}
 
 protected:
 	map<int, FGeometry> Geometries;
@@ -128,8 +144,14 @@ protected:
 	FConstantBufferViews ViewportConstantBufferViews;
 	
 	FConstantBufferViews LightConstantBufferViews;
+	
+	FConstantBufferViews FogConstantBufferViews;
 
-	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingTextureResources;
+	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingTexture2DResources;
+	
+	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingCubeMapResources;
 	
 	std::vector<CMaterial*> Materials;
+
+	CFogComponent* Fog;
 };

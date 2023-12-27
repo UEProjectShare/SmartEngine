@@ -43,7 +43,7 @@ int Init(CEngine* InEngine, HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cm
 
 void Tick(CEngine* InEngine)
 {
-	const float DeltaTime = 0.03f;
+	float DeltaTime = 0.03f;
 	InEngine->Tick(DeltaTime);
 
 	//Sleep(30);
@@ -75,13 +75,13 @@ int Exit(CEngine* InEngine)
 	return ReturnValue;
 }
 
-CEngine* Engine = nullptr;
+CEngine* Engine = NULL;
 
 //hInstance 自己的实例
 //prevInstance 上次的实例
 //cmdLine 传递命令
 //showCmd 多少条cmd
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int showCmd)
 {
 	int ReturnValue = 0;
 
@@ -112,6 +112,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 			else
 			{
 				Tick(Engine);
+
+				//模拟电脑固定消耗
+				Sleep(1);
 			}
 		}
 

@@ -1,3 +1,5 @@
+#ifndef PBR
+#define PBR
 
 float3 GetDiffuseLambert(float3 DiffuseColor)
 {
@@ -31,3 +33,4 @@ float GSmith(float3 N, float3 V, float3 L, float Roughness)
 
 	return SchlickGGX(NoV, Roughness) * SchlickGGX(NoL, Roughness);
 }
+#endif

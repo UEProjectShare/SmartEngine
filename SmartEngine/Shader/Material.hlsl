@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ShaderCommon.hlsl"
 #include "ShaderFunctionLibrary.hlsl"
 

@@ -22,6 +22,8 @@
 #include "../../../../Actor/Light/ParallelLight.h"
 #include "../../../../Actor/Light/SpotLight.h"
 #include "../../../../Actor/Light/PointLight.h"
+#include "../../../../Actor/Sky/Fog.h"
+#include "../../../../Actor/Sky/Sky.h"
 
 #if defined(_WIN32)
 #include "../../../../Core/WinMainCommandParameters.h"
@@ -566,30 +568,22 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
-		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())
+		if (GSky* InSky = World->CreateActorObject<GSky>())//Ìì¿Õ
 		{
-			SphereMesh->CreateMesh(2.f, 100, 100,true);
-			SphereMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
-			//SphereMesh->SetRotation(fvector_3d(0.f, 90.f, 0.f));
-			SphereMesh->SetScale(fvector_3d(4000.f));
-			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
-			{
-				InMaterial->SetBaseColor("EpicQuadPanorama_CC");
-				InMaterial->SetSpecular(fvector_3d(1.f));
-				InMaterial->SetMaterialType(EMaterialType::BaseColor);
-			}
+			InSky->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
 		}
 
-		/*if (GMesh* CylinderMesh = MeshManage->CreateCylinderMesh(1.f, 1.f, 5.f, 20, 20))
+		//ÎíµÄÊµÀý
+		if (GFog* Fog = World->CreateActorObject<GFog>())
 		{
-			CylinderMesh->SetPosition(XMFLOAT3(1, -2, -4));
-		}
+			Fog->SetFogColor(fvector_color(0.7f));
+			Fog->SetFogStart(10.f);
+			Fog->SetFogRange(200.f);
 
-		if (GMesh* ConeMesh = MeshManage->CreateConeMesh(1.f, 5.f, 20, 20))
-		{
-			ConeMesh->SetPosition(XMFLOAT3(-1, 1, 9));
-			ConeMesh->SetRotation(fvector_3d(90.f, 1.f, 20.f));
-		}*/
+			Fog->SetFogHeight(5000.f);
+			Fog->SetFogTransparentCoefficient(0.00f);
+
+		}
 	}
 	
 	MeshManage->BuildMesh();

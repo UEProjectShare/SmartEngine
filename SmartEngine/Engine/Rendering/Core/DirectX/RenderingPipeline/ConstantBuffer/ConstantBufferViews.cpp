@@ -33,3 +33,8 @@ void FConstantBufferViews::BuildConstantBuffer(
         GetD3dDevice()->CreateConstantBufferView(&CBVDesc, Handle);
     }
 }
+
+UINT FConstantBufferViews::GetConstantBufferByteSize() const
+{
+    return Constant->GetConstantBufferByteSize();
+}

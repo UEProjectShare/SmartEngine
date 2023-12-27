@@ -24,8 +24,6 @@ public:
 	
 	virtual void PostDraw(float DeltaTime);
 
-	virtual void BuildShader();
-
 	virtual void BuildPSO();
 
 	//еепР

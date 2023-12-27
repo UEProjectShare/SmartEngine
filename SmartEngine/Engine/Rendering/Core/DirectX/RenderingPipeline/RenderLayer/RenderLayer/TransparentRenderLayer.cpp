@@ -18,21 +18,20 @@ void FTransparentRenderLayer::BuildShader()
 {
 	//构建Shader
 	//HLSL
-	char TextureNumBuff[10] = { 0 };
-	const D3D_SHADER_MACRO ShaderMacro[] =
-	{
-		"TEXTURE2D_MAP_NUM", _itoa(GeometryMap->GetDrawTextureResourcesNumber(), TextureNumBuff, 10),
-		nullptr, nullptr,
-	};
+	vector<ShaderType::FShaderMacro> ShaderMacro;
+	BuildShaderMacro(ShaderMacro);
 
-	VertexShader.BuildShaders(L"../SmartEngine/Shader/Hello.hlsl", "VertexShaderMain", "vs_5_1", ShaderMacro);
-	PixelShader.BuildShaders(L"../SmartEngine/Shader/Hello.hlsl", "PixelShaderMain", "ps_5_1", ShaderMacro);
+	vector<D3D_SHADER_MACRO> D3DShaderMacro;
+	ShaderType::ToD3DShaderMacro(ShaderMacro, D3DShaderMacro);
+
+	VertexShader.BuildShaders(L"../SmartEngine/Shader/Hello.hlsl", "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
+	PixelShader.BuildShaders(L"../SmartEngine/Shader/Hello.hlsl", "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
 	DirectXPipelineState->BindShader(VertexShader, PixelShader);
-
+	
 	//输入布局
 	InputElementDesc =
 	{
-		{"POSITION", 0,DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
@@ -43,6 +42,8 @@ void FTransparentRenderLayer::BuildShader()
 
 void FTransparentRenderLayer::BuildPSO()
 {
+	Super::BuildPSO();
+
 	D3D12_RENDER_TARGET_BLEND_DESC RenderTargetBlendDesc;
 	RenderTargetBlendDesc.BlendEnable = true;
 	RenderTargetBlendDesc.LogicOpEnable = false;

@@ -1,3 +1,5 @@
+#ifndef ShaderFunctionLibrary
+#define ShaderFunctionLibrary
 
 float3x3 GetBuildTBNMatrix(float3 InUnitWorldNormal, float3 InWorldTangent)
 {
@@ -10,3 +12,5 @@ float3x3 GetBuildTBNMatrix(float3 InUnitWorldNormal, float3 InWorldTangent)
 
 	return float3x3(T, B, N);
 }
+
+#endif
