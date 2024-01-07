@@ -47,8 +47,10 @@ public:
 	}
 	
 	virtual void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
+
 protected:
 	virtual void SetMeshComponent(CMeshComponent* InMeshComponent);
+
 public:
 	UINT GetMaterialNum()const;
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LIGHT_HLSL
+#define LIGHT_HLSL
 
 struct Light
 {
@@ -125,3 +126,4 @@ float4 ComputeLightStrength(Light L,float3 InObjectPointNormal,float3 InObjectWo
 
 	return float4( 0.f,0.f,0.f,1.f );
 }
+#endif

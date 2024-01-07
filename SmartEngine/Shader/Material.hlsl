@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MATERIAL_HLSL
+#define MATERIAL_HLSL
 
 #include "ShaderCommon.hlsl"
 #include "ShaderFunctionLibrary.hlsl"
@@ -56,3 +57,53 @@ float4 GetMaterialSpecular(MaterialConstBuffer MatConstBuffer, float2 InTexCoord
 
 	return float4(MatConstBuffer.SpecularColor,1.f);
 }
+
+float3 GetReflect(float3 InUnitWorldNormal, float3 WorldPosition)
+{
+	float3 ViewDirection = normalize(ViewportPosition.xyz - WorldPosition);
+	return reflect(-ViewDirection, InUnitWorldNormal);
+}
+
+float3 GetRefract(float3 InUnitWorldNormal, float3 WorldPosition,float InRefractiveIndex)
+{
+	float3 ViewDirection = normalize(ViewportPosition.xyz - WorldPosition);
+	return refract(-ViewDirection, InUnitWorldNormal, InRefractiveIndex);
+}
+
+float3 GetReflectionSampleColor(float3 InUnitWorldNormal, float3 NewReflect)
+{
+	return SimpleCubeMap.Sample(TextureSampler, NewReflect);
+}
+
+float GetShininess(MaterialConstBuffer MatConstBuffer)
+{
+	return 1.f - MatConstBuffer.MaterialRoughness;
+}
+
+float3 FresnelSchlickFactor(MaterialConstBuffer MatConstBuffer, float3 InUnitWorldNormal, float3 InReflect)
+{
+	return FresnelSchlickMethod(MatConstBuffer.FresnelF0, InUnitWorldNormal, InReflect, 5);
+}
+
+//获取反射的颜色
+float3 GetReflectionColor(MaterialConstBuffer MatConstBuffer, float3 InUnitWorldNormal, float3 WorldPosition)
+{
+	float3 NewReflect = GetReflect(InUnitWorldNormal, WorldPosition);
+	float3 SampleReflectionColor = GetReflectionSampleColor(InUnitWorldNormal, NewReflect);
+	float Shininess = GetShininess(MatConstBuffer);
+	float3 FresnelFactor = FresnelSchlickFactor(MatConstBuffer, InUnitWorldNormal, NewReflect);
+
+	return SampleReflectionColor * FresnelFactor * Shininess;
+}
+
+//获取折射的颜色 
+float3 GetRefractColor(MaterialConstBuffer MatConstBuffer, float InRefractiveIndex, float3 InUnitWorldNormal, float3 WorldPosition)
+{
+	float3 NewRefract = GetRefract(InUnitWorldNormal, WorldPosition, InRefractiveIndex);
+	float3 SampleReflectionColor = GetReflectionSampleColor(InUnitWorldNormal, NewRefract);
+	float Shininess = GetShininess(MatConstBuffer);
+	float3 FresnelFactor = FresnelSchlickFactor(MatConstBuffer, InUnitWorldNormal, NewRefract);
+
+	return SampleReflectionColor * FresnelFactor * Shininess;
+}
+#endif

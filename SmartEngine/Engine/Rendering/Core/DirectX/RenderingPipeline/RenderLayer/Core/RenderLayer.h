@@ -29,6 +29,10 @@ public:
 	
 	virtual void PostDraw(float DeltaTime);
 
+	virtual void DrawObject(float DeltaTime, const FRenderingData& InRenderingData);
+	
+	virtual void FindObjectDraw(float DeltaTime, const CMeshComponent* InKey);
+
 	virtual void BuildPSO();
 
 	void RegisterRenderLayer();

@@ -4,7 +4,7 @@
 #include "CameraType.h"
 
 GCamera::GCamera()
-	: GActorObject()
+	: Super()
 {
 	InputComponent = CreateObject<CInputComponent>(new CInputComponent());
 	
@@ -31,7 +31,7 @@ void GCamera::BeginInit()
 
 void GCamera::Tick(float DeltaTime)
 {
-	BuildViewMatrix(DeltaTime);
+	Super::Tick(DeltaTime);
 
 }
 
@@ -40,26 +40,38 @@ void GCamera::ExecuteKeyboard(const FInputKey& InputKey)
 	if(InputKey.KeyName == "W")
 	{ 
 		MoveForward(1.f);
+
+		SetDirty(true);
 	}
 	else if (InputKey.KeyName == "S")
 	{
 		MoveForward(-1.f);
+
+		SetDirty(true);
 	}
 	else if (InputKey.KeyName == "A")
 	{
 		MoveRight(-1.f);
+
+		SetDirty(true);
 	}
 	else if (InputKey.KeyName == "D")
 	{
 		MoveRight(1.f);
+
+		SetDirty(true);
 	}
 	else if (InputKey.KeyName == "Q")
 	{
 		CameraType = ECameraType::ObservationObject;
+
+		SetDirty(true);
 	}
 	else  if (InputKey.KeyName == "E")
 	{
 		CameraType = ECameraType::CameraRoaming;
+
+		SetDirty(true);
 	}
 }
 
@@ -69,24 +81,7 @@ void GCamera::BuildViewMatrix(float DeltaTime)
 	{
 		case CameraRoaming:
 		{
-			//计算和矫正轴
-			GetTransformationComponent()->CorrectionVector();
-
-			//算出按自身方向移动意图
-			fvector_3d V3;
-			GetTransformationComponent()->GetCorrectionPosition(V3);
-
-			//构建Viewmatrix
-			XMFLOAT3 RightVector = GetTransformationComponent()->GetRightVector();
-			XMFLOAT3 UPVector = GetTransformationComponent()->GetUPVector();
-			XMFLOAT3 ForwardVector = GetTransformationComponent()->GetForwardVector();
-
-			ViewMatrix = {
-				RightVector.x,	UPVector.x,	 ForwardVector.x,	0.f,
-				RightVector.y,	UPVector.y,	 ForwardVector.y,	0.f,
-				RightVector.z,	UPVector.z,	 ForwardVector.z,	0.f,
-				V3.x,			V3.y,		 V3.z,				1.f };
-
+			Super::BuildViewMatrix(DeltaTime);
 			break;
 		}
 		case ObservationObject:
@@ -117,6 +112,8 @@ void GCamera::OnMouseButtonDown(int X, int Y)
 	LastMousePosition.y = Y;
 
 	SetCapture(GetMainWindowsHandle());
+
+	SetDirty(true);
 }
 
 void GCamera::OnMouseButtonUp(int X, int Y)
@@ -127,6 +124,8 @@ void GCamera::OnMouseButtonUp(int X, int Y)
 
 	LastMousePosition.x = X;
 	LastMousePosition.y = Y;
+
+	SetDirty(true);
 }
 
 void GCamera::OnMouseMove(int X, int Y)
@@ -157,6 +156,8 @@ void GCamera::OnMouseMove(int X, int Y)
 
 	LastMousePosition.x = X;
 	LastMousePosition.y = Y;
+
+	SetDirty(true);
 }
 
 void GCamera::OnMouseWheel(int X, int Y, float InDelta)
@@ -168,6 +169,8 @@ void GCamera::OnMouseWheel(int X, int Y, float InDelta)
 		//限制在一定的范围内
 		Radius = math_libray::Clamp(Radius, 7.f, 40.f);
 	}
+
+	SetDirty(true);
 }
 
 void GCamera::MoveForward(float InValue)

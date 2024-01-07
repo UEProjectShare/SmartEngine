@@ -5,6 +5,7 @@
 #include "PipelineState/DirectXPipelineState.h"
 #include "RootSignature/DirectXRootSignature.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
+#include "CubeMap/DynamicCubeMap.h"
 #include "RenderLayer/RenderLayerManage.h"
 
 class CMeshComponent;
@@ -39,4 +40,6 @@ protected:
 	FDirectXRootSignature RootSignature;
 	
 	FGeometryMap GeometryMap;
+
+	FDynamicCubeMap DynamicCubeMap;
 };

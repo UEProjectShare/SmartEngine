@@ -276,6 +276,11 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 				DotValue = NormalLight * (A + B * max(0, Phiri) * sin(Alpha) * tan(Beta));
 			}
+			else if (MatConstBuffer.MaterialType == 15)//透明物体
+			{
+				float DiffuseReflection = dot(ModelNormal, NormalizeLightDirection);
+				DotValue = max((DiffuseReflection * 0.5f + 0.5f), 0.0);//[-1,1] => [0,1]
+			}
 			else if (MatConstBuffer.MaterialType == 20)//PBR
 			{
 				float3 L = NormalizeLightDirection;
@@ -336,8 +341,31 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 	MVOut.Color = FinalColor + //最终颜色
 		AmbientLight * Material.BaseColor; //间接光
 
-	MVOut.Color.a = Material.BaseColor.a;
+	switch (MatConstBuffer.MaterialType)
+	{
+		case 2:
+		case 3:
+		case 9:
+		case 15:
+		{
+			//计算反射
+			float3 ReflectionColor = GetReflectionColor(MatConstBuffer, ModelNormal, MVOut.WorldPosition.xyz);
+			MVOut.Color.xyz += ReflectionColor;
+			break;
+		}
+	}
 
+	if (MatConstBuffer.MaterialType == 15)
+	{
+		//透明的
+		MVOut.Color.a = MatConstBuffer.Transparency;
+	}
+	else
+	{
+		//透明的
+		MVOut.Color.a = Material.BaseColor.a;
+	}
+	
 	//计算雾
 	MVOut.Color = GetFogValue(MVOut.Color, MVOut.WorldPosition);
 

@@ -18,6 +18,10 @@ public:
 	void SetSpecular(const std::string& InAssetFilename);
 	
 	void SetSpecular(const fvector_3d& InVector);
+	
+	void SetFresnelF0(const fvector_3d& InF0Vector);
+	
+	void SetTransparency(float InTransparency);
 
 	void SetBaseColor(const std::string& InAssetFilename);
 	
@@ -27,11 +31,25 @@ public:
 	
 	void SetMaterialIndex(int InNewIndex);
 	
+	void SetDynamicReflection(bool InDynamicReflection);
+	
+	//动态反射
+	FORCEINLINE float IsDynamicReflection() const { 
+		 return bDynamicReflection && 
+		(MaterialType == EMaterialType::Back ||
+		 MaterialType == EMaterialType::Phong ||
+		 MaterialType == EMaterialType::BlinnPhong ||
+		 MaterialType == EMaterialType::PBR); }
+
+	FORCEINLINE float GetTransparency() const { return Transparency; }
+	
 	FORCEINLINE float GetRoughness() const { return Roughness; }
 	
 	FORCEINLINE fvector_4d GetBaseColor() const { return BaseColor; }
 	
 	FORCEINLINE fvector_3d GetSpecularColor() const { return SpecularColor; }
+	
+	FORCEINLINE fvector_3d GetFresnelF0() const { return FresnelF0; }
 	
 	FORCEINLINE EMaterialType GetMaterialType() const { return MaterialType; }
 	
@@ -56,6 +74,8 @@ private:
 	fvector_4d BaseColor;
 	
 	fvector_3d SpecularColor;
+	
+	fvector_3d FresnelF0;
 
 	float Roughness;
 	
@@ -70,4 +90,10 @@ private:
 	EMaterialDisplayStatusType MaterialDisplayStatus;
 	
 	XMFLOAT4X4 MaterialTransform;
+
+	//透明度
+	float Transparency;
+
+	//动态反射
+	bool bDynamicReflection;
 };

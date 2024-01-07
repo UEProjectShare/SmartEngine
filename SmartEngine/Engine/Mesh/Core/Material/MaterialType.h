@@ -17,9 +17,11 @@ enum EMaterialType
 	OrenNayar,				//GDC 模拟粗糙表面
 
 	//单独显示对应效果
-	BaseColor,				//本身的颜色
+	BaseColor = 12,			//本身的颜色
 	Normal,					//显示法线
 	WorldNormal,			//显示世界法线
+
+	Transparency = 15,		//透明
 
 	PBR = 20,				//基于物理的显示
 

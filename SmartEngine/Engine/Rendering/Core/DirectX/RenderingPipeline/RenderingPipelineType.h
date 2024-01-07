@@ -5,6 +5,7 @@ enum EPipelineState
 	Transparent = 0,
 	AlphaTest,
 	Background,
+	Reflector,
 	GrayModel = 4,
 	Wireframe = 5,
 };

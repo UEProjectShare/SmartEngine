@@ -1,5 +1,5 @@
-#ifndef PBR
-#define PBR
+#ifndef PBR_HLSL
+#define PBR_HLSL
 
 float3 GetDiffuseLambert(float3 DiffuseColor)
 {

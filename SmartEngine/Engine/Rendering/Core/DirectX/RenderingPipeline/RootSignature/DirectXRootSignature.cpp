@@ -12,8 +12,10 @@ void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
    
     //texture√Ë ˆ±Ì
     CD3DX12_DESCRIPTOR_RANGE DescriptorRangeTextureSRV;
-    DescriptorRangeTextureSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, InTextureNum, 1);
+    DescriptorRangeTextureSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 
+        InTextureNum, 1);
 
+    //æ≤Ã¨CubeMap
     CD3DX12_DESCRIPTOR_RANGE DescriptorRangeCubeMapSRV;
     DescriptorRangeCubeMapSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 

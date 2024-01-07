@@ -46,6 +46,13 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 
 			//法线赋值
 			InVertex.Normal = EngineMath::ToFloat3(Normal);
+
+			//展UV
+			InVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InHeightSubdivision);
+			InVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InAxialSubdivision);
+
+			//InVertex.UTangent.x = tan(BetaRadian) * InRadius;
+			//InVertex.UTangent.y = tan(ThetaRadian) * InSectionRadius;
 		}
 	}
 

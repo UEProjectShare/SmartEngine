@@ -1,5 +1,6 @@
 #include "Material.h"
 #include "../../../Math/EngineMath.h"
+
 CMaterial::CMaterial()
 	: bDirty(true)
 	, MaterialIndex(-1)
@@ -9,6 +10,8 @@ CMaterial::CMaterial()
 	, MaterialType(EMaterialType::Lambert)
 	, MaterialDisplayStatus(EMaterialDisplayStatusType::TriangleDisplay)
 	, MaterialTransform(EngineMath::IdentityMatrix4x4())
+	, Transparency(1.f)
+	, bDynamicReflection(false)
 {
 
 }
@@ -55,6 +58,20 @@ void CMaterial::SetSpecular(const fvector_3d& InVector)
 	SetDirty(true);
 }
 
+void CMaterial::SetFresnelF0(const fvector_3d& InF0Vector)
+{
+	FresnelF0 = InF0Vector;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetTransparency(float InTransparency)
+{
+	Transparency = InTransparency;
+
+	SetDirty(true);
+}
+
 void CMaterial::SetBaseColor(const std::string& InAssetFilename)
 {
 	BaseColorIndexKey = InAssetFilename;
@@ -77,6 +94,13 @@ void CMaterial::SetDirty(bool bNewDirty)
 void CMaterial::SetMaterialIndex(int InNewIndex)
 {
 	MaterialIndex = InNewIndex;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetDynamicReflection(bool InDynamicReflection)
+{
+	bDynamicReflection = InDynamicReflection;
 
 	SetDirty(true);
 }

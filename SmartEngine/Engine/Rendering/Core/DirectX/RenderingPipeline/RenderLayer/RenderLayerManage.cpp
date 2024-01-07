@@ -3,6 +3,7 @@
 #include "RenderLayer/OpaqueRenderLayer.h"
 #include "RenderLayer/TransparentRenderLayer.h"
 #include "RenderLayer/BackgroundRenderLayer.h"
+#include "RenderLayer/OpaqueReflectorRenderLayer.h"
 
 std::vector<std::shared_ptr<FRenderLayer>> FRenderLayerManage::RenderLayers;
 
@@ -14,6 +15,7 @@ FRenderLayerManage::FRenderLayerManage()
 //	CreateRenderLayer<FAlphaTestRenderLayer>();
 	CreateRenderLayer<FOpaqueRenderLayer>();
 	CreateRenderLayer<FTransparentRenderLayer>();
+	CreateRenderLayer<FOpaqueReflectorRenderLayer>();
 }
 
 FRenderLayerManage::~FRenderLayerManage()
@@ -90,5 +92,29 @@ void FRenderLayerManage::PostDraw(float DeltaTime)
 	for (const auto& Tmp : RenderLayers)
 	{
 		Tmp->PostDraw(DeltaTime);
+	}
+}
+
+void FRenderLayerManage::Draw(int InLayer, float DeltaTime)
+{
+	for (const auto& Tmp : RenderLayers)
+	{
+		if (Tmp->GetRenderLayerType() == InLayer)
+		{
+			Tmp->Draw(DeltaTime);
+			break;
+		}
+	}
+}
+
+void FRenderLayerManage::FindObjectDraw(float DeltaTime, int InLayer, const CMeshComponent* InKey)
+{
+	for (const auto& Tmp : RenderLayers)
+	{
+		if (Tmp->GetRenderLayerType() == InLayer)
+		{
+			Tmp->FindObjectDraw(DeltaTime, InKey);
+			break;
+		}
 	}
 }

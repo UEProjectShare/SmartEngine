@@ -50,6 +50,8 @@ protected:
 struct FGeometryMap : public IDirectXDeviceInterface_Struct
 {
 	friend class FRenderLayer;
+	
+	friend class FDynamicCubeMap;
 
 	FGeometryMap();
 	
@@ -62,9 +64,17 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	void PostDraw(float DeltaTime);
 
 	void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
+	
+	void UpdateCalculationsViewport(
+		float DeltaTime, 
+		const FViewportInfo& ViewportInfo,
+		UINT InConstantBufferOffset) const;
 
 	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 
+	//收集动态反射模型
+	void BuildDynamicReflectionMesh();
+	
 	void BuildFog();
 	
 	void BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
@@ -108,11 +118,14 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	//CubeMap贴图数量
 	UINT GetDrawCubeMapResourcesNumber() const;
 
+	//动态摄像机
+	UINT GetDynamicReflectionViewportNum() const;
+
 	//构建我们的贴图SRV视图
 	void BuildTextureConstantBuffer() const;
 
 	//构建我们的视口常量缓冲区视图
-	void BuildViewportConstantBufferView();
+	void BuildViewportConstantBufferView(UINT InViewportOffset = 0);
 	
 	bool IsStartUPFog() const;
 	
@@ -126,11 +139,13 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	
 	void DrawMaterial(float DeltaTime);
 	
-	void DrawTexture(float DeltaTime);
+	void Draw2DTexture(float DeltaTime);
+	
+	void DrawCubeMapTexture(float DeltaTime);
 	
 	void DrawFog(float DeltaTime);
 	
-	ID3D12DescriptorHeap* GetHeap() const {return DescriptorHeap.GetHeap();}
+	ID3D12DescriptorHeap* GetHeap()const {return DescriptorHeap.GetHeap();}
 
 protected:
 	map<int, FGeometry> Geometries;
@@ -152,6 +167,8 @@ protected:
 	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingCubeMapResources;
 	
 	std::vector<CMaterial*> Materials;
-
+	
+	std::vector<CMeshComponent*> DynamicReflectionMeshComponents;
+	
 	CFogComponent* Fog;
 };

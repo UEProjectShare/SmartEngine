@@ -1,5 +1,5 @@
-#ifndef ShaderCommon
-#define ShaderCommon
+#ifndef SHADERCOMMON_HLSL
+#define SHADERCOMMON_HLSL
 
 #include "Light.hlsl"
 
@@ -56,8 +56,10 @@ struct MaterialConstBuffer
 	float4 BaseColor;
 
 	float3 SpecularColor;
-	int XX6;
+	float xxx5;
 
+	float3 FresnelF0;
+	float Transparency;
 	float4x4 TransformInformation;
 };
 

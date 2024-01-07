@@ -1,4 +1,5 @@
 #include "RenderingPipeline.h"
+#include "../../../../Component/Mesh/Core/MeshComponentType.h"
 
 FRenderingPipeline::FRenderingPipeline()
 {
@@ -22,6 +23,7 @@ bool FRenderingPipeline::FindMeshRenderingDataByHash(const size_t& InHash, FRend
 
 void FRenderingPipeline::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
+	DynamicCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	GeometryMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	RenderLayer.UpdateCalculations(DeltaTime, ViewportInfo);
 }
@@ -43,6 +45,12 @@ void FRenderingPipeline::BuildPipeline()
 	//构建雾气
 	GeometryMap.BuildFog();
 
+	//构建动态的CubeMap
+	DynamicCubeMap.Init(
+		&GeometryMap,
+		&DirectXPipelineState,
+		&RenderLayer);
+
 	//构建根签名
 	RootSignature.BuildRootSignature(GeometryMap.GetDrawTexture2DResourcesNumber());
 	DirectXPipelineState.BindRootSignature(RootSignature.GetRootSignature());
@@ -50,8 +58,23 @@ void FRenderingPipeline::BuildPipeline()
 	//构建模型
 	GeometryMap.Build();
 
+	//构建动态反射Mesh
+	GeometryMap.BuildDynamicReflectionMesh();
+
 	//构建常量描述堆
 	GeometryMap.BuildDescriptorHeap();
+
+	//初始化CubeMap 摄像机
+	DynamicCubeMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
+
+	//构建RTVDes
+	DynamicCubeMap.BuildRenderTargetDescriptor();
+
+	//构建深度模板描述
+	DynamicCubeMap.BuildDepthStencilDescriptor();
+
+	//构建深度模板
+	DynamicCubeMap.BuildDepthStencil();
 
 	//构建常量缓冲区
 	GeometryMap.BuildMeshConstantBuffer();
@@ -79,16 +102,36 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 {
 	DirectXPipelineState.PreDraw(DeltaTime);
 
+	GeometryMap.PreDraw(DeltaTime);
+	RootSignature.PreDraw(DeltaTime);
+
+	//渲染灯光材质贴图等
+	GeometryMap.Draw(DeltaTime);
+
+	//主视口清除画布
+	ClearMainSwapChainCanvas();
+
+	//动态反射
+	if (DynamicCubeMap.IsExistDynamicReflectionMesh())
+	{
+		DynamicCubeMap.PreDraw(DeltaTime);
+	}
+
 	RenderLayer.PreDraw(DeltaTime);
 }
 
 void FRenderingPipeline::Draw(float DeltaTime)
 {
-	GeometryMap.PreDraw(DeltaTime);
-	RootSignature.PreDraw(DeltaTime);
+	//主视口
+	GeometryMap.DrawViewport(DeltaTime);
 
-	GeometryMap.Draw(DeltaTime);
-	RenderLayer.Draw(DeltaTime);
+	//CubeMap 覆盖原先被修改的CubeMap //TODO:什么意思？
+	GeometryMap.DrawCubeMapTexture(DeltaTime);
+
+	//各类层级
+	RenderLayer.Draw(RENDERLAYER_BACKGROUND, DeltaTime);
+	RenderLayer.Draw(RENDERLAYER_OPAQUE, DeltaTime);
+	RenderLayer.Draw(RENDERLAYER_TRANSPARENT, DeltaTime);
 
 	DirectXPipelineState.Draw(DeltaTime);
 }

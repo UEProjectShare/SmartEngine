@@ -1,5 +1,5 @@
-#ifndef SkyFunction
-#define SkyFunction
+#ifndef SKYFUNCTION_HLSL
+#define SKYFUNCTION_HLSL
 
 #include "ShaderCommon.hlsl"
 

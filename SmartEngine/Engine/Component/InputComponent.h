@@ -2,7 +2,7 @@
 #include "Core/Component.h"
 #include "Input/InputType.h"
 
-DEFINITION_SIMPLE_SINGLE_DELEGATE(FCaptureKeyboardInforDelegate, void, const FInputKey& );
+DEFINITION_SIMPLE_SINGLE_DELEGATE(FCaptureKeyboardInfoDelegate, void, const FInputKey& );
 DEFINITION_SIMPLE_SINGLE_DELEGATE(FCaptureOnMouseDelegate, void, int, int);
 DEFINITION_SIMPLE_SINGLE_DELEGATE(FCaptureOnMouseWheelDelegate, void, int, int, float);
 
@@ -10,7 +10,7 @@ class CInputComponent : public CComponent
 {
 public:
 	CVARIABLE(hello world)
-	FCaptureKeyboardInforDelegate CaptureKeyboardInfoDelegate;
+	FCaptureKeyboardInfoDelegate CaptureKeyboardInfoDelegate;
 
 	CVARIABLE(xxx, aaaa)
 	FCaptureOnMouseDelegate OnMouseButtonDownDelegate;

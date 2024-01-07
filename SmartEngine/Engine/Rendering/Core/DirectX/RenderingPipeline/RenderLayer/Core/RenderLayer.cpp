@@ -62,53 +62,69 @@ void FRenderLayer::PreDraw(float DeltaTime)
 
 void FRenderLayer::Draw(float DeltaTime)
 {
-	//UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	const UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
-
 	//模型构建
 	for (auto& InRenderingData : RenderDatas)
 	{
-		D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometries[InRenderingData.GeometryKey].GetVertexBufferView();
-		D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometries[InRenderingData.GeometryKey].GetIndexBufferView();
-
-		const D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
-		//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
-
-		GetGraphicsCommandList()->IASetIndexBuffer(&IBV);
-		//	GetGraphicsCommandList()->OMSetBlendFactor();
-		//绑定渲染流水线上的输入槽，可以在输入装配器阶段传入顶点数据
-		GetGraphicsCommandList()->IASetVertexBuffers(
-			0,//起始输入槽 0-15 
-			1,//k k+1 ... k+n-1 
-			&VBV);
-
-		//定义我们要绘制的哪种图元 点 线 面
-		EMaterialDisplayStatusType DisplayStatus = (*InRenderingData.Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
-		GetGraphicsCommandList()->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(DisplayStatus));
-
-		//模型起始地址偏移
-		//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
-		//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
-		
-		//每个对象相对首地址的偏移
-		const D3D12_GPU_VIRTUAL_ADDRESS VAddress = 
-			FirstVirtualMeshAddress + InRenderingData.MeshObjectIndex * MeshOffset;
-
-		GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(0, VAddress);
-
-		//真正的绘制
-		GetGraphicsCommandList()->DrawIndexedInstanced(
-			InRenderingData.IndexSize,//顶点数量
-			1,//绘制实例数量
-			InRenderingData.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
-			InRenderingData.VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
-			0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
+		DrawObject(DeltaTime,InRenderingData);
 	}
 }
 
 void FRenderLayer::PostDraw(float DeltaTime)
 {
 
+}
+
+void FRenderLayer::DrawObject(float DeltaTime, const FRenderingData& InRenderingData)
+{
+	const UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
+
+	const D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometries[InRenderingData.GeometryKey].GetVertexBufferView();
+	const D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometries[InRenderingData.GeometryKey].GetIndexBufferView();
+
+	const D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
+	//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
+
+	GetGraphicsCommandList()->IASetIndexBuffer(&IBV);
+	//	GetGraphicsCommandList()->OMSetBlendFactor();
+		//绑定渲染流水线上的输入槽，可以在输入装配器阶段传入顶点数据
+	GetGraphicsCommandList()->IASetVertexBuffers(
+		0,//起始输入槽 0-15 
+		1,//k k+1 ... k+n-1 
+		&VBV);
+
+	//定义我们要绘制的哪种图元 点 线 面
+	EMaterialDisplayStatusType DisplayStatus = (*InRenderingData.Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
+	GetGraphicsCommandList()->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(DisplayStatus));
+
+	//模型起始地址偏移
+	//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
+	//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
+
+	//每个对象相对首地址的偏移
+	const D3D12_GPU_VIRTUAL_ADDRESS VAddress =
+		FirstVirtualMeshAddress + InRenderingData.MeshObjectIndex * MeshOffset;
+
+	GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(0, VAddress);
+
+	//真正的绘制
+	GetGraphicsCommandList()->DrawIndexedInstanced(
+		InRenderingData.IndexSize,//顶点数量
+		1,//绘制实例数量
+		InRenderingData.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
+		InRenderingData.VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
+		0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
+}
+
+void FRenderLayer::FindObjectDraw(float DeltaTime, const CMeshComponent* InKey)
+{
+	for (const auto& InRenderingData : RenderDatas)
+	{
+		if (InRenderingData.Mesh == InKey)
+		{
+			DrawObject(DeltaTime, InRenderingData);
+			break;
+		}
+	}
 }
 
 void FRenderLayer::BuildPSO()
@@ -139,8 +155,8 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 		}
 
 		//更新模型位置
-		XMMATRIX ATRIXWorld = XMLoadFloat4x4(&InRenderingData.WorldMatrix);
-		XMMATRIX ATRIXTextureTransform = XMLoadFloat4x4(&InRenderingData.TextureTransform);
+		const XMMATRIX ATRIXWorld = XMLoadFloat4x4(&InRenderingData.WorldMatrix);
+		const XMMATRIX ATRIXTextureTransform = XMLoadFloat4x4(&InRenderingData.TextureTransform);
 
 		FObjectTransformation ObjectTransformation;
 		XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));

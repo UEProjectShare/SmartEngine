@@ -27,5 +27,9 @@ struct FMaterialConstantBuffer
 	
 	int XX6;
 	
+	XMFLOAT3 FresnelF0;
+	
+	float Transparency;
+	
 	XMFLOAT4X4 TransformInformation;
 };

@@ -1,5 +1,5 @@
-#ifndef ShaderFunctionLibrary
-#define ShaderFunctionLibrary
+#ifndef SHADERFUNCTIONLIBRARY_HLSL
+#define SHADERFUNCTIONLIBRARY_HLSL
 
 float3x3 GetBuildTBNMatrix(float3 InUnitWorldNormal, float3 InWorldTangent)
 {
