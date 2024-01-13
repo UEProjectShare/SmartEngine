@@ -9,7 +9,7 @@ FTransparentRenderLayer::FTransparentRenderLayer()
 
 void FTransparentRenderLayer::Draw(float DeltaTime)
 {
-	DirectXPipelineState->ResetPSO(Transparent);
+	ResetPSO();
 
 	Super::Draw(DeltaTime);
 }
@@ -61,4 +61,9 @@ void FTransparentRenderLayer::BuildPSO()
 
 	DirectXPipelineState->SetRenderTarget(0, RenderTargetBlendDesc);
 	DirectXPipelineState->Build(Transparent);
+}
+
+void FTransparentRenderLayer::ResetPSO()
+{
+	DirectXPipelineState->ResetPSO(Transparent);
 }

@@ -53,8 +53,6 @@ void replace_string_inline(
 		memset(str, 0, str_size * sizeof(wchar_t));
 
 		strcpy(str, buff2);
-
-		replace_string_inline(str, sub_char_a, sub_char_b);
 	}
 }
 

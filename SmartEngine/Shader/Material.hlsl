@@ -64,10 +64,10 @@ float3 GetReflect(float3 InUnitWorldNormal, float3 WorldPosition)
 	return reflect(-ViewDirection, InUnitWorldNormal);
 }
 
-float3 GetRefract(float3 InUnitWorldNormal, float3 WorldPosition,float InRefractiveIndex)
+float3 GetRefract(float3 InUnitWorldNormal, float3 WorldPosition, float InRefractiveValue)
 {
 	float3 ViewDirection = normalize(ViewportPosition.xyz - WorldPosition);
-	return refract(-ViewDirection, InUnitWorldNormal, InRefractiveIndex);
+	return refract(-ViewDirection, InUnitWorldNormal, InRefractiveValue);
 }
 
 float3 GetReflectionSampleColor(float3 InUnitWorldNormal, float3 NewReflect)
@@ -85,6 +85,10 @@ float3 FresnelSchlickFactor(MaterialConstBuffer MatConstBuffer, float3 InUnitWor
 	return FresnelSchlickMethod(MatConstBuffer.FresnelF0, InUnitWorldNormal, InReflect, 5);
 }
 
+float3 FresnelSchlickRoughness(float NV, float3 F0, float Roughness)
+{
+	return F0 + (max(float3(1.0 - Roughness, 1.0 - Roughness, 1.0 - Roughness), F0) - F0) * pow(1.0 - NV, 5.0);
+}
 //获取反射的颜色
 float3 GetReflectionColor(MaterialConstBuffer MatConstBuffer, float3 InUnitWorldNormal, float3 WorldPosition)
 {
@@ -97,9 +101,9 @@ float3 GetReflectionColor(MaterialConstBuffer MatConstBuffer, float3 InUnitWorld
 }
 
 //获取折射的颜色 
-float3 GetRefractColor(MaterialConstBuffer MatConstBuffer, float InRefractiveIndex, float3 InUnitWorldNormal, float3 WorldPosition)
+float3 GetRefractColor(MaterialConstBuffer MatConstBuffer, float3 InUnitWorldNormal, float3 WorldPosition)
 {
-	float3 NewRefract = GetRefract(InUnitWorldNormal, WorldPosition, InRefractiveIndex);
+	float3 NewRefract = GetRefract(InUnitWorldNormal, WorldPosition, MatConstBuffer.Refraction);
 	float3 SampleReflectionColor = GetReflectionSampleColor(InUnitWorldNormal, NewRefract);
 	float Shininess = GetShininess(MatConstBuffer);
 	float3 FresnelFactor = FresnelSchlickFactor(MatConstBuffer, InUnitWorldNormal, NewRefract);

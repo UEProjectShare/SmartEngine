@@ -16,8 +16,22 @@ void FShader::BuildShaders(
 	const string& InShadersVersion,
 	const D3D_SHADER_MACRO* InShaderMacro)
 {
+	wchar_t WStringFileName[1024] = { 0 };
+	{
+		char WToCBuff[1024] = { 0 };
+		wchar_t_to_char(WToCBuff,1024,InFileName.c_str());
+
+		char Buff[1024] = { 0 };
+		char *FullPath = get_full_path(Buff,1024, WToCBuff);
+
+		Engine_Log("Shader path: [%s]", FullPath);
+	
+		char_to_wchar_t(WStringFileName,1024,FullPath);
+	}
+
 	ComPtr<ID3DBlob> ErrorShaderMsg;
-	HRESULT R = D3DCompileFromFile(InFileName.c_str(),
+	const HRESULT R = D3DCompileFromFile(
+		WStringFileName,
 		InShaderMacro, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		InEntryFunName.c_str(), InShadersVersion.c_str(),
 #if _DEBUG

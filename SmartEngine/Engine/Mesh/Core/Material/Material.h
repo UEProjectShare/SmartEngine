@@ -33,13 +33,18 @@ public:
 	
 	void SetDynamicReflection(bool InDynamicReflection);
 	
+	void SetRefractiveValue(float InRefractiveValue);
+	
+	void SetMetallicity(float InMetallicity);
+	
 	//动态反射
 	FORCEINLINE float IsDynamicReflection() const { 
 		 return bDynamicReflection && 
 		(MaterialType == EMaterialType::Back ||
 		 MaterialType == EMaterialType::Phong ||
 		 MaterialType == EMaterialType::BlinnPhong ||
-		 MaterialType == EMaterialType::PBR); }
+		 MaterialType == EMaterialType::PBR || 
+		 MaterialType == EMaterialType::Transparency); }
 
 	FORCEINLINE float GetTransparency() const { return Transparency; }
 	
@@ -53,7 +58,11 @@ public:
 	
 	FORCEINLINE EMaterialType GetMaterialType() const { return MaterialType; }
 	
-	FORCEINLINE EMaterialDisplayStatusType GetMaterialDisplayStatus() const { return MaterialDisplayStatus; }
+	FORCEINLINE float GetRefractiveValue() const { return Refractive; }
+	
+	FORCEINLINE fvector_3d GetMetallicity() const { return Metallicity; }
+	
+	FORCEINLINE EMaterialDisplayStatusType GetMaterialDisplayStatus()const { return MaterialDisplayStatus; }
 
 	FORCEINLINE XMFLOAT4X4& GetMaterialTransform() { return MaterialTransform; }
 	
@@ -96,4 +105,10 @@ private:
 
 	//动态反射
 	bool bDynamicReflection;
+	
+	//金属度
+	fvector_3d Metallicity;
+	
+	//折射
+	float Refractive;
 };

@@ -86,3 +86,34 @@ void GClientViewport::BuildViewMatrix(float DeltaTime)
 		RightVector.z,	UPVector.z,	 ForwardVector.z,	0.f,
 		V3.x,			V3.y,		 V3.z,				1.f };
 }
+
+void GClientViewport::BuildOrthographicOffCenterLHMatrix(float InRadius, const fvector_3d& InTargetPosition)
+{
+    const XMFLOAT3 TargetPosition = EngineMath::ToFloat3(InTargetPosition);
+    const XMVECTOR TargetPositionTOR = XMLoadFloat3(&TargetPosition);
+
+    const XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ViewMatrix);
+
+    //变换到灯光视口空间
+    XMFLOAT3 ViewCenter;
+    XMStoreFloat3(&ViewCenter, XMVector3TransformCoord(TargetPositionTOR, ShadowViewMatrixRTX));
+
+    //正交关系
+    const float ViewLeft = ViewCenter.x - InRadius;
+    const float ViewRight = ViewCenter.x + InRadius;
+    const float ViewBottom = ViewCenter.y - InRadius;
+    const float ViewTop = ViewCenter.y + InRadius;
+    const float NearZ = ViewCenter.z - InRadius;
+    const float FarZ = ViewCenter.z + InRadius;
+
+    const XMMATRIX ProjectMatrixRIX = XMMatrixOrthographicOffCenterLH(
+        ViewLeft,
+        ViewRight, 
+        ViewBottom,
+        ViewTop, 
+        NearZ, 
+        FarZ);
+
+    //存储
+    XMStoreFloat4x4(&ProjectMatrix, ProjectMatrixRIX);
+}

@@ -7,6 +7,6 @@ class GSky : public GSphereMesh
 
 public:
 	GSky();
-
+	
 	void Tick(float DeltaTime) override;
 };

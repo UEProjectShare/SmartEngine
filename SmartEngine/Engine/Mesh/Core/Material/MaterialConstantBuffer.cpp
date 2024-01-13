@@ -11,5 +11,7 @@ FMaterialConstantBuffer::FMaterialConstantBuffer()
 	, FresnelF0(0.04f, 0.04f, 0.04f)
 	, Transparency(1.f)
 	, TransformInformation(EngineMath::IdentityMatrix4x4())
+	, Refraction(1.1f)
+	, Metallicity(0.2f, 0.2f, 0.2f)
 {
 }

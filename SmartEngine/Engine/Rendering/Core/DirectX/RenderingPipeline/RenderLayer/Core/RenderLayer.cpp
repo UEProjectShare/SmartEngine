@@ -43,7 +43,7 @@ void FRenderLayer::BuildShaderMacro(std::vector<ShaderType::FShaderMacro>& InMac
 	 {
 		 ShaderType::FShaderMacro ShaderMacro;
 		 ShaderMacro.Name = "START_UP_FOG";
-		 ShaderMacro.Definition = GeometryMap->IsStartUPFog() ? "1": "0";
+		 ShaderMacro.Definition = GeometryMap->IsStartUPFog() ? "1" : "0";
 
 		 InMacro.push_back(ShaderMacro);
 	 }
@@ -63,10 +63,7 @@ void FRenderLayer::PreDraw(float DeltaTime)
 void FRenderLayer::Draw(float DeltaTime)
 {
 	//模型构建
-	for (auto& InRenderingData : RenderDatas)
-	{
-		DrawObject(DeltaTime,InRenderingData);
-	}
+	DrawMesh(DeltaTime);
 }
 
 void FRenderLayer::PostDraw(float DeltaTime)
@@ -169,5 +166,18 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 		}
 
 		GeometryMap->MeshConstantBufferViews.Update(InRenderingData.MeshObjectIndex, &ObjectTransformation);		
+	}
+}
+
+void FRenderLayer::ResetPSO()
+{
+	
+}
+
+void FRenderLayer::DrawMesh(float DeltaTime)
+{
+	for (auto& InRenderingData : RenderDatas)
+	{
+		DrawObject(DeltaTime, InRenderingData);
 	}
 }

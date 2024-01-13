@@ -2,16 +2,17 @@
 #include "../../../Math/EngineMath.h"
 
 CMaterial::CMaterial()
-	: bDirty(true)
-	, MaterialIndex(-1)
-	, BaseColor(0.5f, 0.5f, 0.5f, 1.f)
-	, SpecularColor(0.f, 0.f, 0.f)
-	, Roughness(0.2f)
-	, MaterialType(EMaterialType::Lambert)
-	, MaterialDisplayStatus(EMaterialDisplayStatusType::TriangleDisplay)
-	, MaterialTransform(EngineMath::IdentityMatrix4x4())
-	, Transparency(1.f)
-	, bDynamicReflection(false)
+	:bDirty(true)
+	,MaterialIndex(-1)
+	,BaseColor(0.5f, 0.5f, 0.5f, 1.f)
+	,SpecularColor(0.f, 0.f, 0.f)
+	,Roughness(0.2f)
+	,MaterialType(EMaterialType::Lambert)
+	,MaterialDisplayStatus(EMaterialDisplayStatusType::TriangleDisplay)
+	,MaterialTransform(EngineMath::IdentityMatrix4x4())
+	,Transparency(1.f)
+	,bDynamicReflection(false)
+	,Refractive(1.1f)
 {
 
 }
@@ -101,6 +102,20 @@ void CMaterial::SetMaterialIndex(int InNewIndex)
 void CMaterial::SetDynamicReflection(bool InDynamicReflection)
 {
 	bDynamicReflection = InDynamicReflection;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetRefractiveValue(float InRefractiveValue)
+{
+	Refractive = InRefractiveValue;
+
+	SetDirty(true);
+}
+
+void CMaterial::SetMetallicity(float InMetallicity)
+{
+	Metallicity = InMetallicity;
 
 	SetDirty(true);
 }

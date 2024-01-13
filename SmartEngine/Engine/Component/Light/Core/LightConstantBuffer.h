@@ -24,6 +24,9 @@ struct FLight
 	float  xx1;
 	
 	float  xx2;
+
+	//µ∆π‚ ”Ω«
+	XMFLOAT4X4 ShadowTransform;
 };
 
 struct FLightConstantBuffer

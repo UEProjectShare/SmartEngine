@@ -36,7 +36,7 @@ public:
 	
 	void BuildParam();
 	
-	void ResetTextureByType(const std::unique_ptr<FRenderingTexture> *InTexture);
+	void ResetTextureByType(const std::unique_ptr<FRenderingTexture>* InTexture);
 	
 	void SetViewDimension(D3D12_SRV_DIMENSION InNewDimension);
 	

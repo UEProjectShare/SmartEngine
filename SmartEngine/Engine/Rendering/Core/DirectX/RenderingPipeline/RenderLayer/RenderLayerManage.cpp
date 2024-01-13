@@ -4,13 +4,15 @@
 #include "RenderLayer/TransparentRenderLayer.h"
 #include "RenderLayer/BackgroundRenderLayer.h"
 #include "RenderLayer/OpaqueReflectorRenderLayer.h"
+#include "RenderLayer/OpaqueShadowRenderLayer.h"
 
 std::vector<std::shared_ptr<FRenderLayer>> FRenderLayerManage::RenderLayers;
 
 FRenderLayerManage::FRenderLayerManage()
 {
 	RenderLayers.clear();
-
+	
+	CreateRenderLayer<FOpaqueShadowRenderLayer>();
 	CreateRenderLayer<FBackgroundRenderLayer>();
 //	CreateRenderLayer<FAlphaTestRenderLayer>();
 	CreateRenderLayer<FOpaqueRenderLayer>();
@@ -58,6 +60,22 @@ void FRenderLayerManage::Sort()
 	std::sort(RenderLayers.begin(), RenderLayers.end(), CompRenderLayer);
 }
 
+void FRenderLayerManage::ResetPSO(int InLayer)
+{
+	if (const auto InRenderLayer = FindByRenderLayer(InLayer))
+	{
+		InRenderLayer->ResetPSO();
+	}
+}
+
+void FRenderLayerManage::DrawMesh(float DeltaTime, int InLayer)
+{
+	if (const auto InRenderLayer = FindByRenderLayer(InLayer))
+	{
+		InRenderLayer->DrawMesh(DeltaTime);
+	}
+}
+
 std::shared_ptr<FRenderLayer> FRenderLayerManage::FindByRenderLayer(int InRenderLayer)
 {
 	for (auto& Tmp : RenderLayers)
@@ -97,24 +115,16 @@ void FRenderLayerManage::PostDraw(float DeltaTime)
 
 void FRenderLayerManage::Draw(int InLayer, float DeltaTime)
 {
-	for (const auto& Tmp : RenderLayers)
+	if (const auto InRenderLayer = FindByRenderLayer(InLayer))
 	{
-		if (Tmp->GetRenderLayerType() == InLayer)
-		{
-			Tmp->Draw(DeltaTime);
-			break;
-		}
+		InRenderLayer->Draw(DeltaTime);
 	}
 }
 
 void FRenderLayerManage::FindObjectDraw(float DeltaTime, int InLayer, const CMeshComponent* InKey)
 {
-	for (const auto& Tmp : RenderLayers)
+	if (const auto InRenderLayer = FindByRenderLayer(InLayer))
 	{
-		if (Tmp->GetRenderLayerType() == InLayer)
-		{
-			Tmp->FindObjectDraw(DeltaTime, InKey);
-			break;
-		}
+		InRenderLayer->FindObjectDraw(DeltaTime, InKey);		
 	}
 }

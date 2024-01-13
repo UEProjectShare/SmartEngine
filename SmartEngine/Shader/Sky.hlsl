@@ -29,7 +29,7 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	return Out;
 }
 
-float4 PixelShaderMain(MeshVertexOut MVOut) : SV_TARGET
+float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 {	
 	float4 Color = SimpleCubeMap.Sample(TextureSampler, MVOut.PositionH);
 

@@ -23,6 +23,8 @@ public:
 	
 	virtual void BuildViewMatrix(float DeltaTime);
 	
+	void BuildOrthographicOffCenterLHMatrix(float InRadius,const fvector_3d& InTargetPosition);
+	
 	FORCEINLINE float GetFOV() const { return YFOV; }
 	
 	FORCEINLINE float GetAspect() const { return Aspect; }

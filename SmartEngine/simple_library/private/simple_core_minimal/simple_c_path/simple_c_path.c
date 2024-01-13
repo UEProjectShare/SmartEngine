@@ -36,12 +36,18 @@ void get_path_clean_filename(char *buf, const char *path_buf)
 }
 
 void normalization_path(char *path_buf)
-{
+{	
+	//这种替换似乎有点问题 
 	//replace_char_inline(path_buf,'\\','/');
-
-	const char* sub_char_a = "\\";
-	const char* sub_char_b = "/";
-	replace_string_inline(path_buf, sub_char_a, sub_char_b);
+	
+	int len = strlen(path_buf);
+	for (int i = 0; path_buf[i] != 0 && i < len; i++)
+	{
+		if (path_buf[i] == 92) 
+		{
+			path_buf[i] = '/';
+		}
+	}
 }
 
 void normalization_directory(char *buf, const char *path_buf)
@@ -59,6 +65,18 @@ void normalization_directory(char *buf, const char *path_buf)
 	}
 
 	destroy_string(&c_string);
+}
+
+char* get_full_path(char* in_path_buf,int in_buff_len, const char* in_path)
+{
+#ifdef _WIN32
+	_fullpath(in_path_buf, in_path, in_buff_len);
+#else
+	realpath(in_path, in_path_buf);
+#endif
+	normalization_path(in_path_buf);
+
+	return in_path_buf;
 }
 
 void get_path_clean_filename_w(wchar_t* buf, const wchar_t* path_buf)

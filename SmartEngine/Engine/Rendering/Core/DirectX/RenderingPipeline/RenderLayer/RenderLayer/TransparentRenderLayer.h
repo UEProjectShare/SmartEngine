@@ -14,4 +14,6 @@ public:
 	void BuildPSO() override;
 	
 	int GetRenderLayerType() const override { return 1; }
+
+	void ResetPSO() override;
 };

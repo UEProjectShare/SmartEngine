@@ -5,8 +5,10 @@
 
 SamplerState TextureSampler : register(s0);
 SamplerState AnisotropicSampler : register(s1);
+SamplerComparisonState ShadowSampler : register(s2);
 
-Texture2D    SimpleTexture2DMap[TEXTURE2D_MAP_NUM] : register(t1);
+Texture2D    SimpleShadowMap : register(t1);
+Texture2D    SimpleTexture2DMap[TEXTURE2D_MAP_NUM] : register(t2);
 TextureCube  SimpleCubeMap : register(t0);
 
 cbuffer ObjectConstBuffer : register(b0)//b0->b14
@@ -56,11 +58,14 @@ struct MaterialConstBuffer
 	float4 BaseColor;
 
 	float3 SpecularColor;
-	float xxx5;
+	float Refraction;
 
 	float3 FresnelF0;
 	float Transparency;
 	float4x4 TransformInformation;
+
+	float3 Metallicity;
+	float XXX5;
 };
 
 StructuredBuffer<MaterialConstBuffer> Materials : register(t0, Space1);

@@ -3,7 +3,7 @@
 
 #include "ShaderCommon.hlsl"
 
-float4 GetFogValue(float4 InColor, float3 InPointPosition)
+float4 GetFogValue(float4 InColor,float3 InPointPosition)
 {
 #if START_UP_FOG
 	float Distance = length(InPointPosition - ViewportPosition.xyz);
@@ -12,9 +12,9 @@ float4 GetFogValue(float4 InColor, float3 InPointPosition)
 
 	float3 Color = lerp(InColor.xyz, FogColor.xyz, AlphaValue);
 
-	float HeightAlphaValue = saturate((InPointPosition.y - ViewportPosition.y) / max(FogHeight, 1.f));
+	float HeightAlphaValue = saturate((InPointPosition.y - ViewportPosition.y) / max(FogHeight,1.f));
 
-	InColor.xyz = lerp(Color.xyz, InColor.xyz, HeightAlphaValue - FogTransparentCoefficient);
+	InColor.xyz = lerp(Color.xyz, InColor.xyz,HeightAlphaValue - FogTransparentCoefficient);
 #endif
 
 	return InColor;

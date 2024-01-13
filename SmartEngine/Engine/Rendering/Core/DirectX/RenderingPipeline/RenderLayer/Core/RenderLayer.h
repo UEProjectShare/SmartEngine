@@ -41,6 +41,12 @@ public:
 
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
+	//单独设置PSO
+	virtual void ResetPSO();
+
+	//渲染 不包含设置PSO
+	virtual void DrawMesh(float DeltaTime);
+
 	UINT GetRenderPriority() const { return RenderPriority; }
 	
 	virtual void BuildShader() {};

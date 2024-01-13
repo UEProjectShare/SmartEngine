@@ -27,13 +27,13 @@ _CRT_BEGIN_C_HEADER
 typedef struct
 {
 	int index;
-	char paths[8196][1024];//MAX_PATH
+	char paths[2048][512];//MAX_PATH
 }def_c_paths;
 
 typedef struct
 {
 	int index;
-	wchar_t paths[8196][1024];//MAX_PATH
+	wchar_t paths[2048][512];//MAX_PATH
 }def_c_paths_w;
 
 void init_def_c_paths(def_c_paths *c_paths);

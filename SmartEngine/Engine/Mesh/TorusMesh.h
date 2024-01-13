@@ -9,7 +9,9 @@ public:
 	GTorusMesh();
 
 	void Init() override;
-
+	
+	void Tick(float DeltaTime) override;
+	
 	void Draw(float DeltaTime) override;
 
 	void CreateMesh(

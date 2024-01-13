@@ -19,7 +19,7 @@ void IDirectXDeviceInterface::ClearMainSwapChainCanvas()
 
 ComPtr<ID3D12Fence> IDirectXDeviceInterface::GetFence()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -32,7 +32,7 @@ ComPtr<ID3D12Fence> IDirectXDeviceInterface::GetFence()
 
 ComPtr<ID3D12Device> IDirectXDeviceInterface::GetD3dDevice()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -45,7 +45,7 @@ ComPtr<ID3D12Device> IDirectXDeviceInterface::GetD3dDevice()
 
 CLightManage* IDirectXDeviceInterface::GetLightManage()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -63,7 +63,7 @@ CMeshManage* IDirectXDeviceInterface::GetMeshManage()
 
 CWorld* IDirectXDeviceInterface::GetWorld()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		return InEngine->GetWorld();
 	}
@@ -73,7 +73,7 @@ CWorld* IDirectXDeviceInterface::GetWorld()
 
 ComPtr<ID3D12GraphicsCommandList> IDirectXDeviceInterface::GetGraphicsCommandList()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -86,7 +86,7 @@ ComPtr<ID3D12GraphicsCommandList> IDirectXDeviceInterface::GetGraphicsCommandLis
 
 ComPtr<ID3D12CommandAllocator> IDirectXDeviceInterface::GetCommandAllocator()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -99,7 +99,7 @@ ComPtr<ID3D12CommandAllocator> IDirectXDeviceInterface::GetCommandAllocator()
 
 ComPtr<ID3D12CommandQueue> IDirectXDeviceInterface::GetCommandQueue()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -112,7 +112,7 @@ ComPtr<ID3D12CommandQueue> IDirectXDeviceInterface::GetCommandQueue()
 
 ID3D12DescriptorHeap* IDirectXDeviceInterface::GetRTVHeap()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -125,7 +125,7 @@ ID3D12DescriptorHeap* IDirectXDeviceInterface::GetRTVHeap()
 
 ID3D12DescriptorHeap* IDirectXDeviceInterface::GetDSVHeap()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -153,7 +153,7 @@ UINT IDirectXDeviceInterface::GetDescriptorHandleIncrementSizeByCBV_SRV_UAV()
 
 UINT64 IDirectXDeviceInterface::GetCurrentFenceIndex()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{
@@ -166,7 +166,7 @@ UINT64 IDirectXDeviceInterface::GetCurrentFenceIndex()
 
 HWND IDirectXDeviceInterface::GetMainWindowsHandle()
 {
-	if (const CWindowsEngine* InEngine = GetEngine())
+	if (CWindowsEngine* InEngine = GetEngine())
 	{
 		if (InEngine->GetRenderingEngine())
 		{

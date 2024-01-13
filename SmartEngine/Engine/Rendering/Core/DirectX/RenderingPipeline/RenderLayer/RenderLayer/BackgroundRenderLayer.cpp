@@ -48,9 +48,14 @@ void FBackgroundRenderLayer::BuildPSO()
 	DirectXPipelineState->Build(Background);
 }
 
-void FBackgroundRenderLayer::Draw(float DeltaTime)
+void FBackgroundRenderLayer::ResetPSO()
 {
 	DirectXPipelineState->ResetPSO(Background);
+}
+
+void FBackgroundRenderLayer::Draw(float DeltaTime)
+{
+	ResetPSO();
 
 	Super::Draw(DeltaTime);
 }

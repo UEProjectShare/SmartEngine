@@ -43,7 +43,7 @@ int Init(CEngine* InEngine, HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cm
 
 void Tick(CEngine* InEngine)
 {
-	float DeltaTime = 0.03f;
+	const float DeltaTime = 0.03f;
 	InEngine->Tick(DeltaTime);
 
 	//Sleep(30);
@@ -75,7 +75,7 @@ int Exit(CEngine* InEngine)
 	return ReturnValue;
 }
 
-CEngine* Engine = NULL;
+CEngine* Engine = nullptr;
 
 //hInstance 自己的实例
 //prevInstance 上次的实例

@@ -73,7 +73,7 @@ void CTransformationComponent::CorrectionVector()
 	XMStoreFloat3(&ForwardVector, Forward);
 }
 
-fvector_3d CTransformationComponent::GetCorrectionPosition() const
+fvector_3d CTransformationComponent::GetCorrectionPosition()
 {
 	fvector_3d F3D;
 	GetCorrectionPosition(F3D);

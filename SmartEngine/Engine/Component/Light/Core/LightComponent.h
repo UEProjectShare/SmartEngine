@@ -4,7 +4,7 @@
 #include "LightType.h"
 
 class CMeshComponent;
-class CLightComponent : public CTransformationComponent, public IDirectXDeviceInterface
+class CLightComponent : public CTransformationComponent,public IDirectXDeviceInterface
 {
 	typedef CTransformationComponent Super;
 
@@ -37,7 +37,7 @@ public:
 
 protected:
 	void SetLightMesh(CMeshComponent* InLightMesh);
-
+	
 	fvector_3d LightIntensity;
 	
 	ELightType LightType;

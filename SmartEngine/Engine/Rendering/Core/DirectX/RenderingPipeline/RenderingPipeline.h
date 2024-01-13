@@ -5,7 +5,7 @@
 #include "PipelineState/DirectXPipelineState.h"
 #include "RootSignature/DirectXRootSignature.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
-#include "CubeMap/DynamicCubeMap.h"
+#include "DynamicMap/CubeMap/DynamicCubeMap.h"
 #include "RenderLayer/RenderLayerManage.h"
 
 class CMeshComponent;
@@ -30,8 +30,8 @@ public:
 	virtual void Draw(float DeltaTime);
 	
 	virtual void PostDraw(float DeltaTime);
+	
 protected:
-
 	//‰÷»æ≤„º∂
 	FRenderLayerManage RenderLayer;
 

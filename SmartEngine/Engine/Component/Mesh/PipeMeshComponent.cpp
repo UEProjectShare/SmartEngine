@@ -107,7 +107,7 @@ void CPipeMeshComponent::BuildRadiusPoint(
 
 				MyVertex.UTangent = XMFLOAT3(-BetaValueSin, 0.0f, BetaValueCos);
 
-				float D = InBottomRadius - InTopRadius;
+				const float D = InBottomRadius - InTopRadius;
 				XMFLOAT3 Bitangent(D * BetaValueCos, -InHeight, D * BetaValueSin);
 
 				const XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
@@ -135,9 +135,9 @@ void CPipeMeshComponent::BuildRadiusPoint(
 				const float D = InBottomRadius - InTopRadius;
 				XMFLOAT3 Bitangent(D * BetaValueCos, -InHeight, D * BetaValueSin);
 
-				const XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
-				const XMVECTOR B = XMLoadFloat3(&Bitangent);
-				const XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
+				XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
+				XMVECTOR B = XMLoadFloat3(&Bitangent);
+				XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
 				XMStoreFloat3(&MyVertex.Normal, N);
 
 				MyVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InAxialSubdivision);
@@ -225,8 +225,8 @@ void CPipeMeshComponent::CreateMesh(
 
 				FVertex& InOuterVertex = MeshData.VertexData[MeshData.VertexData.size()-1];
 				
-				InOuterVertex.TexCoord.x =(BetaValueCos * 0.5f) + 0.5f;
-				InOuterVertex.TexCoord.y =(BetaValueSin * 0.5f) + 0.5f;
+				InOuterVertex.TexCoord.x = (BetaValueCos * 0.5f) + 0.5f;
+				InOuterVertex.TexCoord.y = (BetaValueSin * 0.5f) + 0.5f;
 
 				//»æÖÆÄÚÈ¦
 				MeshData.VertexData.push_back(FVertex(

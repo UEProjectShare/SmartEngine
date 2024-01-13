@@ -29,7 +29,7 @@ void CConeMeshComponent::CreateMesh(
 
 	for (uint32_t i = 0; i <= InHeightSubdivision; ++i)
 	{
-		float Y = 0.5f * InHeight - HeightInterval * i;
+		const float Y = 0.5f * InHeight - HeightInterval * i;
 		const float Radius = i * RadiusInterval;
 		for (uint32_t j = 0; j <= InAxialSubdivision; ++j)
 		{

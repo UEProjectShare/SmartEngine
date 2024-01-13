@@ -13,6 +13,9 @@
 #include "transformation/vector/vector_4id.h"
 #include "transformation/vector/vector_color.h"
 
+//≈∑¿≠Ω«
+#include "transformation/rotator/rotator.h"
+
 //æÿ’Û
 #include "transformation/matrix/matrix_2x2.h"
 #include "transformation/matrix/matrix_3x3.h"

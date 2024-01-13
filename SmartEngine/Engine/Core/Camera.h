@@ -20,7 +20,7 @@ public:
 	GCamera();
 
 	void BeginInit() override;
-
+	
 	void Tick(float DeltaTime) override;
 
 	virtual void ExecuteKeyboard(const FInputKey& InputKey);
@@ -57,9 +57,9 @@ protected:
 	//ÇòÃæ×ø±ê
 	float Radius;
 	
-	float A;
+	float A;//Theta
 	
-	float B;//Theta
+	float B;//
 
 	class CMeshComponent* SphereMesh;
 };

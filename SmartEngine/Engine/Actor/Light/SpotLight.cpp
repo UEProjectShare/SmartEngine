@@ -22,11 +22,11 @@ void GSpotLight::Tick(float DeltaTime)
 	SetConicalOuterCorner(O * fabsf(cos(index_test)) + 20.f);
 
 	fvector_3d v3 = GetRotation();
-	//v3.x += DeltaTime * 40.f;
+	v3.x += DeltaTime * 40.f;
 	v3.y += DeltaTime * 40.f;
 	////v3.z += DeltaTime * 100.f;
 
-	//SetRotation(v3);
+	SetRotation(v3);
 }
 
 float GSpotLight::GetConicalInnerCorner() const

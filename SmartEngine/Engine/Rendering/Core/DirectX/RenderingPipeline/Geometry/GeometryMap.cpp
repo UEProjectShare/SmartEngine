@@ -19,7 +19,7 @@ UINT MeshObjectCount = 0;
 
 FGeometryMap::FGeometryMap()
 {
-	Geometries.insert(pair<int, FGeometry>(0, FGeometry()));
+	Geometries.insert(pair<int,FGeometry>(0,FGeometry()));
 
 	RenderingTexture2DResources = std::make_shared<FRenderingTextureResourcesUpdate>();
 	RenderingTexture2DResources->SetViewDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
@@ -70,70 +70,16 @@ void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 {
 	UpdateMaterialShaderResourceView(DeltaTime, ViewportInfo);
 
-	//更新灯光
-	FLightConstantBuffer LightConstantBuffer;
-	for (size_t i = 0 ; i < GetLightManage()->Lights.size(); i++)
-	{
-		if (CLightComponent* InLightComponent = GetLightManage()->Lights[i])
-		{
-			const fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
-			LightConstantBuffer.SceneLights[i].LightIntensity = XMFLOAT3(LightIntensity.x, LightIntensity.y, LightIntensity.z);
-			LightConstantBuffer.SceneLights[i].LightDirection = InLightComponent->GetForwardVector();
-			
-			LightConstantBuffer.SceneLights[i].Position = InLightComponent->GetPosition();
-			LightConstantBuffer.SceneLights[i].LightType = InLightComponent->GetLightType();
-			
-			switch (InLightComponent->GetLightType())
-			{
-				case ELightType::PointLight:
-				case ELightType::SpotLight:
-				{
-					if (const CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
-					{
-						LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
-						LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
-					}
-				
-					if (InLightComponent->GetLightType() == ELightType::SpotLight)
-					{
-						if (const CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
-						{
-							LightConstantBuffer.SceneLights[i].ConicalInnerCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalInnerCorner());
-							LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
-						}
-					}
-
-					break;
-				}
-			}
-		}
-	}	
-	LightConstantBufferViews.Update(0, &LightConstantBuffer);
-
+	//更新灯
+	UpdateLight(DeltaTime, ViewportInfo);
+	
 	//更新视口
 	UpdateCalculationsViewport(DeltaTime, ViewportInfo,0);
 
-	//更新雾
-	if (Fog)
-	{
-		if (Fog->IsDirty())
-		{
-			FFogConstantBuffer FogConstantBuffer;
-			{
-				const fvector_color FogColor = Fog->GetFogColor();
-				FogConstantBuffer.FogColor = XMFLOAT3(FogColor.r, FogColor.g, FogColor.b);
+	UpdateFog(DeltaTime, ViewportInfo);
 
-				FogConstantBuffer.FogStart = Fog->GetFogStart();
-				FogConstantBuffer.FogRange = Fog->GetFogRange();
-				FogConstantBuffer.FogHeight = Fog->GetFogHeight();
-				FogConstantBuffer.FogTransparentCoefficient = Fog->GetFogTransparentCoefficient();
-			}
-
-			FogConstantBufferViews.Update(0, &FogConstantBuffer);
-
-			Fog->SetDirty(false);
-		}
-	}
+	//更新视口
+	DynamicShadowMap.UpdateCalculations(DeltaTime, ViewportInfo);
 }
 
 void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportInfo& ViewportInfo, UINT InConstantBufferOffset) const
@@ -151,7 +97,7 @@ void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportIn
 	ViewportConstantBufferViews.Update(InConstantBufferOffset, &ViewportTransformation);
 }
 
-void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const
+void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
 	FMaterialConstantBuffer MaterialConstantBuffer;
 	for (size_t i = 0; i < Materials.size(); i++)
@@ -162,24 +108,29 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 			if (InMaterial->IsDirty())
 			{
 				//BaseColor
-				const fvector_4d InBaseColor = InMaterial->GetBaseColor();
-				MaterialConstantBuffer.BaseColor = XMFLOAT4(InBaseColor.x, InBaseColor.y, InBaseColor.z, InBaseColor.w);
+				MaterialConstantBuffer.BaseColor = EngineMath::ToFloat4(InMaterial->GetBaseColor());
 
-				const fvector_3d InSpecularColor = InMaterial->GetSpecularColor();
-				MaterialConstantBuffer.SpecularColor = XMFLOAT3(InSpecularColor.x, InSpecularColor.y, InSpecularColor.z);
+				//高光颜色
+				MaterialConstantBuffer.SpecularColor = EngineMath::ToFloat3(InMaterial->GetSpecularColor());
 
 				//粗糙度
 				MaterialConstantBuffer.Roughness = InMaterial->GetRoughness();
+
+				//折射率
+				MaterialConstantBuffer.Refraction = InMaterial->GetRefractiveValue();
 
 				//类型输入
 				MaterialConstantBuffer.MaterialType = InMaterial->GetMaterialType();
 				
 				//F0输入
-				const fvector_3d F0 = InMaterial->GetFresnelF0();
+				fvector_3d F0 = InMaterial->GetFresnelF0();
 				MaterialConstantBuffer.FresnelF0 = XMFLOAT3(F0.x, F0.y, F0.z);
 
 				//透明度
 				MaterialConstantBuffer.Transparency = InMaterial->GetTransparency();
+
+				//金属度
+				MaterialConstantBuffer.Metallicity = EngineMath::ToFloat3(InMaterial->GetMetallicity());
 
 				//外部资源导入
 				{
@@ -228,9 +179,110 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 	}
 }
 
+void FGeometryMap::UpdateLight(float DeltaTime, const FViewportInfo& ViewportInfo)
+{
+	//更新灯光
+	FLightConstantBuffer LightConstantBuffer;
+	for (size_t i = 0; i < GetLightManage()->Lights.size(); i++)
+	{
+		if (CLightComponent* InLightComponent = GetLightManage()->Lights[i])
+		{
+			const fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
+			LightConstantBuffer.SceneLights[i].LightIntensity = XMFLOAT3(LightIntensity.x, LightIntensity.y, LightIntensity.z);
+			LightConstantBuffer.SceneLights[i].LightDirection = InLightComponent->GetForwardVector();
+
+			LightConstantBuffer.SceneLights[i].Position = InLightComponent->GetPosition();
+			LightConstantBuffer.SceneLights[i].LightType = InLightComponent->GetLightType();
+
+			switch (InLightComponent->GetLightType())
+			{
+				case ELightType::DirectionalLight:
+				{
+					XMFLOAT3 ForwardVector = InLightComponent->GetForwardVector();
+
+					DynamicShadowMap.BuildParallelLightMatrix(
+						EngineMath::ToVector3d(ForwardVector), fvector_3d(0.f), 70.f);
+
+					XMFLOAT4X4 ShadowViewMatrix; 
+					XMFLOAT4X4 ShadowProjectMatrix;
+					DynamicShadowMap.GetViewportMatrix(ShadowViewMatrix, ShadowProjectMatrix);
+
+					XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ShadowViewMatrix);
+					const XMMATRIX ShadowProjectMatrixRTX = XMLoadFloat4x4(&ShadowProjectMatrix);
+
+					//NDC [-1,1]; = >[0,1]
+					//半兰伯特思想
+					const XMMATRIX Transform =
+					{
+						0.5f, 0.0f, 0.0f, 0.0f,
+						0.0f, -0.5f, 0.0f, 0.0f,
+						0.0f, 0.0f, 1.0f, 0.0f,
+						0.5f, 0.5f, 0.0f, 1.0f
+					};
+
+					const XMMATRIX ShadowViewProjectMatrixRTX = 
+						ShadowViewMatrixRTX * ShadowProjectMatrixRTX * Transform;
+
+					//存储Shadow变换信息
+					XMStoreFloat4x4(&LightConstantBuffer.SceneLights[i].ShadowTransform, XMMatrixTranspose(ShadowViewProjectMatrixRTX));
+
+					break;
+				}
+				case ELightType::PointLight:
+				case ELightType::SpotLight:
+				{
+					if (const CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
+					{
+						LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
+						LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
+					}
+
+					if (InLightComponent->GetLightType() == ELightType::SpotLight)
+					{
+						if (const CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
+						{
+							LightConstantBuffer.SceneLights[i].ConicalInnerCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalInnerCorner());
+							LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
+						}
+					}
+
+					break;
+				}
+			}
+		}
+	}
+
+	LightConstantBufferViews.Update(0, &LightConstantBuffer);
+}
+
+void FGeometryMap::UpdateFog(float DeltaTime, const FViewportInfo& ViewportInfo) const
+{
+	//更新雾
+	if (Fog)
+	{
+		if (Fog->IsDirty())
+		{
+			FFogConstantBuffer FogConstantBuffer;
+			{
+				const fvector_color FogColor = Fog->GetFogColor();
+				FogConstantBuffer.FogColor = XMFLOAT3(FogColor.r, FogColor.g, FogColor.b);
+
+				FogConstantBuffer.FogStart = Fog->GetFogStart();
+				FogConstantBuffer.FogRange = Fog->GetFogRange();
+				FogConstantBuffer.FogHeight = Fog->GetFogHeight();
+				FogConstantBuffer.FogTransparentCoefficient = Fog->GetFogTransparentCoefficient();
+			}
+
+			FogConstantBufferViews.Update(0, &FogConstantBuffer);
+
+			Fog->SetDirty(false);
+		}
+	}
+}
+
 void FGeometryMap::BuildFog()
 {
-	for (const auto& Tmp : GObjects)
+	for (auto& Tmp : GObjects)
 	{
 		if (CFogComponent* InFogComponent = dynamic_cast<CFogComponent*>(Tmp))
 		{
@@ -238,6 +290,17 @@ void FGeometryMap::BuildFog()
 			break;
 		}
 	}
+}
+
+void FGeometryMap::BuildShadow()
+{
+	DynamicShadowMap.init(2048, 2048);
+
+	DynamicShadowMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
+
+	DynamicShadowMap.BuildDepthStencilDescriptor();
+
+	DynamicShadowMap.BuildRenderTargetDescriptor();
 }
 
 void FGeometryMap::BuildDynamicReflectionMesh()
@@ -289,7 +352,16 @@ void FGeometryMap::LoadTexture() const
 	init_def_c_paths(&Paths);
 
 	const char RootPath[] = "../SmartEngine/Asset";
-	find_files(RootPath, &Paths, true);
+
+	//相对路径转为绝对路径
+	char Buff[1024] = { 0 };
+	char* RootPathFull = get_full_path(Buff,1024,RootPath);
+
+	Engine_Log("Load texture root path: [%s]",RootPathFull);
+
+	find_files(RootPathFull, &Paths, true);
+
+	Engine_Log("Load texture num: [%i]", Paths.index);
 
 	for (int i = 0; i < Paths.index; i++)
 	{
@@ -314,6 +386,8 @@ void FGeometryMap::LoadTexture() const
 				RenderingTexture2DResources->LoadTextureResources(TexturePath);
 			}
 		}	
+
+		Engine_Log("texture fullname: [%s]", Paths.paths[i]);
 	}
 }
 
@@ -332,7 +406,8 @@ void FGeometryMap::BuildDescriptorHeap()
 	DescriptorHeap.Build(
 		GetDrawTexture2DResourcesNumber() + //Texture2D
 		GetDrawCubeMapResourcesNumber() + //静态Cube贴图
-		1);//动态Cube贴图
+		1 + //动态Cube贴图
+		1);//Shadow
 }
 
 void FGeometryMap::BuildMeshConstantBuffer()
@@ -444,6 +519,7 @@ void FGeometryMap::BuildViewportConstantBufferView(UINT InViewportOffset)
 	ViewportConstantBufferViews.CreateConstant(sizeof(FViewportTransformation), 
 		1 + //主视口 摄像机
 		GetDynamicReflectionViewportNum() + //这个是动态反射的视口
+		1+ //Shadow 摄像机视口
 		InViewportOffset);
 
 	////Handle
@@ -473,6 +549,11 @@ std::unique_ptr<FRenderingTexture>* FGeometryMap::FindRenderingTexture(const std
 	}
 
 	return nullptr;
+}
+
+void FGeometryMap::DrawShadow(float DeltaTime)
+{
+	DynamicShadowMap.Draw(DeltaTime);
 }
 
 void FGeometryMap::DrawLight(float DeltaTime)

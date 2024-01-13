@@ -16,6 +16,15 @@ void GBoxMesh::Init()
 
 }
 
+void GBoxMesh::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//auto R = GetRotation();
+	//R.x += DeltaTime *10.f;
+	//SetRotation(R);
+}
+
 void GBoxMesh::Draw(float DeltaTime)
 {
 	Super::Draw(DeltaTime);

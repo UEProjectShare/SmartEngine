@@ -15,6 +15,15 @@ void GTorusMesh::Init()
 
 }
 
+void GTorusMesh::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//auto R = GetRotation();
+	//R.x += DeltaTime *10.f;
+	//SetRotation(R);
+}
+
 void GTorusMesh::Draw(float DeltaTime)
 {
 

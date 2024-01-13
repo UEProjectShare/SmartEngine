@@ -37,10 +37,14 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 			const float dr = InBottomRadius-InTopRadius;
 			XMFLOAT3 Bitangent(dr * BetaValueCos, -InHeight, dr * BetaValueSin);
 
-			XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
-			XMVECTOR B = XMLoadFloat3(&Bitangent);
-			XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
+			const XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
+			const XMVECTOR B = XMLoadFloat3(&Bitangent);
+			const XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
 			XMStoreFloat3(&MyVertex.Normal, N);
+
+			//展UV
+			MyVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InHeightSubdivision);
+			MyVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InAxialSubdivision);
 		}
 	}
 
@@ -82,15 +86,24 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 	{
 		const uint32_t Index = MeshData.VertexData.size();
 
-		float Y = 0.5f * InHeight;
+		const float Y = 0.5f * InHeight;
 		for (uint32_t i = 0; i <= InAxialSubdivision; ++i)
 		{
+			const float RCos = cosf(i * BetaValue);
+			const float RSin = sinf(i * BetaValue);
+
 			MeshData.VertexData.push_back(FVertex(
 				XMFLOAT3(
-					InTopRadius * cosf(i * BetaValue),//x
+					InTopRadius * RCos,//x
 					Y,//y
-					InTopRadius * sinf(i * BetaValue)), //z
+					InTopRadius * RSin), //z
 				XMFLOAT4(Colors::White), XMFLOAT3(0.f, 1.f, 0.f)));
+
+			FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+
+			//展UV
+			MyVertex.TexCoord.x = RCos;
+			MyVertex.TexCoord.y = RSin;
 		}
 
 		//添加中点
@@ -114,12 +127,21 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 		const float Y = -0.5f * InHeight;
 		for (uint32_t i = 0; i <= InAxialSubdivision; ++i)
 		{
+			const float RCos = cosf(i * BetaValue);
+			const float RSin = sinf(i * BetaValue);
+
 			MeshData.VertexData.push_back(FVertex(
 				XMFLOAT3(
-					InBottomRadius * cosf(i * BetaValue),//x
+					InBottomRadius * RCos,//x
 					Y,//y
-					InBottomRadius * sinf(i * BetaValue)), //z
-				XMFLOAT4(Colors::White), XMFLOAT3(0.f, -1.f, 0.f)));
+					InBottomRadius * RSin), //z
+				XMFLOAT4(Colors::White),XMFLOAT3(0.f, -1.f, 0.f)));
+
+			FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+
+			//展UV
+			MyVertex.TexCoord.x = RCos;
+			MyVertex.TexCoord.y = RSin;
 		}
 
 		//添加中点

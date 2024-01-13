@@ -87,22 +87,22 @@ int CDirectXRenderingEngine::PostInit()
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
 		////灯光生成
-		//if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
-		//{
-		//	ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
-		//	ParallelLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-		//	ParallelLight->SetScale(fvector_3d(1));
-		//	ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
-		//}
-		//点灯光生成
-		if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		{
-			PointLight->SetPosition(XMFLOAT3(0.f, -6.f, 10.f));
-			PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-			
-			PointLight->SetLightIntensity(fvector_3d(0.9f));
-			PointLight->SetEndAttenuation(190.f);
+			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
+			ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
+			ParallelLight->SetScale(fvector_3d(1));
+			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
 		}
+		//点灯光生成
+		//if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		//{
+		//	PointLight->SetPosition(XMFLOAT3(0.f, -6.f, 10.f));
+		//	PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+		//	
+		//	PointLight->SetLightIntensity(fvector_3d(0.9f));
+		//	PointLight->SetEndAttenuation(190.f);
+		//}
 
 		//聚灯光生成
 		//if (GSpotLight* SpotLight = World->CreateActorObject<GSpotLight>())
@@ -565,18 +565,6 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
-		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//PBR模型
-		{
-			SphereMesh->CreateMesh(2.f, 100, 100);
-			SphereMesh->SetPosition(XMFLOAT3(15.f, 2, 0.f));
-			SphereMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
-			{
-				InMaterial->SetBaseColor(fvector_4d(1.f));
-				InMaterial->SetMaterialType(EMaterialType::PBR);
-			}
-		}
-
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//透明
 		{
 			SphereMesh->SetMeshRenderLayerType(EMeshRenderLayerType::RENDERLAYER_TRANSPARENT);
@@ -608,20 +596,101 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
+		//FBX
+		if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())
+		{
+			//
+			std::string Path = "../SmartEngine/Asset/Heart.fbx";
+			CustomMesh->CreateMesh(Path);
+			CustomMesh->SetPosition(XMFLOAT3(0.f, 0, 50.f));
+			CustomMesh->SetRotation(fvector_3d(0.f, 180.f, 0.f));
+
+			if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		//if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//反射球
+		//{
+		//	string Path = "../SmartEngine/Asset/man.obj";
+		//	CustomMesh->CreateMesh(Path);
+		//
+		//	CustomMesh->SetPosition(XMFLOAT3(0.f, -12, 30.f));
+		//	CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+		//	if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+		//	{
+		//		InMaterial->SetBaseColor(fvector_4d(1.f));
+		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+		//
+		//		InMaterial->SetRoughness(0.01f);
+		//		InMaterial->SetFresnelF0(fvector_3d(0.5f));
+		//	}
+		//}
+
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//透明的珠子
 		{
-			SphereMesh->SetMeshRenderLayerType(EMeshRenderLayerType::RENDERLAYER_TRANSPARENT);
+			SphereMesh->SetMeshRenderLayerType(EMeshRenderLayerType::RENDERLAYER_OPAQUE_REFLECTOR);
 			SphereMesh->CreateMesh(2.f, 100, 100);
-			SphereMesh->SetPosition(XMFLOAT3(15.f, 17, 0.f));
+			SphereMesh->SetPosition(XMFLOAT3(0.f, 9, 10.f));
+			//SphereMesh->SetPosition(XMFLOAT3(15.f, 18, 0.f));
 			SphereMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
 			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
 			{
-				InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetBaseColor(fvector_4d(0.f));
 				InMaterial->SetMaterialType(EMaterialType::Transparency);
 
 				InMaterial->SetRoughness(0.01f);
 				InMaterial->SetFresnelF0(fvector_3d(0.5f));
-				InMaterial->SetTransparency(0.2f);
+				InMaterial->SetTransparency(1.f);
+				InMaterial->SetDynamicReflection(true);
+
+				InMaterial->SetSpecular(fvector_3d(1.f));
+				InMaterial->SetRefractiveValue(1.11f);
+			}
+		}
+
+		//PBR模型组
+		{
+			//自由设定
+			if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//PBR模型
+			{
+				SphereMesh->CreateMesh(2.f, 30, 30);
+				SphereMesh->SetPosition(XMFLOAT3(15.f, 2, 0.f));
+				SphereMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+				if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+				{
+					InMaterial->SetBaseColor(fvector_4d(1.f));
+					InMaterial->SetMaterialType(EMaterialType::PBR);
+				}
+			}
+
+			int Row = 6;
+			int Colum = 6;
+			for (int i = 0; i < Colum; i++)
+			{
+				for (int j = 0; j < Row; j++)
+				{
+					fvector_3d PBRPosition(25.f, -3.f, 5.f);
+					PBRPosition.y += i * 5.f;
+					PBRPosition.z += j * 5.f;
+
+					if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//PBR模型
+					{
+						SphereMesh->CreateMesh(2.f, 30, 30);
+						SphereMesh->SetPosition(XMFLOAT3(PBRPosition.x, PBRPosition.y, PBRPosition.z));
+						SphereMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+						if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
+						{
+							InMaterial->SetBaseColor(fvector_4d(1.f));
+							InMaterial->SetMaterialType(EMaterialType::PBR);
+
+							InMaterial->SetRoughness((static_cast<float>(j) + 1.f)   / static_cast<float>(Row));
+							InMaterial->SetMetallicity((static_cast<float>(i) + 1.f) / static_cast<float>(Colum));
+						}
+					}
+				}
 			}
 		}
 
@@ -631,7 +700,7 @@ int CDirectXRenderingEngine::PostInit()
 		}
 
 		//雾的实例
-		if (const GFog* Fog = World->CreateActorObject<GFog>())
+		if (GFog* Fog = World->CreateActorObject<GFog>())
 		{
 			Fog->SetFogColor(fvector_color(0.7f, 0.7f, 0.9f,1.f));
 			Fog->SetFogStart(10.f);
@@ -640,6 +709,17 @@ int CDirectXRenderingEngine::PostInit()
 			Fog->SetFogHeight(5000.f);
 			Fog->SetFogTransparentCoefficient(0.00f);
 
+		}
+
+		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
+		{
+			InPlaneMesh->CreateMesh(7.f, 7.f, 2, 2);
+			InPlaneMesh->SetPosition(XMFLOAT3(0.f, 0.f, 40.f));
+			InPlaneMesh->SetRotation(fvector_3d(90.f, 90.f, 0.f));
+			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(ShadowTexture);
+			}
 		}
 	}
 	
@@ -843,7 +923,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	D3D_FEATURE_LEVEL_11_0 目标功能级别支持Direct3D 11.0包含 shader model 5.
 	*/
 
-	HRESULT D3dDeviceResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3dDevice));
+	HRESULT D3dDeviceResult = D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3dDevice));
 	if (FAILED(D3dDeviceResult))
 	{
 		//warp
@@ -960,7 +1040,8 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	D3D12_DESCRIPTOR_HEAP_DESC DSVDescriptorHeapDesc;
 	DSVDescriptorHeapDesc.NumDescriptors = 
 		1 + //本身深度
-		1;//CubeMap深度
+		1 + //CubeMap深度
+		1;  //Shadow
 
 	DSVDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	DSVDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;

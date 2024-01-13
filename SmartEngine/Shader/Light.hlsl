@@ -16,6 +16,9 @@ struct Light
 	float  ConicalOuterCorner;//spot
 	float xx1;
 	float xx2;
+
+	//µ∆π‚ ”Ω«
+	float4x4 ShadowTransform;
 };
 
 float3 GetLightDirection(Light L, float3 InObjectWorldLocation)

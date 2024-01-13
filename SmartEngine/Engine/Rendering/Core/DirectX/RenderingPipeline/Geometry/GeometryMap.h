@@ -5,6 +5,7 @@
 #include "../DescriptorHeap/DirectXDescriptorHeap.h"
 #include "../ConstantBuffer/ConstantBufferViews.h"
 #include "../../../../../Core/Viewport/ViewportInfo.h"
+#include "../DynamicMap/ShadowMap/DynamicShadowMap.h"
 
 class CMaterial;
 struct FRenderingTexture;
@@ -52,6 +53,10 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	friend class FRenderLayer;
 	
 	friend class FDynamicCubeMap;
+	
+	friend class FDynamicShadowMap;
+	
+	friend class FRenderingPipeline;
 
 	FGeometryMap();
 	
@@ -70,12 +75,18 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 		const FViewportInfo& ViewportInfo,
 		UINT InConstantBufferOffset) const;
 
-	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const;
+	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo);
+	
+	void UpdateLight(float DeltaTime, const FViewportInfo& ViewportInfo);
+	
+	void UpdateFog(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 
 	//收集动态反射模型
 	void BuildDynamicReflectionMesh();
 	
 	void BuildFog();
+	
+	void BuildShadow();
 	
 	void BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
 	
@@ -131,6 +142,8 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	
 	std::unique_ptr<FRenderingTexture>* FindRenderingTexture(const std::string& InKey) const;
 	
+	void DrawShadow(float DeltaTime);
+	
 	void DrawLight(float DeltaTime);
 	
 	void DrawViewport(float DeltaTime);
@@ -158,9 +171,9 @@ protected:
 	
 	FConstantBufferViews ViewportConstantBufferViews;
 	
-	FConstantBufferViews LightConstantBufferViews;
-	
 	FConstantBufferViews FogConstantBufferViews;
+	
+	FConstantBufferViews LightConstantBufferViews;
 
 	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingTexture2DResources;
 	
@@ -171,4 +184,6 @@ protected:
 	std::vector<CMeshComponent*> DynamicReflectionMeshComponents;
 	
 	CFogComponent* Fog;
+
+	FDynamicShadowMap DynamicShadowMap;
 };

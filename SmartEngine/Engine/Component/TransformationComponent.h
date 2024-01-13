@@ -6,7 +6,7 @@ class CTransformationComponent : public CComponent
 public:
 	CTransformationComponent();
 
-	virtual void SetPosition(const XMFLOAT3 &InNewPosition);
+	virtual void SetPosition(const XMFLOAT3& InNewPosition);
 	
 	virtual void SetRotation(const fvector_3d& InNewRotation);
 	
@@ -33,7 +33,7 @@ public:
 	//½ÃÕýUp right look(fd) ·µ»Ø pos
 	void CorrectionVector(); 
 
-	fvector_3d GetCorrectionPosition() const;
+	fvector_3d GetCorrectionPosition();
 	
 	void GetCorrectionPosition(fvector_3d& InPos3) const;
 private:

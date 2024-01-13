@@ -10,7 +10,7 @@ FOpaqueReflectorRenderLayer::FOpaqueReflectorRenderLayer()
 void FOpaqueReflectorRenderLayer::Draw(float DeltaTime)
 {
 	//重置当前的PSO
-	DirectXPipelineState->ResetPSO();
+	ResetPSO();
 
 	Super::Draw(DeltaTime);
 }
@@ -52,4 +52,9 @@ void FOpaqueReflectorRenderLayer::BuildPSO()
 	////构建一遍线框模式
 	//DirectXPipelineState->SetFillMode(true);
 	//DirectXPipelineState->Build(Wireframe);
+}
+
+void FOpaqueReflectorRenderLayer::ResetPSO()
+{
+	DirectXPipelineState->ResetPSO(Reflector);
 }

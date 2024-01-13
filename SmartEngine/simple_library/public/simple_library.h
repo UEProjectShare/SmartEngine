@@ -53,3 +53,6 @@
 
 //math
 #include "simple_math/simple_core_math.h"
+
+//image
+#include "simple_image/simple_image.h"
