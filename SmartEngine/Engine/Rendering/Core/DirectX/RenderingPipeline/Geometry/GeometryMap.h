@@ -1,11 +1,12 @@
 #pragma once
-#include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../Interface/DirectXDeviceInterface.h"
 #include "../../../../../Mesh/Core/MeshType.h"
 #include "RenderingData.h"
 #include "../DescriptorHeap/DirectXDescriptorHeap.h"
 #include "../ConstantBuffer/ConstantBufferViews.h"
 #include "../../../../../Core/Viewport/ViewportInfo.h"
 #include "../DynamicMap/ShadowMap/DynamicShadowMap.h"
+#include "../DynamicMap/ShadowMap/DynamicShadowCubeMap.h"
 
 class CMaterial;
 struct FRenderingTexture;
@@ -138,6 +139,14 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	//构建我们的视口常量缓冲区视图
 	void BuildViewportConstantBufferView(UINT InViewportOffset = 0);
 	
+	UINT GetDynamicReflectionMeshComponentsSize() const;
+	
+	CMeshComponent* GetDynamicReflectionMeshComponents(int Index) const;
+	
+	UINT GetViewportConstantBufferByteSize() const;
+	
+	D3D12_GPU_VIRTUAL_ADDRESS ViewportGPUVirtualAddress() const;
+	
 	bool IsStartUPFog() const;
 	
 	std::unique_ptr<FRenderingTexture>* FindRenderingTexture(const std::string& InKey) const;
@@ -186,4 +195,6 @@ protected:
 	CFogComponent* Fog;
 
 	FDynamicShadowMap DynamicShadowMap;
+
+	FDynamicShadowCubeMap DynamicShadowCubeMap;
 };

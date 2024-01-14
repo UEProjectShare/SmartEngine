@@ -11,6 +11,9 @@
 #include "transformation/matrix/matrix_3x3.h"
 #include "transformation/matrix/matrix_4x4.h"
 
+//四元数
+#include "transformation/quaternion/quat.h"
+
 using namespace std;
 namespace math_utils
 {
@@ -49,4 +52,27 @@ namespace math_utils
 
 	//任意轴旋转
 	fmatrix_4x4 matrix_rotation_axis(const fvector_3d &axis,const float angle);
+
+	//四元数转矩阵
+	//惯性->物体
+	void inertia_to_object(const fquat &in_quat, fmatrix_3x3& out_rotation_matrix);
+
+	//物体->惯性
+	void object_to_inertia(const fquat &in_quat, fmatrix_3x3& out_rotation_matrix);
+
+	//向量
+	//惯性->物体 
+	//默认的 in_rotation_matrix 是 惯->物体
+	fvector_3d inertia_to_object(const fvector_3d& in_vector,const fmatrix_3x3& in_rotation_matrix);
+
+	//物体->惯性
+	fvector_3d object_to_inertia(const fvector_3d& in_vector, const fmatrix_3x3& in_rotation_matrix);
+
+	//旋转矩阵->四元数
+	void matrix_to_quat(const fmatrix_3x3& in_rotation_matrix, fquat& out_quat);
+
+	//旋转矩阵->四元数
+	fquat matrix_to_quat(const fmatrix_3x3& in_rotation_matrix);
+
+
 }

@@ -1,12 +1,13 @@
 #pragma once
-#include "../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../Interface/DirectXDeviceInterface.h"
 #include "Geometry/GeometryMap.h"
 #include "../../../../Shader/Core/Shader.h"
 #include "PipelineState/DirectXPipelineState.h"
 #include "RootSignature/DirectXRootSignature.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
-#include "DynamicMap/CubeMap/DynamicCubeMap.h"
+#include "DynamicMap/CubeMap/DynamicReflectionCubeMap.h"
 #include "RenderLayer/RenderLayerManage.h"
+#include "UI/IMGUIPipeline.h"
 
 class CMeshComponent;
 //提供渲染内容的接口
@@ -41,5 +42,7 @@ protected:
 	
 	FGeometryMap GeometryMap;
 
-	FDynamicCubeMap DynamicCubeMap;
+	FDynamicReflectionCubeMap DynamicCubeMap;
+
+	FIMGUIPipeline UIPipeline;
 };

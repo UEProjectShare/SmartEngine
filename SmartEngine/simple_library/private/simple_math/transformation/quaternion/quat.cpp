@@ -1,5 +1,6 @@
 #include "../../../../public/simple_math/transformation/quaternion/quat.h"
 #include "../../../../public/simple_math/transformation/vector/vector_3d.h"
+#include "../../../../public/simple_math/transformation/rotator/rotator.h"
 #include <cmath>
 #include <assert.h> 
 
@@ -157,4 +158,50 @@ fquat fquat::inverse()
 	assert(is_normalized());//至少单位化
 
 	return fquat(-x,-y,-z,w);
+}
+
+void fquat::inertia_to_object(const frotator& in_rot)
+{
+	feuler euler;
+	in_rot.rotator_to_euler(euler);
+
+	//半角
+	euler /= 2.f;
+
+	float sin_heading = sin(euler.heading);
+	float sin_pitch = sin(euler.pitch);
+	float sin_bank = sin(euler.bank);
+
+	float cos_heading = cos(euler.heading);
+	float cos_pitch = cos(euler.pitch);
+	float cos_bank = cos(euler.bank);
+
+	//套公式
+	w = cos_heading * cos_pitch * cos_bank + sin_heading * sin_pitch * sin_bank;
+	x = -cos_heading * sin_pitch * cos_bank - sin_heading * cos_pitch * sin_bank;
+	y = cos_heading * sin_pitch * sin_bank - sin_heading * cos_pitch * cos_bank;
+	z = sin_heading * sin_pitch * cos_bank - cos_heading * cos_pitch * sin_bank;
+}
+
+void fquat::object_to_inertia(const frotator& in_rot)
+{
+	feuler euler;
+	in_rot.rotator_to_euler(euler);
+
+	//半角
+	euler /= 2.f;
+
+	float sin_heading = sin(euler.heading);
+	float sin_pitch = sin(euler.pitch);
+	float sin_bank = sin(euler.bank);
+
+	float cos_heading = cos(euler.heading);
+	float cos_pitch = cos(euler.pitch);
+	float cos_bank = cos(euler.bank);
+
+	//套公式
+	w = cos_heading * cos_pitch * cos_bank + sin_heading * sin_pitch * sin_bank;
+	x = cos_heading * sin_pitch * cos_bank + sin_heading * cos_pitch * sin_bank;
+	y = sin_heading * cos_pitch * cos_bank - cos_heading * sin_pitch * sin_bank;
+	z = cos_heading * cos_pitch * sin_bank - sin_heading * sin_pitch * cos_bank;
 }

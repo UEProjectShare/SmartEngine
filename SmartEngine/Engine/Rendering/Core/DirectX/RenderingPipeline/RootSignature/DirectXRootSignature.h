@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../Interface/DirectXDeviceInterface.h"
 #include "../StaticSampler/StaticSamplerObject.h"
 
 //提供渲染内容的接口

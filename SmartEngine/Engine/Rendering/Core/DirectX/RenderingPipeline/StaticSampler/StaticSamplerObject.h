@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../Interface/DirectXDeviceInterface.h"
 
 struct FStaticSamplerObject : public IDirectXDeviceInterface_Struct
 {

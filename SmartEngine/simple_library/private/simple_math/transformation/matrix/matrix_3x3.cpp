@@ -1,4 +1,6 @@
 #include "../../../../public/simple_math/transformation/matrix/matrix_3x3.h"
+#include "../../../../public/simple_math/transformation/rotator/rotator.h"
+#include <math.h>
 
 fmatrix_3x3::fmatrix_3x3()
 {
@@ -15,6 +17,35 @@ fmatrix_3x3::fmatrix_3x3(
 {
 }
 
+void fmatrix_3x3::inertia_to_object(const frotator& in_rot)
+{
+	//将角度转为弧度
+	float angle_to_radians = 3.1415926f / 180.f;
+
+	float h = in_rot.pitch * angle_to_radians;//y
+	float p = in_rot.roll * angle_to_radians;//x
+	float b = in_rot.yaw * angle_to_radians;//z
+
+	m11 = cos(h) * cos(b) + sin(h) * sin(p) * sin(b);
+	m12 = -cos(h) * sin(b) + sin(h) * sin(p) * cos(b);
+	m13 = sin(h) * cos(p);
+
+	m21 = sin(b) * cos(p);
+	m22 = cos(b) * cos(p);
+	m23 = sin(p);
+
+	m31 = -sin(h) * cos(b) + cos(h) * sin(p) * sin(b);
+	m32 = sin(b) * sin(h) + cos(h) * sin(p) * cos(b);
+	m33 = cos(h) * cos(p);
+}
+
+void fmatrix_3x3::object_to_inertia(const frotator& in_rot)
+{
+	inertia_to_object(in_rot);
+
+	transpose();
+}
+
 float fmatrix_3x3::Determinant()
 {
 	return	m11 * m22 * m33 +
@@ -23,6 +54,30 @@ float fmatrix_3x3::Determinant()
 			m11 * m23 * m32 - 
 			m12 * m21 * m33 - 
 			m13 * m22 * m31;
+}
+
+void fmatrix_3x3::transpose()
+{
+	//交换函数
+	auto swap_float = [](float& a, float& b)
+	{
+		float tmp = a;
+		a = b;
+		b = tmp;
+	};
+
+	swap_float(m21,m12);
+	swap_float(m31,m13);
+	swap_float(m32,m23);
+}
+
+fmatrix_3x3 fmatrix_3x3::to_transpose() const
+{
+	fmatrix_3x3 matrix = *this;
+
+	matrix.transpose();
+
+	return matrix;
 }
 
 fmatrix_3x3 fmatrix_3x3::identity()

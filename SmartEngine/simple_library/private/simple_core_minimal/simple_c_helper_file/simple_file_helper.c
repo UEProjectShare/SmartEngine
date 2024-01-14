@@ -100,13 +100,34 @@ int copy_file(char *Src, char *Dest)
 }
 void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
 {
+#ifdef  _WIN64
+	struct _finddatai64_t finddata;
+#else
+#ifdef _WIN32    
 	struct _finddata_t finddata;
+#endif 
+#endif 
 
+#ifdef  _WIN64
 	intptr_t hfile = 0;
+#else
+#ifdef _WIN32    
+	long hfile = 0;
+#endif 
+#endif 
+	
 	char tmp_path[1024] = { 0 };
 	strcpy(tmp_path, in_path);
 	strcat(tmp_path, "\\*");
-	if ((hfile = _findfirst(tmp_path, &finddata)) != -1)
+	if ((hfile = 
+#ifdef _WIN64
+		_findfirst64
+#else
+#ifdef WIN32	
+		_findfirst
+#endif // _WIN64
+#endif // _WIN32
+		(tmp_path, &finddata)) != -1)
 	{
 		do
 		{
@@ -135,7 +156,16 @@ void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
 				strcat(str->paths[str->index++], finddata.name);
 			}
 
-		} while (_findnext(hfile, &finddata) == 0);
+		} while (
+#ifdef _WIN64
+		_findnext64
+#else
+#ifdef _WIN32
+			
+		_findnext
+#endif
+#endif
+			(hfile, &finddata) == 0);
 		_findclose(hfile);
 	}
 }

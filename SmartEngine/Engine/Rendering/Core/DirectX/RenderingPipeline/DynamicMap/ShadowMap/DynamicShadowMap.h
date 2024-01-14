@@ -7,7 +7,7 @@ struct FDirectXPipelineState;
 class FRenderLayerManage;
 struct FViewportInfo;
 
-class FDynamicShadowMap :public FDynamicMap
+class FDynamicShadowMap : public FDynamicMap
 {
 	typedef FDynamicMap Super;
 public:
@@ -16,7 +16,7 @@ public:
 	
 	void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo) override;
 	
-	virtual void init(int InWidth, int InHeight);
+	virtual void Init(int InWidth, int InHeight);
 	
 	void Init(FGeometryMap* InGeometryMap, FDirectXPipelineState* InDirectXPipelineState, FRenderLayerManage* InRenderLayer) override;
 	
@@ -37,6 +37,11 @@ public:
 	void BuildParallelLightMatrix(
 		const fvector_3d& InDirection,
 		const fvector_3d& InTargetPosition,
+		float InRadius = 100.f) const;
+
+	void BuildSpotLightMatrix(
+		const fvector_3d& InDirection,
+		const fvector_3d& InPosition,
 		float InRadius = 100.f) const;
 	
 	virtual void BuildViewport(const fvector_3d& InCenterPoint);

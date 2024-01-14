@@ -43,7 +43,10 @@ void CCustomMeshComponent::CreateMesh(FMeshRenderingData& MeshData, const string
 	else if (find_string(Buff, ".fbx", 0) != -1 ||
 		find_string(Buff, ".FBX", 0) != -1)
 	{
-		LoadFBXFromBuff(InPath, MeshData);
+		char PathBuff[1024] = { 0 };
+		get_full_path(PathBuff,1024, InPath.c_str());
+
+		LoadFBXFromBuff(PathBuff, MeshData);
 	}
 }
 

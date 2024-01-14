@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../../Interface/DirectXDeviceInterface.h"
 #include "../../../../../../Shader/Core/Shader.h"
 #include "../../Geometry/RenderingData.h"
 #include "../../../../../../Shader/Core/ShaderType.h"
+#include "../../RenderingPipelineType.h"
 
 struct FDirectXPipelineState;
 struct FGeometryMap;
@@ -29,7 +30,7 @@ public:
 	
 	virtual void PostDraw(float DeltaTime);
 
-	virtual void DrawObject(float DeltaTime, const FRenderingData& InRenderingData);
+	virtual void DrawObject(float DeltaTime, const FRenderingData& InRenderingData, ERenderingConditions RC = ERenderingConditions::RC_None);
 	
 	virtual void FindObjectDraw(float DeltaTime, const CMeshComponent* InKey);
 
@@ -44,8 +45,10 @@ public:
 	//单独设置PSO
 	virtual void ResetPSO();
 
+	virtual void ResetPSO(EPipelineState InPipelineState);
+
 	//渲染 不包含设置PSO
-	virtual void DrawMesh(float DeltaTime);
+	virtual void DrawMesh(float DeltaTime, ERenderingConditions RC = ERenderingConditions::RC_None);
 
 	UINT GetRenderPriority() const { return RenderPriority; }
 	

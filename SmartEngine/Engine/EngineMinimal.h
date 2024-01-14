@@ -4,6 +4,13 @@
 #include "../simple_library/public/simple_library.h"
 #include "Debug/Log/SimpleLog.h"
 
+#include "../imgui/imgui.h"
+#include "../imgui/backends/imgui_impl_win32.h"
+#include "../imgui/backends/imgui_impl_dx12.h"
+
+#include <d3d12.h>
+#include <tchar.h>
+
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -26,4 +33,4 @@ using namespace DirectX::PackedVector;
 
 extern class CEngine* Engine;
 
-#define THIRD_PARTY_LIBRARY 1
+#define THIRD_PARTY_LIBRARY 0

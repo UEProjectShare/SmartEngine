@@ -229,6 +229,15 @@ void FGeometryMap::UpdateLight(float DeltaTime, const FViewportInfo& ViewportInf
 					break;
 				}
 				case ELightType::PointLight:
+				{
+					if (const CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
+					{
+						LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
+						LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
+					}
+
+					break;
+				}
 				case ELightType::SpotLight:
 				{
 					if (const CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
@@ -245,6 +254,37 @@ void FGeometryMap::UpdateLight(float DeltaTime, const FViewportInfo& ViewportInf
 							LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
 						}
 					}
+
+					XMFLOAT3 ForwardVector = InLightComponent->GetForwardVector();
+					XMFLOAT3 Position = InLightComponent->GetPosition();
+
+					DynamicShadowMap.BuildSpotLightMatrix(
+						EngineMath::ToVector3d(ForwardVector),
+						EngineMath::ToVector3d(Position),
+						370.f);
+
+					XMFLOAT4X4 ShadowViewMatrix;
+					XMFLOAT4X4 ShadowProjectMatrix;
+					DynamicShadowMap.GetViewportMatrix(ShadowViewMatrix, ShadowProjectMatrix);
+
+					XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ShadowViewMatrix);
+					XMMATRIX ShadowProjectMatrixRTX = XMLoadFloat4x4(&ShadowProjectMatrix);
+
+					//NDC [-1,1]; = >[0,1]
+					//半兰伯特思想
+					XMMATRIX Transform =
+					{
+						0.5f, 0.0f, 0.0f, 0.0f,
+						0.0f, -0.5f, 0.0f, 0.0f,
+						0.0f, 0.0f, 1.0f, 0.0f,
+						0.5f, 0.5f, 0.0f, 1.0f
+					};
+
+					XMMATRIX ShadowViewProjectMatrixRTX =
+						ShadowViewMatrixRTX * ShadowProjectMatrixRTX * Transform;
+
+					//存储Shadow变换信息
+					XMStoreFloat4x4(&LightConstantBuffer.SceneLights[i].ShadowTransform, XMMatrixTranspose(ShadowViewProjectMatrixRTX));
 
 					break;
 				}
@@ -294,13 +334,15 @@ void FGeometryMap::BuildFog()
 
 void FGeometryMap::BuildShadow()
 {
-	DynamicShadowMap.init(2048, 2048);
-
+	DynamicShadowMap.Init(2048, 2048);
 	DynamicShadowMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
-
 	DynamicShadowMap.BuildDepthStencilDescriptor();
-
 	DynamicShadowMap.BuildRenderTargetDescriptor();
+
+	DynamicShadowCubeMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
+	DynamicShadowCubeMap.BuildDepthStencilDescriptor();
+	DynamicShadowCubeMap.BuildRenderTargetDescriptor();
+	DynamicShadowCubeMap.BuildDepthStencil();
 }
 
 void FGeometryMap::BuildDynamicReflectionMesh()
@@ -407,7 +449,9 @@ void FGeometryMap::BuildDescriptorHeap()
 		GetDrawTexture2DResourcesNumber() + //Texture2D
 		GetDrawCubeMapResourcesNumber() + //静态Cube贴图
 		1 + //动态Cube贴图
-		1);//Shadow
+		1 + //Shadow
+		1 +//ShadowCubeMap
+		1);//UI
 }
 
 void FGeometryMap::BuildMeshConstantBuffer()
@@ -519,7 +563,8 @@ void FGeometryMap::BuildViewportConstantBufferView(UINT InViewportOffset)
 	ViewportConstantBufferViews.CreateConstant(sizeof(FViewportTransformation), 
 		1 + //主视口 摄像机
 		GetDynamicReflectionViewportNum() + //这个是动态反射的视口
-		1+ //Shadow 摄像机视口
+		1 + //Shadow 摄像机视口
+		6 + //ShadowCubeMap
 		InViewportOffset);
 
 	////Handle
@@ -530,6 +575,26 @@ void FGeometryMap::BuildViewportConstantBufferView(UINT InViewportOffset)
 	//	1,
 	//	GetDrawMeshObjectNumber() + 
 	//	GetDrawLightObjectNumber());
+}
+
+UINT FGeometryMap::GetDynamicReflectionMeshComponentsSize() const
+{
+	return DynamicReflectionMeshComponents.size();
+}
+
+CMeshComponent* FGeometryMap::GetDynamicReflectionMeshComponents(int Index) const
+{
+	return DynamicReflectionMeshComponents[Index];
+}
+
+UINT FGeometryMap::GetViewportConstantBufferByteSize() const
+{
+	return ViewportConstantBufferViews.GetConstantBufferByteSize();
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS FGeometryMap::ViewportGPUVirtualAddress() const
+{
+	return ViewportConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
 }
 
 bool FGeometryMap::IsStartUPFog() const

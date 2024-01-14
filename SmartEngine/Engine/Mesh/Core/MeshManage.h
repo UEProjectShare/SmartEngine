@@ -3,7 +3,7 @@
 #include "../../Shader/Core/Shader.h"
 #include "MeshType.h"
 #include "Mesh.h"
-#include "../../Interface/DirectXDeviceInterfece.h"
+#include "../../Interface\DirectXDeviceInterface.h"
 #include "../../Core/Viewport/ViewportInfo.h"
 #include "../../Rendering/Core/DirectX/RenderingPipeline/RenderingPipeline.h"
 

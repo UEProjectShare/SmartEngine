@@ -17,7 +17,7 @@ public:
 	
 	void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
 	
-	UINT GetMaterialNum()const;
+	UINT GetMaterialNum() const;
 
 	EMeshRenderLayerType GetRenderLayerType()const { return MeshRenderLayerType; }
 
@@ -27,4 +27,11 @@ public:
 	
 	//¶¯Ì¬·´Éä
 	bool IsDynamicReflection() const;
+
+	void SetCastShadow(bool bNewCastShadow) { bCastShadow = bNewCastShadow; }
+	
+	bool IsCastShadow()const {return bCastShadow;}
+
+protected:
+	bool bCastShadow;
 };

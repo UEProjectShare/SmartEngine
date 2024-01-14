@@ -101,18 +101,17 @@ bool log_wirte(enum e_error error, char *format, ...)
 	if (p != NULL)
 	{
 		FILE* hfile = NULL;
-#if _WIN64
-
-#elif _WIN32
+//#if _WIN64
+//#elif _WIN32
 		if ((hfile = fopen(p, "a+")) != NULL)
 		{
-			char buf[8196 * 1024] = { 0 };
-			ZeroMemory(buf, sizeof(char) * 8196 * 1024);
+			char buf[SIMPLE_C_BUFF_SIZE] = { 0 };
+			ZeroMemory(buf, sizeof(char) * SIMPLE_C_BUFF_SIZE);
 			va_list args;
 			va_start(args, format);
-			_vsnprintf_s(buf, 8196 * 1024 - 1, 8196 * 1024, format, args);
+			_vsnprintf_s(buf, SIMPLE_C_BUFF_SIZE - 1, SIMPLE_C_BUFF_SIZE, format, args);
 			va_end(args);
-			buf[8196 * 1024 - 1] = 0;
+			buf[SIMPLE_C_BUFF_SIZE - 1] = 0;
 
 			//char* time = ctime(__TIME__);// \n
 			char time[256] = { 0 };
@@ -122,7 +121,7 @@ bool log_wirte(enum e_error error, char *format, ...)
 				remove_char_end(time, '\n');
 			}
 	
-			char text_buf[8196 * 1024] = { 0 };
+			char text_buf[SIMPLE_C_BUFF_SIZE] = { 0 };
 			get_printf_s(text_buf, "[%s] [%s] %s \r\n", error_str, time, buf);
 
 			switch (error)
@@ -145,7 +144,7 @@ bool log_wirte(enum e_error error, char *format, ...)
 			set_console_w_color(SIMPLE_WHITE, SIMPLE_BLACK);
 			fclose(hfile);
 		}
-#endif
+//#endif
 		return true;
 	}
 

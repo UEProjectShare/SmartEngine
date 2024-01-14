@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../Core/Engine.h"
-#include "../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../Interface/DirectXDeviceInterface.h"
 
 namespace ConstructBuffer
 {

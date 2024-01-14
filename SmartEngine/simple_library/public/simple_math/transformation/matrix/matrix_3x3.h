@@ -1,5 +1,7 @@
 #pragma once
 
+struct frotator;
+
 struct fmatrix_3x3
 {
 	float m11; float m12; float m13;
@@ -87,8 +89,18 @@ public:
 			m31* a.m13 + m32 * a.m23 + m33 * a.m33);
 	}
 
+	//惯性->物体
+	void inertia_to_object(const frotator &in_rot);
+	//物体->惯性
+	void object_to_inertia(const frotator& in_rot);
+
 	//行列式
 	float Determinant();
+
+	//3x3矩阵转置
+	void transpose();
+
+	fmatrix_3x3 to_transpose() const;
 
 	//单位化
 	static fmatrix_3x3 identity();

@@ -1,6 +1,7 @@
 #pragma once
 
 struct fvector_3d;
+struct frotator;
 
 __declspec(align(16)) struct fquat
 {
@@ -40,6 +41,13 @@ public:
 	void rotator_by_axis(float theta, const fvector_3d& axis);
 
 	fquat inverse();
+
+	//欧拉转四元
+	//惯性->物体
+	void inertia_to_object(const frotator& in_rot);
+
+	//物体->惯性
+	void object_to_inertia(const frotator& in_rot);
 
 	static const fquat identity;
 };

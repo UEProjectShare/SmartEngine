@@ -1,6 +1,6 @@
 #pragma once
 #include "../../TransformationComponent.h"
-#include "../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../Interface\DirectXDeviceInterface.h"
 #include "LightType.h"
 
 class CMeshComponent;

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../Interface/DirectXDeviceInterface.h"
 #include "Core/RenderLayer.h"
 
 class FRenderLayerManage
@@ -36,9 +36,11 @@ public:
 
 	//单独设置PSO
 	virtual void ResetPSO(int InLayer);
-
+	
+	virtual void ResetPSO(int InLayer, EPipelineState InPipelineState);
+	
 	//渲染 不包含设置PSO
-	virtual void DrawMesh(float DeltaTime, int InLayer);
+	virtual void DrawMesh(float DeltaTime, int InLayer, ERenderingConditions RC = ERenderingConditions::RC_None);
 
 	static std::shared_ptr<FRenderLayer> FindByRenderLayer(int InRenderLayer);
 protected:

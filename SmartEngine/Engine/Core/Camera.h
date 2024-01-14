@@ -2,7 +2,7 @@
 #include "Viewport/Viewport.h"
 #include "Viewport/ClientViewport.h"
 #include "../CodeReflection/CodeReflectionMacroTag.h"
-#include "../Interface/DirectXDeviceInterfece.h"
+#include "../Interface/DirectXDeviceInterface.h"
 
 enum ECameraType;
 struct FInputKey;

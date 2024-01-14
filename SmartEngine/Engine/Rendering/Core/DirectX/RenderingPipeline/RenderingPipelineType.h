@@ -8,17 +8,13 @@ enum EPipelineState
 	Reflector,
 	GrayModel = 4,
 	Wireframe = 5,
-	Shadow = 6,
+	OrthogonalShadow = 6,
+	PerspectiveShadow = 7,
+	VientianeShadow = 8,
 };
 
-struct FTextureNumber
+enum ERenderingConditions
 {
-	FTextureNumber()
-		: Texture2DNum(1)
-		, CubeMapNum(1)
-	{}
-
-	UINT Texture2DNum;
-	
-	UINT CubeMapNum;
+	RC_None = 0,//全部渲染
+	RC_Shadow,//bCastShadow=true 渲染该物体
 };

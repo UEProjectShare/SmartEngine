@@ -12,5 +12,5 @@ public:
 
 	void Draw(float DeltaTime) override;
 
-	void CreateMesh(string &InPath);
+	void CreateMesh(const string &InPath);
 };

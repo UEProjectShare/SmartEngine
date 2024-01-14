@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)imgui;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -102,7 +105,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -118,7 +121,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -179,8 +182,8 @@
     <ClCompile Include="Engine\Core\World.cpp" />
     <ClCompile Include="Engine\Debug\EngineDebug.cpp" />
     <ClCompile Include="Engine\EngineFactory.cpp" />
-    <ClCompile Include="Engine\Interface\DirectXDeviceInterfece.cpp" />
-    <ClCompile Include="Engine\Interface\OpenGLDeviceInterfece.cpp" />
+    <ClCompile Include="Engine\Interface\DirectXDeviceInterface.cpp" />
+    <ClCompile Include="Engine\Interface\OpenGLDeviceInterface.cpp" />
     <ClCompile Include="Engine\Manage\LightManage.cpp" />
     <ClCompile Include="Engine\Math\EngineMath.cpp" />
     <ClCompile Include="Engine\Mesh\BoxMesh.cpp" />
@@ -210,8 +213,10 @@
     <ClCompile Include="Engine\Rendering\Core\Buffer\ConstructBuffer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\ConstantBuffer\ConstantBufferViews.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DescriptorHeap\DirectXDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicCubeMap.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicMap.cpp" />
-    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicCubeMap.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicReflectionCubeMap.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowCubeMap.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowMap.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\Geometry\GeometryMap.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\Geometry\RenderingData.cpp" />
@@ -231,6 +236,7 @@
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\ShadowMapRenderTarget.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\StaticSampler\StaticSamplerObject.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\UI\IMGUIPipeline.cpp" />
     <ClCompile Include="Engine\Rendering\Core\Rendering.cpp" />
     <ClCompile Include="Engine\Rendering\Core\RenderingResourcesUpdate.cpp" />
     <ClCompile Include="Engine\Rendering\Core\RenderingTextureResourcesUpdate.cpp" />
@@ -245,6 +251,14 @@
     <ClCompile Include="Engine\Shader\Core\Shader.cpp" />
     <ClCompile Include="Engine\Shader\Core\ShaderType.cpp" />
     <ClCompile Include="Engine\SmartEngine.cpp" />
+    <ClCompile Include="imgui\backends\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="imgui\libs\usynergy\uSynergy.c" />
     <ClCompile Include="simple_library\private\simple_channel\simple_io_stream\simple_io_stream.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_channel\simple_channel.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion.cpp" />
@@ -341,8 +355,8 @@
     <ClInclude Include="Engine\Debug\Log\SimpleLog.h" />
     <ClInclude Include="Engine\EngineFactory.h" />
     <ClInclude Include="Engine\EngineMinimal.h" />
-    <ClInclude Include="Engine\Interface\DirectXDeviceInterfece.h" />
-    <ClInclude Include="Engine\Interface\OpenGLDeviceInterfece.h" />
+    <ClInclude Include="Engine\Interface\DirectXDeviceInterface.h" />
+    <ClInclude Include="Engine\Interface\OpenGLDeviceInterface.h" />
     <ClInclude Include="Engine\Manage\LightManage.h" />
     <ClInclude Include="Engine\Math\EngineMath.h" />
     <ClInclude Include="Engine\Mesh\BoxMesh.h" />
@@ -373,8 +387,10 @@
     <ClInclude Include="Engine\Rendering\Core\Buffer\ConstructBuffer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\ConstantBuffer\ConstantBufferViews.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DescriptorHeap\DirectXDescriptorHeap.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicCubeMap.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicMap.h" />
-    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicCubeMap.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicReflectionCubeMap.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowCubeMap.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowMap.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\Geometry\GeometryMap.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\Geometry\RenderingData.h" />
@@ -394,6 +410,7 @@
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\ShadowMapRenderTarget.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\StaticSampler\StaticSamplerObject.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\UI\IMGUIPipeline.h" />
     <ClInclude Include="Engine\Rendering\Core\Rendering.h" />
     <ClInclude Include="Engine\Rendering\Core\RenderingResourcesUpdate.h" />
     <ClInclude Include="Engine\Rendering\Core\RenderingTextureResourcesUpdate.h" />
@@ -408,6 +425,17 @@
     <ClInclude Include="Engine\Rendering\Enigne\Vulkan\VulkanRenderingEngine.h" />
     <ClInclude Include="Engine\Shader\Core\Shader.h" />
     <ClInclude Include="Engine\Shader\Core\ShaderType.h" />
+    <ClInclude Include="imgui\backends\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="imgui\libs\glfw\include\GLFW\glfw3.h" />
+    <ClInclude Include="imgui\libs\glfw\include\GLFW\glfw3native.h" />
+    <ClInclude Include="imgui\libs\usynergy\uSynergy.h" />
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.h" />
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_udp.h" />
     <ClInclude Include="simple_library\private\simple_channel\simple_net_drive\simple_net_drive_tcp.h" />
@@ -462,6 +490,9 @@
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_4d.h" />
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_4id.h" />
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_color.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -71,3 +71,16 @@ void GMesh::SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType)
 {
 	MeshComponent->SetMeshRenderLayerType(InRenderLayerType);
 }
+
+void GMesh::SetCastShadow(bool bNewCastShadow) const
+{
+	if (MeshComponent)
+	{
+		MeshComponent->SetCastShadow(bNewCastShadow);
+	}
+}
+
+bool GMesh::IsCastShadow() const
+{
+	return MeshComponent->IsCastShadow();
+}

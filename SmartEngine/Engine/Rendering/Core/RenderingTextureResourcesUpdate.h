@@ -1,6 +1,6 @@
 #pragma once
 #include "../../EngineMinimal.h"
-#include "../../Interface/DirectXDeviceInterfece.h"
+#include "../../Interface/DirectXDeviceInterface.h"
 
 struct FRenderingTexture
 {

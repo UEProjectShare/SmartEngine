@@ -50,7 +50,7 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	//ÇÐÏß
 	Out.UTangent = mul(MV.UTangent, (float3x3)WorldMatrix);
 
-	//ui×ø±ê
+	//uv×ø±ê
 	float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
 	Out.TexCoord = mul(MyTexCoord, MatConstBuffer.TransformInformation).xy;
 
@@ -352,11 +352,22 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 			float4 Diffuse = Material.BaseColor;;
 			Specular = saturate(Specular);
-			
-			//float ShadowFactor = GetShadowFactor(MVOut.WorldPosition, SceneLights[i].ShadowTransform);
-			//float ShadowFactor = GetShadowFactor_PCF_Sample4(MVOut.WorldPosition, SceneLights[i].ShadowTransform);
-			float ShadowFactor = GetShadowFactor_PCF_Sample9(MVOut.WorldPosition, SceneLights[i].ShadowTransform);
-			
+
+			int IndexR = GetSampleCubeMapIndexR(MVOut.WorldPosition);
+			//return DebugCubeViewport(IndexR);
+
+			float ShadowFactor = 1.f;
+			if (SceneLights[i].LightType == 1)
+			{
+				ShadowFactor = ProcessingOmnidirectionalSampleCmpLevelZeroCubeMapShadow(MVOut.WorldPosition, SceneLights[i].Position);
+			}
+			else
+			{
+				//float ShadowFactor = GetShadowFactor(MVOut.WorldPosition, SceneLights[i].ShadowTransform);
+				//float ShadowFactor = GetShadowFactor_PCF_Sample4(MVOut.WorldPosition, SceneLights[i].ShadowTransform);
+				ShadowFactor = GetShadowFactor_PCF_Sample9(MVOut.WorldPosition, SceneLights[i].ShadowTransform);
+			}
+	
 			FinalColor += ShadowFactor * (saturate((Diffuse + Specular) * LightStrength * DotValue));
 		}
 	}

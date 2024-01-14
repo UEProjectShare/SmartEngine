@@ -23,6 +23,7 @@ bool FRenderingPipeline::FindMeshRenderingDataByHash(const size_t& InHash, FRend
 
 void FRenderingPipeline::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
+	GeometryMap.DynamicShadowCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	DynamicCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	GeometryMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	RenderLayer.UpdateCalculations(DeltaTime, ViewportInfo);
@@ -56,6 +57,11 @@ void FRenderingPipeline::BuildPipeline()
 		&DirectXPipelineState,
 		&RenderLayer);
 
+	GeometryMap.DynamicShadowCubeMap.Init(
+		&GeometryMap,
+		&DirectXPipelineState,
+		&RenderLayer);
+
 	//构建根签名
 	RootSignature.BuildRootSignature(GeometryMap.GetDrawTexture2DResourcesNumber());
 	DirectXPipelineState.BindRootSignature(RootSignature.GetRootSignature());
@@ -68,6 +74,15 @@ void FRenderingPipeline::BuildPipeline()
 
 	//构建常量描述堆
 	GeometryMap.BuildDescriptorHeap();
+	
+	//初始化我们的UI管线
+	UIPipeline.Init(
+		GeometryMap.GetHeap(),
+		GeometryMap.GetDrawTexture2DResourcesNumber() + //Texture2D
+		GeometryMap.GetDrawCubeMapResourcesNumber() + //静态Cube贴图
+		1 + //动态Cube贴图
+		1 + //Shadow
+		1);//ShadowCubeMap
 
 	//初始化CubeMap 摄像机
 	DynamicCubeMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
@@ -120,14 +135,18 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 	//渲染灯光材质贴图等(必须要放在 这个位置 否则天崩地裂)
 	GeometryMap.Draw(DeltaTime);
 
+	//渲染
+	GeometryMap.DynamicShadowCubeMap.PreDraw(DeltaTime);
+
 	//渲染阴影
 	GeometryMap.DrawShadow(DeltaTime);
 
+	//为了ShadowCubeMap暂时注释掉
 	//动态反射
-	if (DynamicCubeMap.IsExistDynamicReflectionMesh())
+	/*if (DynamicCubeMap.IsExistDynamicReflectionMesh())
 	{
 		DynamicCubeMap.PreDraw(DeltaTime);
-	}
+	}*/
 
 	RenderLayer.PreDraw(DeltaTime);
 }
@@ -137,13 +156,17 @@ void FRenderingPipeline::Draw(float DeltaTime)
 	//主视口
 	GeometryMap.DrawViewport(DeltaTime);
 
+	//为了ShadowCubeMap暂时注释掉
 	//CubeMap 覆盖原先被修改的CubeMap
-	GeometryMap.DrawCubeMapTexture(DeltaTime);
+	//GeometryMap.DrawCubeMapTexture(DeltaTime);
 
 	//各类层级
 	RenderLayer.Draw(RENDERLAYER_BACKGROUND, DeltaTime);
 	RenderLayer.Draw(RENDERLAYER_OPAQUE, DeltaTime);
 	RenderLayer.Draw(RENDERLAYER_TRANSPARENT, DeltaTime);
+
+	//渲染UI
+	UIPipeline.Draw(DeltaTime);
 
 	DirectXPipelineState.Draw(DeltaTime);
 }

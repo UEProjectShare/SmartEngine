@@ -13,6 +13,11 @@ void FCubeMapRenderTarget::Init(UINT InWidth, UINT InHeight, DXGI_FORMAT InForma
 
 }
 
+CD3DX12_CPU_DESCRIPTOR_HANDLE& FCubeMapRenderTarget::GetCPURenderTargetView(int Index)
+{
+	return CPURenderTargetView[Index];
+}
+
 void FCubeMapRenderTarget::BuildRenderTargetMap()
 {
 	D3D12_RESOURCE_DESC ResourceDesc;

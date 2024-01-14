@@ -204,4 +204,111 @@ namespace math_utils
             n.x * n.z * (1.f - cos(radian)) - n.y * sin(radian),  n.z * n.y * (1.f - cos(radian)) + n.x * sin(radian),  n.z * n.z * (1.f - cos(radian)) + cos(radian),        0.f,
             0.f,                                                  0.f,                                                  0.f,                                                  1.f);
     }
+
+    void inertia_to_object(const fquat& in_quat, fmatrix_3x3& out_rotation_matrix)
+    {
+        out_rotation_matrix.m11 = 1.f - 2.f * (in_quat.y * in_quat.y + in_quat.z * in_quat.z);
+        out_rotation_matrix.m12 = 2.f * (in_quat.x * in_quat.y + in_quat.w * in_quat.z);
+        out_rotation_matrix.m13 = 2.f * (in_quat.x * in_quat.z - in_quat.w * in_quat.y);
+
+        out_rotation_matrix.m21 = 2.f * (in_quat.x * in_quat.y - in_quat.w * in_quat.z);
+        out_rotation_matrix.m22 = 1.f - 2.f * (in_quat.x * in_quat.x + in_quat.z * in_quat.z);
+        out_rotation_matrix.m23 = 2.f * (in_quat.y * in_quat.z + in_quat.w * in_quat.x);
+
+        out_rotation_matrix.m31 = 2.f * (in_quat.x * in_quat.z + in_quat.w * in_quat.y);
+        out_rotation_matrix.m32 = 2.f * (in_quat.y * in_quat.z - in_quat.w * in_quat.x);    
+        out_rotation_matrix.m33 = 1.f-2.f * (in_quat.x * in_quat.x + in_quat.y * in_quat.y);
+    }
+
+    void object_to_inertia(const fquat& in_quat, fmatrix_3x3& out_rotation_matrix)
+    {
+        inertia_to_object(in_quat, out_rotation_matrix);
+
+        out_rotation_matrix.transpose();
+    }
+
+    fvector_3d inertia_to_object(const fvector_3d& in_vector, const fmatrix_3x3& in_rotation_matrix)
+    {
+        return mul(in_vector, in_rotation_matrix);
+    }
+
+    fvector_3d object_to_inertia(const fvector_3d& in_vector, const fmatrix_3x3& in_rotation_matrix)
+    {
+        fmatrix_3x3 matrix = in_rotation_matrix.to_transpose();
+
+        return mul(in_vector, matrix);
+    }
+
+    void matrix_to_quat(const fmatrix_3x3& in_rotation_matrix, fquat& out_quat)
+    {
+       float value[4] = { 0 };
+    
+       value[0] = in_rotation_matrix.m11 + in_rotation_matrix.m22 + in_rotation_matrix.m33;//w
+       value[1] = in_rotation_matrix.m11 - in_rotation_matrix.m22 - in_rotation_matrix.m33;//x
+       value[2] = -in_rotation_matrix.m11 + in_rotation_matrix.m22 - in_rotation_matrix.m33;//y
+       value[3] = -in_rotation_matrix.m11 - in_rotation_matrix.m22 + in_rotation_matrix.m33;//z
+
+       float tmp_value = 0.f;
+
+       int index = 0;
+       for (int i = 0; i < 4; i++)
+       {
+           if (value[i] > tmp_value)
+           {
+               tmp_value = value[i];
+               index = i;
+          }
+       }
+
+       if (tmp_value != 0.f)
+       {
+          float value_sqrt = sqrt(tmp_value + 1.f) * 0.5f;
+          float mult = 0.25f / value_sqrt;
+
+          switch (index)
+          {
+            case 0://w
+            {
+                out_quat.w = value_sqrt;
+                out_quat.x = (in_rotation_matrix.m23 - in_rotation_matrix.m32) * mult;
+                out_quat.y = (in_rotation_matrix.m31 - in_rotation_matrix.m13) * mult;
+                out_quat.z = (in_rotation_matrix.m12 - in_rotation_matrix.m21) * mult;
+                break;
+            } 
+            case 1://x
+            {
+                out_quat.w = (in_rotation_matrix.m23 - in_rotation_matrix.m32) * mult;
+                out_quat.x = value_sqrt;
+                out_quat.y = (in_rotation_matrix.m12 + in_rotation_matrix.m21) * mult;
+                out_quat.z = (in_rotation_matrix.m31 - in_rotation_matrix.m13) * mult;
+                break;
+            }
+            case 2://y
+            {
+                out_quat.w = (in_rotation_matrix.m31 - in_rotation_matrix.m13) * mult;
+                out_quat.x = (in_rotation_matrix.m12 + in_rotation_matrix.m21) * mult;
+                out_quat.y = value_sqrt;
+                out_quat.z = (in_rotation_matrix.m23 + in_rotation_matrix.m32) * mult;
+                break;
+            }
+            case 3://z
+            {
+                out_quat.w = (in_rotation_matrix.m12 - in_rotation_matrix.m21) * mult;
+                out_quat.x = (in_rotation_matrix.m31 + in_rotation_matrix.m13) * mult;
+                out_quat.y = (in_rotation_matrix.m23 + in_rotation_matrix.m32) * mult;
+                out_quat.z = value_sqrt;
+                break;
+            }
+          }
+       }
+    }
+
+    fquat matrix_to_quat(const fmatrix_3x3& in_rotation_matrix)
+    {
+        fquat quat;
+
+        matrix_to_quat(in_rotation_matrix, quat);
+
+        return quat;
+    }
 }

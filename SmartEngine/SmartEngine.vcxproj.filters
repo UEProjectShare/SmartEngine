@@ -270,12 +270,6 @@
     <ClCompile Include="Engine\Debug\EngineDebug.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Interface\DirectXDeviceInterfece.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Interface\OpenGLDeviceInterfece.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Manage\LightManage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -364,9 +358,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicMap.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicCubeMap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowMap.cpp">
@@ -478,6 +469,48 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="simple_library\private\simple_math\transformation\rotator\rotator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicCubeMap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicReflectionCubeMap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowCubeMap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\libs\usynergy\uSynergy.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\UI\IMGUIPipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Interface\DirectXDeviceInterface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Interface\OpenGLDeviceInterface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -794,12 +827,6 @@
     <ClInclude Include="Engine\Debug\EngineDebug.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Interface\DirectXDeviceInterfece.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Interface\OpenGLDeviceInterfece.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Manage\LightManage.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -891,9 +918,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicMap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicCubeMap.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowMap.h">
@@ -1008,6 +1032,57 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="simple_library\public\simple_math\transformation\rotator\rotator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\Core\DynamicCubeMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\DynamicReflectionCubeMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\ShadowMap\DynamicShadowCubeMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\backends\imgui_impl_dx12.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\backends\imgui_impl_win32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\libs\glfw\include\GLFW\glfw3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\libs\glfw\include\GLFW\glfw3native.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\libs\usynergy\uSynergy.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\UI\IMGUIPipeline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Interface\DirectXDeviceInterface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Interface\OpenGLDeviceInterface.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

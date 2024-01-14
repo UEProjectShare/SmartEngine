@@ -12,6 +12,8 @@ public:
 
 	void Init(UINT InWidth, UINT InHeight, DXGI_FORMAT InFormat) override;
 
+	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPURenderTargetView(int Index);
+
 private:
 	void BuildRenderTargetMap() override;
 	

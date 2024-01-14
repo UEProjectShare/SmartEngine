@@ -2,7 +2,7 @@
 #include "../../Rendering/Core/Rendering.h"
 #include "MeshType.h"
 #include "../../Actor/Core/ActorObject.h"
-#include "../../Interface/DirectXDeviceInterfece.h"
+#include "../../Interface/DirectXDeviceInterface.h"
 #include "../Core/MeshManage.h"
 class CTransformationComponent;
 class CMeshComponent;
@@ -47,6 +47,10 @@ public:
 	}
 	
 	virtual void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
+
+	void SetCastShadow(bool bNewCastShadow) const;
+	
+	bool IsCastShadow() const;
 
 protected:
 	virtual void SetMeshComponent(CMeshComponent* InMeshComponent);

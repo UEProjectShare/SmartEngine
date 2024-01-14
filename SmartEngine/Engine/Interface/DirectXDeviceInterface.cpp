@@ -1,4 +1,4 @@
-#include "DirectXDeviceInterfece.h"
+#include "DirectXDeviceInterface.h"
 #include "../Rendering/Enigne/DirectX/Core/DirectXRenderingEngine.h"
 #include "../Platform/Windows/WindowsEngine.h"
 

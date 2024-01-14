@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../Interface/DirectXDeviceInterface.h"
 
 struct FDirectXDescriptorHeap : public IDirectXDeviceInterface_Struct
 {

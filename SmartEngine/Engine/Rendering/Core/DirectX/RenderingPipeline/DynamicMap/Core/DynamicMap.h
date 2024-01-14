@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../../../../Interface/DirectXDeviceInterfece.h"
+#include "../../../../../../Interface/DirectXDeviceInterface.h"
 #include "../../RenderTarget/Core/RenderTarget.h"
 
 struct FGeometryMap;
