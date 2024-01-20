@@ -9,92 +9,116 @@ class CEngine;
 class CLightManage;
 class CMeshManage;
 class CWorld;
+struct FRenderingPipeline;
+class FRenderLayerManage;
+
 //提供渲染内容的接口
 class IDirectXDeviceInterface
 {
+	friend struct IDirectXDeviceInterface_Struct;
 public:
-	void StartSetMainViewportRenderTarget();
+	void StartSetMainViewportRenderTarget() const;
 	
-	void EndSetMainViewportRenderTarget();
+	void EndSetMainViewportRenderTarget() const;
 	
-	void ClearMainSwapChainCanvas();
+	void ClearMainSwapChainCanvas() const;
 	
-	ComPtr<ID3D12Fence> GetFence();
+	ComPtr<ID3D12Fence> GetFence() const;
 	
-	ComPtr<ID3D12Device> GetD3dDevice();
+	ComPtr<ID3D12Device> GetD3dDevice() const;
 	
-	CLightManage* GetLightManage();
+	CLightManage* GetLightManage() const;
 	
-	CMeshManage* GetMeshManage();
+	CMeshManage* GetMeshManage() const;
 	
-	CWorld* GetWorld();
+	CWorld* GetWorld() const;
 
-	ComPtr<ID3D12GraphicsCommandList> GetGraphicsCommandList();
+	ComPtr<ID3D12GraphicsCommandList> GetGraphicsCommandList() const;
 	
-	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
+	ComPtr<ID3D12CommandAllocator> GetCommandAllocator() const;
 	
-	ComPtr<ID3D12CommandQueue> GetCommandQueue();
+	ComPtr<ID3D12CommandQueue> GetCommandQueue() const;
 
-	ID3D12DescriptorHeap* GetRTVHeap();
+	ID3D12DescriptorHeap* GetRTVHeap() const;
 	
-	ID3D12DescriptorHeap* GetDSVHeap();
+	ID3D12DescriptorHeap* GetDSVHeap() const;
 
-	UINT GetDescriptorHandleIncrementSizeByDSV();
+	UINT GetDescriptorHandleIncrementSizeByDSV() const;
 	
-	UINT GetDescriptorHandleIncrementSizeByRTV();
+	UINT GetDescriptorHandleIncrementSizeByRTV() const;
 	
-	UINT GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
+	UINT GetDescriptorHandleIncrementSizeByCBV_SRV_UAV() const;
 
-	UINT64 GetCurrentFenceIndex();
+	UINT64 GetCurrentFenceIndex() const;
 	
-	HWND GetMainWindowsHandle();
+	HWND GetMainWindowsHandle() const;
 
+protected:
+	FRenderingPipeline* GetRenderingPipeline() const;
+	
+	FRenderLayerManage* GetRenderLayerManage() const;
+	
+public:
 #if defined(_WIN32)
-	CWindowsEngine* GetEngine();
+	CWindowsEngine* GetEngine() const;
 #else
 	CEngine* GetEngine();
 #endif
+
+#if EDITOR_ENGINE
+	class CEditorEngine* GetEditorEngine() const;
+#endif // 0
 };
 
 //提供渲染内容的接口
 struct IDirectXDeviceInterface_Struct
 {
 public:
-	ComPtr<ID3D12Fence> GetFence();
+	ComPtr<ID3D12Fence> GetFence() const;
 	
-	ComPtr<ID3D12Device> GetD3dDevice();
+	ComPtr<ID3D12Device> GetD3dDevice() const;
 	
-	CLightManage* GetLightManage();
+	CLightManage* GetLightManage() const;
 	
-	CMeshManage* GetMeshManage();
+	CMeshManage* GetMeshManage() const;
 	
-	CWorld* GetWorld();
+	CWorld* GetWorld() const;
 
-	ComPtr<ID3D12GraphicsCommandList> GetGraphicsCommandList();
+	ComPtr<ID3D12GraphicsCommandList> GetGraphicsCommandList() const;
 	
-	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
+	ComPtr<ID3D12CommandAllocator> GetCommandAllocator() const;
 	
-	ComPtr<ID3D12CommandQueue> GetCommandQueue();
+	ComPtr<ID3D12CommandQueue> GetCommandQueue() const;
 
-	ID3D12DescriptorHeap* GetRTVHeap();
+	ID3D12DescriptorHeap* GetRTVHeap() const;
 	
-	ID3D12DescriptorHeap* GetDSVHeap();
+	ID3D12DescriptorHeap* GetDSVHeap() const;
 
-	UINT GetDescriptorHandleIncrementSizeByDSV();
+	UINT GetDescriptorHandleIncrementSizeByDSV() const;
 	
-	UINT GetDescriptorHandleIncrementSizeByRTV();
+	UINT GetDescriptorHandleIncrementSizeByRTV() const;
 	
-	UINT GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
+	UINT GetDescriptorHandleIncrementSizeByCBV_SRV_UAV() const;
 
-	UINT64 GetCurrentFenceIndex();
+	UINT64 GetCurrentFenceIndex() const;
 	
-	HWND GetMainWindowsHandle();
+	HWND GetMainWindowsHandle() const;
 
+protected:
+	FRenderingPipeline* GetRenderingPipeline() const;
+	
+	FRenderLayerManage* GetRenderLayerManage() const;
+	
+public:
 #if defined(_WIN32)
-	CWindowsEngine* GetEngine();
+	CWindowsEngine* GetEngine()const;
 #else
-	CEngine* GetEngine();
+	CEngine* GetEngine()const;
 #endif
+
+#if EDITOR_ENGINE
+	class CEditorEngine* GetEditorEngine()const;
+#endif // 0
 
 private:
 	IDirectXDeviceInterface Interface;

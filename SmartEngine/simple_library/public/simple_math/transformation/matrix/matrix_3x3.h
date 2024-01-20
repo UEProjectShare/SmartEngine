@@ -1,6 +1,7 @@
 #pragma once
 
 struct frotator;
+struct fmatrix_4x4;
 
 struct fmatrix_3x3
 {
@@ -10,6 +11,8 @@ struct fmatrix_3x3
 
 public:
 	fmatrix_3x3();
+
+	fmatrix_3x3(const fmatrix_4x4 &in_matrix);
 
 	fmatrix_3x3(
 	float in_m11, float in_m12, float in_m13,

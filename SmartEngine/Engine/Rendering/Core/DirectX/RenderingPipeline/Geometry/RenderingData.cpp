@@ -15,6 +15,7 @@ FRenderingData::FRenderingData()
 	, WorldMatrix(EngineMath::IdentityMatrix4x4())
 	, TextureTransform(EngineMath::IdentityMatrix4x4())
 	, Mesh(nullptr)
+	, MeshRenderingData(nullptr)
 {
 
 }

@@ -4,9 +4,13 @@
 CMeshComponent::CMeshComponent()
 {
 	MeshRenderLayerType = EMeshRenderLayerType::RENDERLAYER_OPAQUE;
-	Materials.push_back(CreateObject<CMaterial>(new CMaterial()));
+	
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	Materials.push_back(CreateObject<CMaterial>(Param,new CMaterial()));
 	
 	bCastShadow = true;
+	bPickup = true;
 }
 
 void CMeshComponent::Init()

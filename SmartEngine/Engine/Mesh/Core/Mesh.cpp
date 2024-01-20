@@ -28,6 +28,11 @@ void GMesh::PostDraw(float DeltaTime)
 
 }
 
+void GMesh::SetPickup(bool bNewPickup)
+{
+	GetMeshComponent()->SetPickup(bNewPickup);
+}
+
 void GMesh::SetPosition(const XMFLOAT3& InNewPosition)
 {
 	Super::SetPosition(InNewPosition);

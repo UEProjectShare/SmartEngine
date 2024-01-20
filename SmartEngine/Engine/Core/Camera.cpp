@@ -2,11 +2,17 @@
 #include "../Component/InputComponent.h"
 #include "../Component/TransformationComponent.h"
 #include "CameraType.h"
+#include "../Config/EngineRenderConfig.h"
+#include "../Library/RaycastSystemLibrary.h"
+#include "../Rendering/Core/DirectX/RenderingPipeline/RenderLayer/RenderLayerManage.h"
+#include "../Component/Mesh/Core/MeshComponentType.h"
 
 GCamera::GCamera()
 	: Super()
 {
-	InputComponent = CreateObject<CInputComponent>(new CInputComponent());
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	InputComponent = CreateObject<CInputComponent>(Param, new CInputComponent());
 	
 	MouseSensitivity = 0.7f;
 	CameraType = ECameraType::CameraRoaming;
@@ -22,7 +28,7 @@ void GCamera::BeginInit()
 	ViewportInit();
 
 	InputComponent->CaptureKeyboardInfoDelegate.Bind(this, &GCamera::ExecuteKeyboard);
-	
+	InputComponent->OnLMouseButtonDownDelegate.Bind(this, &GCamera::OnLeftMouseButtonDown);
 	InputComponent->OnMouseButtonDownDelegate.Bind(this, &GCamera::OnMouseButtonDown);
 	InputComponent->OnMouseButtonUpDelegate.Bind(this, &GCamera::OnMouseButtonUp);
 	InputComponent->OnMouseMoveDelegate.Bind(this, &GCamera::OnMouseMove);
@@ -103,6 +109,17 @@ void GCamera::BuildViewMatrix(float DeltaTime)
 		}
 	}
 }
+
+void GCamera::OnLeftMouseButtonDown(int X, int Y)
+{
+	LastMousePosition.x = X;
+	LastMousePosition.y = Y;
+
+	OnClickedScreen(X, Y);
+
+	SetCapture(GetMainWindowsHandle());
+}
+
 
 void GCamera::OnMouseButtonDown(int X, int Y)
 {
@@ -202,6 +219,33 @@ void GCamera::MoveRight(float InValue)
 
 		XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Right, Position));
 		GetTransformationComponent()->SetPosition(AT3Position);
+	}
+}
+
+void GCamera::OnClickedScreen(int X, int Y)
+{
+	FCollisionResult CollisionResult;
+	FRaycastSystemLibrary::HitResultByScreen(GetWorld(), X, Y, CollisionResult);
+
+	if (CollisionResult.bHit)
+	{
+		Engine_Log("Clicked successfully.[time]=%f", CollisionResult.Time);
+		
+		if (FRenderLayerManage* InLayer = GetRenderLayerManage())
+		{
+			//清除旧的物体
+			InLayer->Clear(EMeshRenderLayerType::RENDERLAYER_SELECT);
+
+			//设置新的
+			InLayer->Add(EMeshRenderLayerType::RENDERLAYER_SELECT, CollisionResult.RenderingData);
+		}
+	}
+	else
+	{
+		if (FRenderLayerManage* InLayer = GetRenderLayerManage())
+		{
+			InLayer->Clear(EMeshRenderLayerType::RENDERLAYER_SELECT);
+		}
 	}
 }
 

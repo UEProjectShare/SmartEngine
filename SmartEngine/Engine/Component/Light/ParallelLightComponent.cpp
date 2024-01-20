@@ -8,7 +8,10 @@ CParallelLightComponent::CParallelLightComponent()
 {
 	//读取模型资源
 	string MeshPath = "../SmartEngine/Asset/SunMesh.obj";
-	SetLightMesh(GetMeshManage()->CreateMeshComponent(MeshPath));
+	
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param,MeshPath));
 
 	//设置太阳为线框模式
 	if (GetLightMesh())

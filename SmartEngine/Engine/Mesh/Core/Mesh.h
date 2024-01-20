@@ -31,6 +31,8 @@ public:
 	void Draw(float DeltaTime) override;
 	
 	void PostDraw(float DeltaTime) override;
+
+	void SetPickup(bool bNewPickup) override;
 	
 	void SetPosition(const XMFLOAT3& InNewPosition) override;
 	

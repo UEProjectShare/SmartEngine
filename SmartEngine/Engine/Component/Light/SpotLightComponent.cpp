@@ -10,7 +10,10 @@ CSpotLightComponent::CSpotLightComponent()
 {
 	//读取模型资源
 	string MeshPath = "../SmartEngine/Asset/SpotMesh.obj";
-	SetLightMesh(GetMeshManage()->CreateMeshComponent(MeshPath));
+	
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param, MeshPath));
 
 	if (GetLightMesh())
 	{

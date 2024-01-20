@@ -79,23 +79,6 @@ void init_log_system(const char *path)
 
 bool log_wirte(enum e_error error, char *format, ...)
 {
-	char error_str[64] = { 0 };
-	switch (error)
-	{
-	case SIMPLE_C_SUCCESS:
-		strcpy(error_str, "SUCCESS");
-		break;
-	case SIMPLE_C_LOG:
-		strcpy(error_str, "LOG");
-		break;
-	case SIMPLE_C_WARNING:
-		strcpy(error_str, "WARNING");
-		break;
-	case SIMPLE_C_ERROR:
-		strcpy(error_str, "ERROR");
-		break;
-	}
-
 	const char *p = get_log_filename();
 
 	if (p != NULL)
@@ -114,16 +97,10 @@ bool log_wirte(enum e_error error, char *format, ...)
 			buf[SIMPLE_C_BUFF_SIZE - 1] = 0;
 
 			//char* time = ctime(__TIME__);// \n
-			char time[256] = { 0 };
-			get_local_time_string(time);
-			if (time)
-			{
-				remove_char_end(time, '\n');
-			}
-	
-			char text_buf[SIMPLE_C_BUFF_SIZE] = { 0 };
-			get_printf_s(text_buf, "[%s] [%s] %s \r\n", error_str, time, buf);
 
+			char text_buf[SIMPLE_C_BUFF_SIZE] = { 0 };
+			get_log_str(error, text_buf, buf);
+			
 			switch (error)
 			{
 			case SIMPLE_C_SUCCESS:
@@ -149,4 +126,48 @@ bool log_wirte(enum e_error error, char *format, ...)
 	}
 
 	return false;
+}
+
+char* get_error_str(enum e_error error, char* buff)
+{
+	switch (error)
+	{
+	case SIMPLE_C_SUCCESS:
+		strcpy(buff, "SUCCESS");
+		break;
+	case SIMPLE_C_LOG:
+		strcpy(buff, "LOG");
+		break;
+	case SIMPLE_C_WARNING:
+		strcpy(buff, "WARNING");
+		break;
+	case SIMPLE_C_ERROR:
+		strcpy(buff, "ERROR");
+		break;
+	}
+
+	return buff;
+}
+
+int get_log_str(enum e_error error, char* buff,const char *content_buff)
+{
+	char error_str[64] = { 0 };
+	get_error_str(error, error_str);
+
+	char time[256] = { 0 };
+	get_local_time_string(time);
+	if (time)
+	{
+		remove_char_end(time, '\n');
+	}
+
+	if (content_buff)
+	{
+		return get_printf_s(buff, "[%s] [%s] %s \r\n", error_str, time, content_buff);
+	}
+	else
+	{
+		return get_printf_s(buff, "[%s][%s] \r\n", error_str, time);
+	}
+	
 }

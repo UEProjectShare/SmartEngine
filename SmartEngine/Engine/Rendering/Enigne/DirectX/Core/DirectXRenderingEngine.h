@@ -93,11 +93,6 @@ protected:
 	vector<ComPtr<ID3D12Resource>> SwapChainBuffer;
 	
 	ComPtr<ID3D12Resource> DepthStencilBuffer;
-
-	//和屏幕的视口有关
-	D3D12_VIEWPORT ViewportInfo;
-	
-	D3D12_RECT ViewportRect;
 	
 	UINT M4XQualityLevels;
 	

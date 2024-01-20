@@ -3,7 +3,9 @@
 
 GActorObject::GActorObject()
 {
-	TransformationComponent = CreateObject<CTransformationComponent>(new CTransformationComponent());
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	TransformationComponent = CreateObject<CTransformationComponent>(Param,new CTransformationComponent());
 }
 
 void GActorObject::SetPosition(const XMFLOAT3& InNewPosition)
@@ -19,6 +21,10 @@ void GActorObject::SetRotation(const fvector_3d& InRotation)
 void GActorObject::SetScale(const fvector_3d& InNewScale)
 {
 	TransformationComponent->SetScale(InNewScale);
+}
+
+void GActorObject::SetPickup(bool bNewPickup)
+{
 }
 
 XMFLOAT3& GActorObject::GetPosition() const

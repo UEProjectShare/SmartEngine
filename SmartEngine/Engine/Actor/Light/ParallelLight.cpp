@@ -2,7 +2,9 @@
 
 GParallelLight::GParallelLight()
 {
-	SetLightComponent(CreateObject<CParallelLightComponent>(new CParallelLightComponent()));
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	SetLightComponent(CreateObject<CParallelLightComponent>(Param, new CParallelLightComponent()));
 }
 
 void GParallelLight::Tick(float DeltaTime)

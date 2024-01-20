@@ -11,12 +11,12 @@ void FRenderingPipeline::BuildMesh(const size_t InMeshHash, CMeshComponent* InMe
 	GeometryMap.BuildMesh(InMeshHash,InMesh, MeshData);
 }
 
-void FRenderingPipeline::DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData)
+void FRenderingPipeline::DuplicateMesh(CMeshComponent* InMesh, std::shared_ptr<FRenderingData>& MeshData)
 {
 	GeometryMap.DuplicateMesh(InMesh, MeshData);
 }
 
-bool FRenderingPipeline::FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData, int InRenderLayerIndex)
+bool FRenderingPipeline::FindMeshRenderingDataByHash(const size_t& InHash, std::shared_ptr<FRenderingData>& MeshData, int InRenderLayerIndex)
 {
 	return GeometryMap.FindMeshRenderingDataByHash(InHash, MeshData, InRenderLayerIndex);
 }
@@ -143,10 +143,10 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 
 	//为了ShadowCubeMap暂时注释掉
 	//动态反射
-	/*if (DynamicCubeMap.IsExistDynamicReflectionMesh())
+	if (DynamicCubeMap.IsExistDynamicReflectionMesh())
 	{
 		DynamicCubeMap.PreDraw(DeltaTime);
-	}*/
+	}
 
 	RenderLayer.PreDraw(DeltaTime);
 }
@@ -158,12 +158,15 @@ void FRenderingPipeline::Draw(float DeltaTime)
 
 	//为了ShadowCubeMap暂时注释掉
 	//CubeMap 覆盖原先被修改的CubeMap
-	//GeometryMap.DrawCubeMapTexture(DeltaTime);
+	GeometryMap.DrawCubeMapTexture(DeltaTime);
 
 	//各类层级
 	RenderLayer.Draw(RENDERLAYER_BACKGROUND, DeltaTime);
 	RenderLayer.Draw(RENDERLAYER_OPAQUE, DeltaTime);
 	RenderLayer.Draw(RENDERLAYER_TRANSPARENT, DeltaTime);
+
+	//渲染选择层
+	RenderLayer.Draw(RENDERLAYER_SELECT, DeltaTime);
 
 	//渲染UI
 	UIPipeline.Draw(DeltaTime);

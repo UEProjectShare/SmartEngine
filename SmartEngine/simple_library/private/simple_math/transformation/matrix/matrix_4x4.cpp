@@ -6,6 +6,15 @@ fmatrix_4x4::fmatrix_4x4()
     *this = identity();
 }
 
+fmatrix_4x4::fmatrix_4x4(const fmatrix_3x3& in_matrix)
+    : m11(in_matrix.m11), m12(in_matrix.m12), m13(in_matrix.m13), m14(0.f)
+    , m21(in_matrix.m21), m22(in_matrix.m22), m23(in_matrix.m23), m24(0.f)
+    , m31(in_matrix.m31), m32(in_matrix.m32), m33(in_matrix.m33), m34(0.f)
+    , m41(0.f),           m42(0.f),           m43(0.f),           m44(1.f)
+{
+
+}
+
 fmatrix_4x4::fmatrix_4x4(
     float in_m11, float in_m12, float in_m13, float in_m14, 
     float in_m21, float in_m22, float in_m23, float in_m24, 

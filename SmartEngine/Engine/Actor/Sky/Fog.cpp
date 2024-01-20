@@ -3,7 +3,10 @@
 
 GFog::GFog()
 {
-	FogComponent = CreateObject<CFogComponent>(new CFogComponent());
+	FCreateObjectParam Param;
+	Param.Outer = this;
+
+	FogComponent = CreateObject<CFogComponent>(Param, new CFogComponent());
 }
 
 void GFog::Tick(float DeltaTime)

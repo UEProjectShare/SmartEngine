@@ -3,6 +3,7 @@
 
 void CInputComponent::BeginInit()
 {
+	LMouseDownDelegate.AddFunction(this, &CInputComponent::OnLeftMouseButtonDown);
 	MouseDownDelegate.AddFunction(this, &CInputComponent::OnMouseButtonDown);
 	MouseUpDelegate.AddFunction(this, &CInputComponent::OnMouseButtonUp);
 	MouseMoveDelegate.AddFunction(this, &CInputComponent::OnMouseMove);
@@ -46,6 +47,15 @@ void CInputComponent::Tick(float DeltaTime)
 		CaptureKeyboardInfoDelegate.Execute(InputKey);
 	}
 }
+
+void CInputComponent::OnLeftMouseButtonDown(int X, int Y)
+{
+	if (OnLMouseButtonDownDelegate.IsBound())
+	{
+		OnLMouseButtonDownDelegate.Execute((int)X, (int)Y);
+	}
+}
+
 
 void CInputComponent::OnMouseButtonDown(int X, int Y)
 {

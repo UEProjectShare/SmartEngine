@@ -11,7 +11,10 @@ class CInputComponent : public CComponent
 public:
 	CVARIABLE(hello world)
 	FCaptureKeyboardInfoDelegate CaptureKeyboardInfoDelegate;
-
+	
+	CVARIABLE(xxx, aaaa)
+	FCaptureOnMouseDelegate OnLMouseButtonDownDelegate;
+	
 	CVARIABLE(xxx, aaaa)
 	FCaptureOnMouseDelegate OnMouseButtonDownDelegate;
 
@@ -28,6 +31,8 @@ public:
 
 	void Tick(float DeltaTime) override;
 
+	virtual void OnLeftMouseButtonDown(int X, int Y);
+	
 	virtual void OnMouseButtonDown(int X, int Y);
 	
 	virtual void OnMouseButtonUp(int X, int Y);

@@ -3,7 +3,7 @@
 #include "../../Shader/Core/Shader.h"
 #include "MeshType.h"
 #include "Mesh.h"
-#include "../../Interface\DirectXDeviceInterface.h"
+#include "../../Interface/DirectXDeviceInterface.h"
 #include "../../Core/Viewport/ViewportInfo.h"
 #include "../../Rendering/Core/DirectX/RenderingPipeline/RenderingPipeline.h"
 
@@ -30,17 +30,20 @@ public:
 	void PostDraw(float DeltaTime) override;
 	
 	CMeshComponent* CreateBoxMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InHeight,
 		float InWidth,
 		float InDepth);
 	
 	CMeshComponent* CreateConeMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InRadius,
 		float InHeight,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
 	CMeshComponent* CreateCylinderMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InTopRadius,
 		float InBottomRadius,
 		float InHeight,
@@ -48,22 +51,26 @@ public:
 		uint32_t InHeightSubdivision);
 
 	CMeshComponent* CreatePlaneMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InHeight, 
 		float InWidth,
 		uint32_t InHeightSubdivide, 
 		uint32_t InWidthSubdivide);
 
 	CMeshComponent* CreateSphereMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InRadius,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision, bool bReverse);
 
 	CMeshComponent* CreatePyramidMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		EPyramidNumberSides InPyramidNumberSidesType, 
 		uint32_t InHeightSubdivide,
 		uint32_t InSize);
 
 	CMeshComponent *CreatePipeMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InTopRadius,
 		float InBottomRadius,
 		float InHeight,
@@ -72,14 +79,15 @@ public:
 		uint32_t InHeightSubdivision);
 
 	CMeshComponent* CreateTorusMeshComponent(
+		const FCreateObjectParam& InObjectParam,
 		float InRadius,
 		float InSectionRadius,
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
-	CMeshComponent* CreateMeshComponent(string& InPath);
+	CMeshComponent* CreateMeshComponent(const FCreateObjectParam& InObjectParam, string& InPath);
 
-	FRenderingPipeline& GetRenderingPipeline() {return RenderingPipeline;}
+	FRenderingPipeline* GetRenderingPipeline() const {return const_cast<FRenderingPipeline*>(&RenderingPipeline);}
 
 protected:
 	FRenderingPipeline RenderingPipeline;

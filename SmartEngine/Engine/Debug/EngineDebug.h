@@ -10,6 +10,6 @@
 	}\
 	else if (SUCCEEDED(HandleResult))\
 	{\
-		Engine_Log_Success("Success !");\
+		/*Engine_Log_Success("Success !");*/\
 	}\
 }

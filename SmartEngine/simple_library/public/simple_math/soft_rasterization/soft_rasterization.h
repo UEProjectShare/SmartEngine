@@ -1,3 +1,4 @@
+// Copyright (C) RenZhai.2022.All Rights Reserved.
 #include "../../simple_library.h"
 
 #define VARIABLE(...)
@@ -52,12 +53,25 @@ namespace soft_rasterization
 		virtual void build(float in_time) {}
 		virtual void tick(float in_time);
 		virtual void clear() {}
+
+	public:
+		virtual void set_rot(const frotator &in_rot);
+
+		virtual frotator get_rot() const { return rotation; }
+
 	public:
 		fvector_3d position;
 		frotator rotation;
 		fvector_3d scale;
 
-		fmatrix_4x4 view_matrix;
+		//旋转有关
+		fvector_3d forward_vector;
+		fvector_3d right_vector;
+		fvector_3d up_vector;
+
+		//如果是摄像机 那么它是把世界点转为局部空间下。
+		//如果是模型的worldmatrix 那么它将把局部点转到世界空间下
+		fmatrix_4x4 matrix;
 		fmatrix_4x4 viewProj_matrix;
 	};
 
@@ -77,6 +91,9 @@ namespace soft_rasterization
 	public:
 		factor();
 		virtual ~factor();
+
+		virtual void set_rot(const frotator& in_rot);
+		virtual frotator get_rot() const {return transform->get_rot();}
 
 		FORCEINLINE ftransform_component* get_transform() { return transform; }
 	};
@@ -188,9 +205,10 @@ namespace soft_rasterization
 }
 
 /*
-使用方法
 #include "simple_library/public/simple_math/soft_rasterization/soft_rasterization.h"
+
 using namespace soft_rasterization;
+
 int main()
 {
 	class ftest_mesh_actor :public soft_rasterization::fmesh_actor
@@ -201,14 +219,24 @@ int main()
 		{
 			super::tick(in_time);
 
-			// 位置
-			//get_transform()->position.x += 2.f;
-			// 旋转
-			//get_transform()->rotation.roll += 6.f;
-			// 缩放
-			//get_transform()->scale.x = 1.f;
-			//get_transform()->scale.y = 1.f;
-			//get_transform()->scale.z = 1.f;
+			frotator r = get_rot();
+
+			//r.yaw += 10.f;
+			r.pitch -= 5.f;
+			//r.roll += 14.f;
+			set_rot(r);
+
+			//
+			//// 位置
+			//get_transform()->position.x -= 1.f;
+			//get_transform()->position.y -= 1.f;
+			//get_transform()->position.z -= 1.f;
+			////// 旋转
+			////get_transform()->rotation.yaw += 6.f;
+			//// 缩放
+			//get_transform()->scale.x -= 0.1f;
+			//get_transform()->scale.y -= 0.4f;
+			//get_transform()->scale.z -= 0.4f;
 		}
 	};
 
@@ -218,7 +246,7 @@ int main()
 		std::vector<fmesh_actor*> in_objs;
 		{
 			in_objs.push_back(new ftest_mesh_actor());
-			fmesh_actor *in_actor = in_objs[in_objs.size() - 1];
+			fmesh_actor* in_actor = in_objs[in_objs.size() - 1];
 
 			//三角形 面片
 			in_actor->get_mesh()->vertex_data.push_back(fvector_3d(0.f, 0.f, 0.f));
@@ -229,14 +257,14 @@ int main()
 		//1.转路径
 		char path_buff[1024] = { 0 };
 		char path[] = "../Math/render/a_%i.bmp";
-		get_full_path(path_buff,1024 ,path);
+		get_full_path(path_buff, 1024, path);
 
 		wchar_t dst_wchar_t[1024] = { 0 };
-		char_to_wchar_t(dst_wchar_t,1024, path_buff);
+		char_to_wchar_t(dst_wchar_t, 1024, path_buff);
 
 		fviewport_config config;
 		render_enigne->build_draw_object(in_objs);
-		render_enigne->build_camera(fvector_3d(1.f,40.f,1.f),config);
+		render_enigne->build_camera(fvector_3d(1.f, 40.f, 1.f), config);
 		render_enigne->build_input_path(dst_wchar_t);
 
 		render_enigne->init(0.2f);

@@ -19,6 +19,8 @@ public:
 	virtual void SetRotation(const fvector_3d& InRotation);
 	
 	virtual void SetScale(const fvector_3d& InNewScale);
+
+	virtual void SetPickup(bool bNewPickup);
 	
 	XMFLOAT3& GetPosition() const;
 	

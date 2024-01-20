@@ -1,6 +1,8 @@
 #include "../../../../public/simple_math/transformation/quaternion/quat.h"
 #include "../../../../public/simple_math/transformation/vector/vector_3d.h"
 #include "../../../../public/simple_math/transformation/rotator/rotator.h"
+#include "../../../../public/simple_math/math_libray.hpp"
+
 #include <cmath>
 #include <assert.h> 
 
@@ -17,6 +19,24 @@ fquat::fquat(float in_x, float in_y, float in_z, float in_w)
 	,z(in_z)
 	,w(in_w)
 {
+}
+
+fquat fquat::operator*(const fquat& q) const
+{
+	fquat result;
+
+	result.w = q.w * w - q.x * x - q.y * y - q.z * z;
+	result.x = q.x * w + q.w * x + q.y * z - q.z * y;
+	result.y = q.y * w + q.w * y + q.z * x - q.x * z;
+	result.z = q.z * w + q.w * z + q.x * y - q.y * x;
+
+	return result;
+}
+
+fquat fquat::operator*=(const fquat& q)
+{
+	*this = *this * q;
+	return *this;
 }
 
 fquat fquat::operator*(const float& q) const
@@ -75,6 +95,54 @@ fquat fquat::operator-=(const fquat& q)
 	return *this;
 }
 
+float fquat::operator|(const fquat& q)const
+{
+	return w*q.w + x*q.x + y*q.y + z*q.z;
+}
+
+fquat fquat::log() const
+{
+	fquat result;
+	result.w = 0.f;
+	float scale = 1.f;
+	if (fabsf(w) < 1.f)//cos(theta/2)
+	{
+		float angle = acos(w);
+		float sin_angle = sin(angle);
+		if (sin_angle >= 1.e-8f)
+		{
+			scale = angle / sin_angle;
+		}
+	}
+
+	result.x = scale * x;
+	result.y = scale * y;
+	result.z = scale * z;
+
+	return result;
+}
+
+fquat fquat::exp() const
+{
+	float angle = sqrt(x * x + y * y + z * z);
+	float sin_angle = sin(angle);
+
+	float scale = 1.f;
+
+	fquat result;
+	result.w = cos(angle);
+	if (fabsf(sin_angle) >= 1.e-8f)
+	{
+		scale = sin_angle / angle;
+	}
+
+	result.x = scale * x;
+	result.y = scale * y;
+	result.z = scale * z;
+
+	return result;
+}
+
 float fquat::size() const
 {
 	return sqrt(size_squared());
@@ -119,7 +187,7 @@ void fquat::normalize(float in_tolerance)
 	}	
 }
 
-bool fquat::is_normalized()
+bool fquat::is_normalized() const
 {
 	return abs((1.f - size_squared())) <= 0.01f;
 }
@@ -153,7 +221,7 @@ void fquat::rotator_by_axis(float theta, const fvector_3d& axis)
 	z = axis.z * sin_helf_theta;
 }
 
-fquat fquat::inverse()
+fquat fquat::inverse() const
 {
 	assert(is_normalized());//至少单位化
 
@@ -204,4 +272,135 @@ void fquat::object_to_inertia(const frotator& in_rot)
 	x = cos_heading * sin_pitch * cos_bank + sin_heading * cos_pitch * sin_bank;
 	y = sin_heading * cos_pitch * cos_bank - cos_heading * sin_pitch * sin_bank;
 	z = cos_heading * cos_pitch * sin_bank - sin_heading * sin_pitch * cos_bank;
+}
+
+fquat fquat::lerp(const fquat& in_q0, const fquat& in_q1, float in_t)
+{
+	//考虑双倍覆盖问题
+	//q -q
+	float bias = (in_q0 | in_q1) > 0.f ?1.f :-1.f;
+	return (in_q0 * (bias * (1 - in_t))) + in_q1 * in_t;
+}
+
+fquat fquat::bilinear_lerp(
+	const fquat& in_q00, const fquat& in_q10,
+	const fquat& in_q01, const fquat& in_q11, 
+	float frac_x, float frac_y)
+{
+	return lerp(
+		lerp(in_q00, in_q10, frac_x),
+		lerp(in_q01, in_q11, frac_y),
+		frac_y);
+}
+
+fquat fquat::s_lerp(const fquat& in_q0, const fquat& in_q1, float in_t)
+{
+	if (in_t >= 1.f)
+	{
+		return in_q1;
+	}
+	else if (in_t <= 0.f)
+	{
+		return in_q0;
+	}
+
+	//双倍覆盖
+	float q0oq1_cos = (in_q0 | in_q1);//cos
+	q0oq1_cos = q0oq1_cos >= 0.f ? q0oq1_cos:-q0oq1_cos;
+
+	assert(q0oq1_cos < 1.1f);
+
+	//角度接近0.f的时候
+	float scale0 = 0.f;
+	float scale1 = 0.f;
+	if (q0oq1_cos >= 0.99999f)
+	{
+		//线性Lerp
+		scale0 = 1.f - in_t;
+		scale1 = in_t;
+	}
+	else
+	{
+		//Slerp
+		//sin
+		float q0oq1_sin = sqrt(1.f - q0oq1_cos * q0oq1_cos);
+
+		//角度(弧度)
+		float theta = atan2(q0oq1_sin,q0oq1_cos);
+
+		float q0oq1_inv_sin = 1.f / q0oq1_sin;
+
+		//Slerp 公式
+		scale0 = sin((1.f - in_t) * theta) * q0oq1_inv_sin;
+		scale1 = sin(in_t * theta) * q0oq1_inv_sin;
+	}
+
+	//双倍覆盖
+	scale1 = scale1 >= 0.f ? scale1 : -scale1;
+
+	fquat result;
+	result.x = scale0 * in_q0.x + scale1 * in_q1.x;
+	result.y = scale0 * in_q0.y + scale1 * in_q1.y;
+	result.z = scale0 * in_q0.z + scale1 * in_q1.z;
+	result.w = scale0 * in_q0.w + scale1 * in_q1.w;
+
+	return result;
+}
+
+fquat fquat::s_lerp_full_path(const fquat& in_q0, const fquat& in_q1, float in_t)
+{
+	float scale0 = 0.f;
+	float scale1 = 0.f;
+
+	float q0oq1_cos = (in_q0 | in_q1);//cos
+	q0oq1_cos = math_libray::Clamp(q0oq1_cos,-1.f,1.f);
+	float angle = asin(q0oq1_cos);//弧度
+
+	if (fabsf(angle) < 1.e-4f)//极小值
+	{
+		return in_q0;
+	}
+
+	//Slerp
+	float q0oq1_sin = sqrt(1.f - q0oq1_cos * q0oq1_cos);
+
+	float q0oq1_inv_sin = 1.f / q0oq1_sin;
+
+	//Slerp 公式
+	scale0 = sin((1.f - in_t) * angle) * q0oq1_inv_sin;
+	scale1 = sin(in_t * angle) * q0oq1_inv_sin;
+
+	return in_q0 * scale0 + in_q1 * scale1;
+}
+
+fquat fquat::s_quad(const fquat& in_q0, const fquat& in_q1, const fquat& in_s0, const fquat& in_s1, float in_t)
+{
+	fquat q1 = s_lerp(in_q0, in_q1, in_t);
+	fquat q2 = s_lerp_full_path(in_s0, in_s1, in_t);
+	fquat result = s_lerp_full_path(q1, q2, 2.f * in_t * (1.f - in_t));
+	result.normalize();
+
+	return result;
+}
+
+fquat fquat::s_quad_full_path(const fquat& in_q0, const fquat& in_q1, const fquat& in_s0, const fquat& in_s1, float in_t)
+{
+	fquat q1 = s_lerp_full_path(in_q0, in_q1, in_t);
+	fquat q2 = s_lerp_full_path(in_s0, in_s1, in_t);
+	fquat result = s_lerp_full_path(q1, q2, 2.f * in_t * (1.f - in_t));
+	result.normalize();
+
+	return result;
+}
+
+fquat fquat::get_tangents(const fquat& in_prev_q, const fquat& in_q, const fquat& in_nest_q)
+{
+	fquat inv_p = in_q.inverse();
+
+	fquat r1 = (inv_p * in_prev_q).log();
+	fquat r2 = (inv_p * in_nest_q).log();
+
+	fquat pre_exp = (r1 + r2) * -0.25f;
+
+	return in_q * pre_exp.exp();
 }

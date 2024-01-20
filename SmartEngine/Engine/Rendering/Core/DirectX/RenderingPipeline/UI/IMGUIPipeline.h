@@ -6,12 +6,12 @@ struct FIMGUIPipeline : public IDirectXDeviceInterface_Struct
 {
 	FIMGUIPipeline();
 
-	void Init(ID3D12DescriptorHeap* InHeap, UINT InOffset);
+	void Init(ID3D12DescriptorHeap* InHeap, UINT InOffset) const;
 
 	void Draw(float DeltaTime);
 
-	void Exit();
+	void Exit() const;
 
 protected:
-	void Tick(float DeltaTime);
+	void Tick(float DeltaTime) const;
 };

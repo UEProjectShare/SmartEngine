@@ -2,6 +2,7 @@
 #include "../../../../public/simple_math/transformation/matrix/matrix_3x3.h"
 #include "../../../../public/simple_math/transformation/quaternion/quat.h"
 #include <math.h>
+#include "../../../../public/simple_math/math_utils.h"
 
 void frotator::object_to_inertia(const fmatrix_3x3& in_rot_matrix)
 {
@@ -50,22 +51,17 @@ void frotator::object_to_inertia(const fquat& in_quat)
 
 void frotator::euler_to_rotator(const feuler& in_euler)
 {
-	//弧度转角度
-	float radian = 180.f / 3.1415926f;
-
-	pitch = in_euler.heading * radian;
-	roll = in_euler.pitch * radian;
-	yaw = in_euler.bank * radian;
+	pitch = math_utils::radian_to_angle(in_euler.heading);
+	roll = math_utils::radian_to_angle(in_euler.pitch);
+	yaw = math_utils::radian_to_angle(in_euler.bank);
 }
 
 void frotator::rotator_to_euler(feuler& in_euler) const
 {
 	//将角度转为弧度
-	float angle_to_radians = 3.1415926f / 180.f;
-
-	in_euler.heading = pitch * angle_to_radians;//y
-	in_euler.pitch = roll * angle_to_radians;//x
-	in_euler.bank  = yaw * angle_to_radians;//z
+	in_euler.heading = math_utils::angle_to_radian(pitch);//y
+	in_euler.pitch = math_utils::angle_to_radian(roll);//x
+	in_euler.bank  = math_utils::angle_to_radian(yaw);//z
 }
 
 feuler frotator::rotator_to_euler() const
@@ -98,6 +94,20 @@ void frotator::inertia_to_object(const fquat& in_quat)
 	}
 
 	euler_to_rotator(euler);
+}
+
+frotator::frotator()
+	:pitch(0.f)
+	, yaw(0.f)
+	, roll(0.f)
+{
+}
+
+frotator::frotator(float in_pitch, float in_yaw, float in_roll)
+	:pitch(in_pitch)
+	,yaw(in_yaw)
+	,roll(in_roll)
+{
 }
 
 void frotator::inertia_to_object(const fmatrix_3x3& in_rot_matrix)

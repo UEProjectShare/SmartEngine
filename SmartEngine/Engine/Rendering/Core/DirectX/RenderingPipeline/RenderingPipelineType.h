@@ -11,6 +11,7 @@ enum EPipelineState
 	OrthogonalShadow = 6,
 	PerspectiveShadow = 7,
 	VientianeShadow = 8,
+	Select = 9,
 };
 
 enum ERenderingConditions

@@ -24,6 +24,7 @@
 #include "../../../../Actor/Light/PointLight.h"
 #include "../../../../Actor/Sky/Fog.h"
 #include "../../../../Actor/Sky/Sky.h"
+#include "../../../../Core/Camera.h"
 
 #if defined(_WIN32)
 #include "../../../../Core/WinMainCommandParameters.h"
@@ -51,8 +52,10 @@ CDirectXRenderingEngine::CDirectXRenderingEngine()
 
 	bTick = false;
 
-	MeshManage = CreateObject<CMeshManage>(new CMeshManage());
-	LightManage = CreateObject<CLightManage>(new CLightManage());
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	MeshManage = CreateObject<CMeshManage>(Param,new CMeshManage());
+	LightManage = CreateObject<CLightManage>(Param, new CLightManage());
 }
 
 CDirectXRenderingEngine::~CDirectXRenderingEngine()
@@ -87,23 +90,23 @@ int CDirectXRenderingEngine::PostInit()
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
 		//灯光生成
-		/*if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
+		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		{
 			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
 			ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
 			ParallelLight->SetScale(fvector_3d(1));
 			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
-		}*/
+		}
 		
 		//点灯光生成
-		if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		/*if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
 		{
 			PointLight->SetPosition(XMFLOAT3(0.f, -6.f, 10.f));
 			PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
 			
 			PointLight->SetLightIntensity(fvector_3d(0.9f));
 			PointLight->SetEndAttenuation(190.f);
-		}
+		}*/
 
 		//聚灯光生成
 		/*if (GSpotLight* SpotLight = World->CreateActorObject<GSpotLight>())
@@ -218,6 +221,8 @@ int CDirectXRenderingEngine::PostInit()
 				InMaterial->SetBaseColor(fvector_4d(1.f));
 				InMaterial->SetMaterialType(EMaterialType::Lambert);
 			}
+
+			InPlaneMesh->SetPickup(false);
 		}
 
 		//兰伯特
@@ -252,6 +257,7 @@ int CDirectXRenderingEngine::PostInit()
 		{
 			SphereMesh->CreateMesh(2.f, 50, 50);
 			SphereMesh->SetPosition(XMFLOAT3(9.f, 2, 0.f));
+			SphereMesh->SetScale(1.f);
 			if (CMaterial* InMaterial = (*SphereMesh->GetMaterials())[0])
 			{
 				//模拟黄铜
@@ -713,7 +719,7 @@ int CDirectXRenderingEngine::PostInit()
 
 		}*/
 
-		//well
+		/*//well
 		if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 		{
 			InBoxMesh->CreateMesh(30.f, 150, 0.4f);
@@ -752,7 +758,7 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 		
-		/*//Top Well
+		//Top Well
 		if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 		{
 			InBoxMesh->CreateMesh(20.f, 150, 150.f);
@@ -858,8 +864,8 @@ void CDirectXRenderingEngine::StartSetMainViewportRenderTarget() const
 
 	//需要每帧执行
 	//绑定矩形框
-	GraphicsCommandList->RSSetViewports(1, &ViewportInfo);
-	GraphicsCommandList->RSSetScissorRects(1, &ViewportRect);
+	GraphicsCommandList->RSSetViewports(1, &World->GetCamera()->ViewportInfo);
+	GraphicsCommandList->RSSetScissorRects(1, &World->GetCamera()->ViewportRect);
 
 	//输出的合并阶段
 	const D3D12_CPU_DESCRIPTOR_HANDLE SwapBufferView = GetCurrentSwapBufferView();
@@ -977,7 +983,7 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	D3D_FEATURE_LEVEL_11_0 目标功能级别支持Direct3D 11.0包含 shader model 5.
 	*/
 
-	HRESULT D3dDeviceResult = D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3dDevice));
+	const HRESULT D3dDeviceResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3dDevice));
 	if (FAILED(D3dDeviceResult))
 	{
 		//warp
@@ -1184,21 +1190,6 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 
 	ID3D12CommandList* CommandList[] = { GraphicsCommandList.Get() };
 	CommandQueue->ExecuteCommandLists(_countof(CommandList), CommandList);
-
-	//这些会覆盖原先windows画布
-	//描述视口尺寸
-	ViewportInfo.TopLeftX = 0;
-	ViewportInfo.TopLeftY = 0;
-	ViewportInfo.Width = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
-	ViewportInfo.Height = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
-	ViewportInfo.MinDepth = 0.f;
-	ViewportInfo.MaxDepth = 1.f;
-
-	//矩形
-	ViewportRect.left = 0;
-	ViewportRect.top = 0;
-	ViewportRect.right = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
-	ViewportRect.bottom = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
 
 	WaitGPUCommandQueueComplete();
 }

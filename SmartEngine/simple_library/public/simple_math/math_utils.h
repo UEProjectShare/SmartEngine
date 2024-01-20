@@ -74,5 +74,6 @@ namespace math_utils
 	//旋转矩阵->四元数
 	fquat matrix_to_quat(const fmatrix_3x3& in_rotation_matrix);
 
-
+	//四元数求幂
+	fquat pow(const fquat &in_q,float in_exponent);
 }

@@ -18,6 +18,8 @@ void init_log_system(const char *path);
 
 //log
 bool log_wirte(enum e_error error, char *format, ...);
+char* get_error_str(enum e_error error, char* buff);
+int get_log_str(enum e_error error, char* buff,const char *content_buff);
 
 #define log_system(type,format,...) \
 { \

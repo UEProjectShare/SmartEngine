@@ -42,6 +42,10 @@ protected:
 	
 	CDirectXRenderingEngine* RenderingEngine;
 	
+#if EDITOR_ENGINE
+	class CEditorEngine* EditorEngine;
+#endif
+	
 	CWorld* World;
 };
 #endif

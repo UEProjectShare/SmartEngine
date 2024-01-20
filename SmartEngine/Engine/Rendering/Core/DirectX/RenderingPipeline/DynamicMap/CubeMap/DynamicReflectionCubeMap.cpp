@@ -181,18 +181,20 @@ void FDynamicReflectionCubeMap::BuildRenderTargetSRV()
 	const auto CPUSRVDesHeapStart = GeometryMap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
 	const auto GPUSRVDesHeapStart = GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart();
 
+	const int InOffset = 
+		GeometryMap->GetDrawTexture2DResourcesNumber() +
+		GeometryMap->GetDrawCubeMapResourcesNumber();
+
 	if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
 	{
 		InRenderTarget->GetCPUSRVOffset() =
 			CD3DX12_CPU_DESCRIPTOR_HANDLE(CPUSRVDesHeapStart,
-				GeometryMap->GetDrawTexture2DResourcesNumber() +
-				GeometryMap->GetDrawCubeMapResourcesNumber(),
+				InOffset,
 				CBVDescriptorSize);
 
 		InRenderTarget->GetGPUSRVOffset() =
 			CD3DX12_GPU_DESCRIPTOR_HANDLE(GPUSRVDesHeapStart,
-				GeometryMap->GetDrawTexture2DResourcesNumber() +
-				GeometryMap->GetDrawCubeMapResourcesNumber(),
+				InOffset,
 				CBVDescriptorSize);
 	}
 }

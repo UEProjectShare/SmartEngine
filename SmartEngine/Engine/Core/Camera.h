@@ -26,6 +26,8 @@ public:
 	virtual void ExecuteKeyboard(const FInputKey& InputKey);
 
 	void BuildViewMatrix(float DeltaTime) override;
+
+	virtual void OnLeftMouseButtonDown(int X, int Y);
 	
 	virtual void OnMouseButtonDown(int X, int Y);
 	
@@ -38,6 +40,9 @@ public:
 	virtual void MoveForward(float InValue);
 	
 	virtual void MoveRight(float InValue);
+
+	virtual void OnClickedScreen(int X, int Y);
+	
 protected:
 	void RotateAroundXAxis(float InRotateDegrees) const;
 	

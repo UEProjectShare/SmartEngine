@@ -73,6 +73,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)imgui;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -129,9 +132,15 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <StackReserveSize>100000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EditorEngine\Core\EditorBase.cpp" />
+    <ClCompile Include="EditorEngine\EditorEngine.cpp" />
+    <ClCompile Include="EditorEngine\LogEditor\LogEditor.cpp" />
+    <ClCompile Include="EditorEngine\LogEditor\LogObject\LogSystem.cpp" />
+    <ClCompile Include="EditorEngine\ToolbarEditor\ToolbarEditor.cpp" />
     <ClCompile Include="Engine\Actor\Core\ActorObject.cpp" />
     <ClCompile Include="Engine\Actor\Light\Core\Light.cpp" />
     <ClCompile Include="Engine\Actor\Light\Core\RangeLight.cpp" />
@@ -140,6 +149,7 @@
     <ClCompile Include="Engine\Actor\Light\SpotLight.cpp" />
     <ClCompile Include="Engine\Actor\Sky\Fog.cpp" />
     <ClCompile Include="Engine\Actor\Sky\Sky.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionSceneQuery.cpp" />
     <ClCompile Include="Engine\Component\Core\Component.cpp" />
     <ClCompile Include="Engine\Component\InputComponent.cpp" />
     <ClCompile Include="Engine\Component\Input\Input.cpp" />
@@ -182,8 +192,10 @@
     <ClCompile Include="Engine\Core\World.cpp" />
     <ClCompile Include="Engine\Debug\EngineDebug.cpp" />
     <ClCompile Include="Engine\EngineFactory.cpp" />
+    <ClCompile Include="Engine\EngineType.cpp" />
     <ClCompile Include="Engine\Interface\DirectXDeviceInterface.cpp" />
     <ClCompile Include="Engine\Interface\OpenGLDeviceInterface.cpp" />
+    <ClCompile Include="Engine\Library\RaycastSystemLibrary.cpp" />
     <ClCompile Include="Engine\Manage\LightManage.cpp" />
     <ClCompile Include="Engine\Math\EngineMath.cpp" />
     <ClCompile Include="Engine\Mesh\BoxMesh.cpp" />
@@ -230,6 +242,7 @@
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueReflectorRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueShadowRenderLayer.cpp" />
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SelectRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\TransparentRenderLayer.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\Core\RenderTarget.cpp" />
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\CubeMapRenderTarget.cpp" />
@@ -298,8 +311,17 @@
     <ClCompile Include="simple_library\private\simple_math\transformation\vector\vector_4d.cpp" />
     <ClCompile Include="simple_library\private\simple_math\transformation\vector\vector_4id.cpp" />
     <ClCompile Include="simple_library\private\simple_math\transformation\vector\vector_color.cpp" />
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinystr.cpp" />
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EditorEngine\Core\EditorBase.h" />
+    <ClInclude Include="EditorEngine\EditorEngine.h" />
+    <ClInclude Include="EditorEngine\LogEditor\LogEditor.h" />
+    <ClInclude Include="EditorEngine\LogEditor\LogObject\LogSystem.h" />
+    <ClInclude Include="EditorEngine\ToolbarEditor\ToolbarEditor.h" />
     <ClInclude Include="Engine\Actor\Core\ActorObject.h" />
     <ClInclude Include="Engine\Actor\Light\Core\Light.h" />
     <ClInclude Include="Engine\Actor\Light\Core\RangeLight.h" />
@@ -309,6 +331,7 @@
     <ClInclude Include="Engine\Actor\Sky\Fog.h" />
     <ClInclude Include="Engine\Actor\Sky\Sky.h" />
     <ClInclude Include="Engine\CodeReflection\CodeReflectionMacroTag.h" />
+    <ClInclude Include="Engine\Collision\CollisionSceneQuery.h" />
     <ClInclude Include="Engine\Component\Core\Component.h" />
     <ClInclude Include="Engine\Component\InputComponent.h" />
     <ClInclude Include="Engine\Component\Input\Input.h" />
@@ -354,9 +377,12 @@
     <ClInclude Include="Engine\Debug\EngineDebug.h" />
     <ClInclude Include="Engine\Debug\Log\SimpleLog.h" />
     <ClInclude Include="Engine\EngineFactory.h" />
+    <ClInclude Include="Engine\EngineMacro.h" />
     <ClInclude Include="Engine\EngineMinimal.h" />
+    <ClInclude Include="Engine\EngineType.h" />
     <ClInclude Include="Engine\Interface\DirectXDeviceInterface.h" />
     <ClInclude Include="Engine\Interface\OpenGLDeviceInterface.h" />
+    <ClInclude Include="Engine\Library\RaycastSystemLibrary.h" />
     <ClInclude Include="Engine\Manage\LightManage.h" />
     <ClInclude Include="Engine\Math\EngineMath.h" />
     <ClInclude Include="Engine\Mesh\BoxMesh.h" />
@@ -404,6 +430,7 @@
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueReflectorRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OpaqueShadowRenderLayer.h" />
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SelectRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\TransparentRenderLayer.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\Core\RenderTarget.h" />
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\CubeMapRenderTarget.h" />
@@ -490,6 +517,8 @@
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_4d.h" />
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_4id.h" />
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_color.h" />
+    <ClInclude Include="simple_library\third_party_library\tinyxml\tinystr.h" />
+    <ClInclude Include="simple_library\third_party_library\tinyxml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\Rendering\Core\DirectX\RenderingPipeline\DynamicMap\CubeMap\" />

@@ -6,7 +6,9 @@
 
 GPipeMesh::GPipeMesh()
 {
-	SetMeshComponent(ConstructionObject<CPipeMeshComponent>());
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	SetMeshComponent(ConstructionObject<CPipeMeshComponent>(Param));
 }
 
 void GPipeMesh::Init()

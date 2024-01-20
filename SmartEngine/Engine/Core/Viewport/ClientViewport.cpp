@@ -20,6 +20,14 @@ void GClientViewport::SetFrustum(float InYFOV, float InAspect, float InZNear, fl
     ZNear = InZNear;
     ZFar = InZFar;
 
+#if USE_SIMPLE_LIB_MATH
+    ProjectMatrix = EngineMath::ToFloat4x4(math_utils::matrix_perspective(
+        InYFOV, //以弧度为单位的自上而下的视场角。
+        InAspect,//视图空间 X:Y 的纵横比。
+        InZNear,//到近剪裁平面的距离。必须大于零。
+        InZFar//到远剪裁平面的距离。必须大于零。
+    ));
+#else
     //基于视野构建左手透视投影矩阵
     const XMMATRIX Project = XMMatrixPerspectiveFovLH(
         InYFOV, //以弧度为单位的自上而下的视场角。
@@ -29,7 +37,7 @@ void GClientViewport::SetFrustum(float InYFOV, float InAspect, float InZNear, fl
     );
 
     XMStoreFloat4x4(&ProjectMatrix, Project);
-
+#endif // USE_SIMPLE_LIB_MATH
     SetDirty(true);
 }
 

@@ -20,9 +20,9 @@ struct FGeometry : public IDirectXDeviceInterface_Struct
 
 	void BuildMesh(const size_t InMeshHash,CMeshComponent* InMesh, const FMeshRenderingData& MeshData,int InKey);
 	
-	void DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData, int InKey);
+	void DuplicateMesh(CMeshComponent* InMesh, const std::shared_ptr<FRenderingData>& MeshData, int InKey);
 	
-	bool FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData,int InRenderLayerIndex = -1);
+	bool FindMeshRenderingDataByHash(const size_t& InHash, std::shared_ptr<FRenderingData>& MeshData, int InRenderLayerIndex = -1);
 
 	//构建模型
 	void Build();
@@ -32,6 +32,7 @@ struct FGeometry : public IDirectXDeviceInterface_Struct
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
 	
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
 protected:
 	ComPtr<ID3DBlob> CPUVertexBufferPtr;
 	
@@ -45,7 +46,15 @@ protected:
 	
 	ComPtr<ID3D12Resource> IndexBufferTmpPtr;
 
+	//真实的数据
 	FMeshRenderingData MeshRenderingData;
+	
+	//唯一性的渲染池
+	static map<size_t, std::shared_ptr<FRenderingData>> UniqueRenderingDatas;
+
+public:
+	//真正的渲染池 里面会有重复的 key (size_t)
+	static vector<std::shared_ptr<FRenderingData>> RenderingDatas;
 };
 
 //提供渲染内容的接口
@@ -78,7 +87,7 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 
 	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo);
 	
-	void UpdateLight(float DeltaTime, const FViewportInfo& ViewportInfo);
+	void UpdateLight(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 	
 	void UpdateFog(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 
@@ -91,9 +100,9 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	
 	void BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData);
 	
-	void DuplicateMesh(CMeshComponent* InMesh, const FRenderingData& MeshData);
+	void DuplicateMesh(CMeshComponent* InMesh, std::shared_ptr<FRenderingData>& MeshData);
 	
-	bool FindMeshRenderingDataByHash(const size_t& InHash, FRenderingData& MeshData, int InRenderLayerIndex = -1);
+	bool FindMeshRenderingDataByHash(const size_t& InHash, std::shared_ptr<FRenderingData>& MeshData, int InRenderLayerIndex = -1);
 
 	void LoadTexture() const;
 
@@ -153,19 +162,19 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 	
 	void DrawShadow(float DeltaTime);
 	
-	void DrawLight(float DeltaTime);
+	void DrawLight(float DeltaTime) const;
 	
-	void DrawViewport(float DeltaTime);
+	void DrawViewport(float DeltaTime) const;
 	
 	void DrawMesh(float DeltaTime);
 	
-	void DrawMaterial(float DeltaTime);
+	void DrawMaterial(float DeltaTime) const;
 	
-	void Draw2DTexture(float DeltaTime);
+	void Draw2DTexture(float DeltaTime) const;
 	
-	void DrawCubeMapTexture(float DeltaTime);
+	void DrawCubeMapTexture(float DeltaTime) const;
 	
-	void DrawFog(float DeltaTime);
+	void DrawFog(float DeltaTime) const;
 	
 	ID3D12DescriptorHeap* GetHeap()const {return DescriptorHeap.GetHeap();}
 
@@ -195,6 +204,6 @@ protected:
 	CFogComponent* Fog;
 
 	FDynamicShadowMap DynamicShadowMap;
-
+	
 	FDynamicShadowCubeMap DynamicShadowCubeMap;
 };

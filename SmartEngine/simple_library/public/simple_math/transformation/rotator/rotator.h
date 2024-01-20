@@ -48,6 +48,17 @@ struct frotator
 
 	//x forward axis
 	float roll;
+public:
+	frotator operator-(const frotator& a) const
+	{
+		return frotator(pitch-a.pitch,yaw-a.yaw,roll-a.roll);
+	}
+
+public:
+	
+	frotator();
+
+	frotator(float in_pitch,float in_yaw,float in_roll);
 
 	//矩阵 转 欧拉角
 	//惯性->物体

@@ -26,6 +26,16 @@ namespace EngineMath
         return fvector_3d(InV3d.x, InV3d.y, InV3d.z);
     }
 
+    XMFLOAT4X4 ToFloat4x4(const fmatrix_4x4& InMatrix4x4)
+    {
+        return XMFLOAT4X4(
+            InMatrix4x4.m11,InMatrix4x4.m12, InMatrix4x4.m13, InMatrix4x4.m14,
+            InMatrix4x4.m21,InMatrix4x4.m22, InMatrix4x4.m23, InMatrix4x4.m24,
+            InMatrix4x4.m31,InMatrix4x4.m32, InMatrix4x4.m33, InMatrix4x4.m34,
+            InMatrix4x4.m41,InMatrix4x4.m42, InMatrix4x4.m43, InMatrix4x4.m44
+        );
+    }
+
     bool IsAngleRange(float InAngle, float X, float Y)
     {
         if (InAngle >= min(X, Y))

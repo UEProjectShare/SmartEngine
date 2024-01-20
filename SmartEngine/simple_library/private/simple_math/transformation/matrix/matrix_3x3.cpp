@@ -1,10 +1,19 @@
 #include "../../../../public/simple_math/transformation/matrix/matrix_3x3.h"
 #include "../../../../public/simple_math/transformation/rotator/rotator.h"
 #include <math.h>
+#include "../../../../public/simple_math/math_utils.h"
 
 fmatrix_3x3::fmatrix_3x3()
 {
 	*this = fmatrix_3x3::identity();
+}
+
+fmatrix_3x3::fmatrix_3x3(const fmatrix_4x4& in_matrix)
+	: m11(in_matrix.m11), m12(in_matrix.m12), m13(in_matrix.m13)
+	, m21(in_matrix.m21), m22(in_matrix.m22), m23(in_matrix.m23)
+	, m31(in_matrix.m31), m32(in_matrix.m32), m33(in_matrix.m33)
+{
+
 }
 
 fmatrix_3x3::fmatrix_3x3(
@@ -20,11 +29,9 @@ fmatrix_3x3::fmatrix_3x3(
 void fmatrix_3x3::inertia_to_object(const frotator& in_rot)
 {
 	//将角度转为弧度
-	float angle_to_radians = 3.1415926f / 180.f;
-
-	float h = in_rot.pitch * angle_to_radians;//y
-	float p = in_rot.roll * angle_to_radians;//x
-	float b = in_rot.yaw * angle_to_radians;//z
+	float h = math_utils::angle_to_radian(in_rot.pitch);//y
+	float p = math_utils::angle_to_radian(in_rot.roll);//x
+	float b = math_utils::angle_to_radian(in_rot.yaw);//z
 
 	m11 = cos(h) * cos(b) + sin(h) * sin(p) * sin(b);
 	m12 = -cos(h) * sin(b) + sin(h) * sin(p) * cos(b);

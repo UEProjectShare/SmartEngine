@@ -7,6 +7,15 @@ public:
 	FViewport();
 
 	void ViewportInit();
+	
+	void ResetViewport(UINT InWidth, UINT InHeight);
+	
+	void ResetScissorRect(UINT InWidth, UINT InHeight);
+	
+	//和屏幕的视口有关
+	D3D12_VIEWPORT ViewportInfo;
+	
+	D3D12_RECT ViewportRect;
 
 	//定义摄像机位置,UP,Right,Look
 	XMFLOAT4X4 ViewMatrix;

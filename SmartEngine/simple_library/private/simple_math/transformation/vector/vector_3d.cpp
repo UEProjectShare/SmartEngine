@@ -40,9 +40,9 @@ char* fvector_3d::to_string(char* buff)
 	return buff;
 }
 
-float fvector_3d::dot(const fvector_3d& a)const
+float fvector_3d::dot(const fvector_3d& a, const fvector_3d& b)
 {
-	return a.x * x + a.y * y + z * a.z;
+	return a.x * b.x + a.y * b.y + b.z * a.z;
 }
 
 void fvector_3d::normalize()

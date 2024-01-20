@@ -26,7 +26,7 @@ public:
 	
 	void GetViewportMatrix(XMFLOAT4X4& OutViewMatrix, XMFLOAT4X4& OutProjectMatrix) const;
 	
-	void DrawShadowMapTexture(float DeltaTime);
+	void DrawShadowMapTexture(float DeltaTime) const;
 	
 	void SetViewportPosition(const fvector_3d& InPosition) const;
 	

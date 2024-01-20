@@ -4,7 +4,9 @@
 GPointLight::GPointLight()
 	: Super()
 {
-	SetLightComponent(CreateObject<CPointLightComponent>(new CPointLightComponent()));
+	FCreateObjectParam Param;
+	Param.Outer = this;
+	SetLightComponent(CreateObject<CPointLightComponent>(Param, new CPointLightComponent()));
 	time = 0.f;
 }
 

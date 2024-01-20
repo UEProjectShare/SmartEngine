@@ -311,4 +311,27 @@ namespace math_utils
 
         return quat;
     }
+
+    fquat pow(const fquat& in_q, float in_exponent)
+    {
+        fquat r;
+        if (fabsf(in_q.w) > 0.9999f)
+        {
+            return in_q;
+        }
+
+        float angle = acos(in_q.w);
+
+        float new_angle = angle * in_exponent;
+
+        r.w = cos(new_angle);
+
+        float in_value = sin(new_angle) / sin(angle);
+
+        r.x = in_q.x * in_value;
+        r.y = in_q.y * in_value;
+        r.z = in_q.z * in_value;
+
+        return r;
+    }
 }

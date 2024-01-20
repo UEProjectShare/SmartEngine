@@ -1,5 +1,6 @@
 #pragma once
 
+struct fmatrix_3x3;
 struct fmatrix_4x4
 {
 	float m11; float m12; float m13; float m14;
@@ -9,6 +10,8 @@ struct fmatrix_4x4
 
 public:
 	fmatrix_4x4();
+
+	fmatrix_4x4(const fmatrix_3x3& in_matrix);
 
 	fmatrix_4x4(
 		float in_m11, float in_m12, float in_m13, float in_m14,

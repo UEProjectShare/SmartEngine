@@ -114,7 +114,7 @@ public:
 		return fvector_3d(a.y * z - a.z * y,x*a.z - a.x*z,a.x*y - a.y * x);
 	}
 
-	float dot(const fvector_3d& a)const;
+	static float dot(const fvector_3d& a, const fvector_3d& b);
 
 	void normalize();
 

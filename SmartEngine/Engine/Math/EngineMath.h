@@ -23,6 +23,8 @@ namespace EngineMath
 	
 	fvector_3d ToVector3d(const XMFLOAT3& InV3d);
 
+	XMFLOAT4X4 ToFloat4x4(const fmatrix_4x4& InMatrix4x4);
+
 	bool IsAngleRange(float InAngle, float X, float Y);
 	
 	fvector_3d GetPointSphericalCoordinates(const fvector_3d& InPoint);

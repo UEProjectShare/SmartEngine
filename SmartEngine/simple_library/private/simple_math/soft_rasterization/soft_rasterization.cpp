@@ -14,6 +14,11 @@ namespace soft_rasterization
 		
 	}
 
+	void factor::set_rot(const frotator& in_rot)
+	{
+		transform->set_rot(in_rot);
+	}
+
 	fmesh_actor::fmesh_actor()
 	{
 		mesh_component = create_object<fmesh_component>();
@@ -69,7 +74,7 @@ namespace soft_rasterization
 
 		//构建view matrix
 		fvector_4d up(0.f, 1.f, 0.f, 1.f);
-		camera.get_transform()->view_matrix = math_utils::matrix_look_at_target(
+		camera.get_transform()->matrix = math_utils::matrix_look_at_target(
 			fvector_4d(
 				camera.get_transform()->position.x,
 				camera.get_transform()->position.y,
@@ -86,7 +91,7 @@ namespace soft_rasterization
 		//构建 viewProj_matrix
 		Proj_matrix.transpose();
 		camera.get_transform()->viewProj_matrix =
-			camera.get_transform()->view_matrix * Proj_matrix;
+			camera.get_transform()->matrix * Proj_matrix;
 	}
 
 	void frender_engine::strat_update(float in_time)
@@ -102,29 +107,29 @@ namespace soft_rasterization
 
 			//II world matrix
 			//构建旋转
-			data_3d.matrix.transpose();
-			data_3d.matrix = math_utils::matrix_rotation_axis(fvector_3d(1.f, 0.f, 0.f), tmp->get_transform()->rotation.roll) *
-				math_utils::matrix_rotation_axis(fvector_3d(0.f, 1.f, 0.f), tmp->get_transform()->rotation.pitch) *
-				math_utils::matrix_rotation_axis(fvector_3d(0.f, 0.f, 1.f), tmp->get_transform()->rotation.yaw);
+			fvector_3d forward_vector = tmp->get_mesh()->forward_vector;
+			fvector_3d right_vector = tmp->get_mesh()->right_vector;
+			fvector_3d up_vector = tmp->get_mesh()->up_vector;
 
-			//|||构建位移
-			data_3d.matrix.transpose();
-			{
-				data_3d.matrix.m41 = tmp->get_mesh()->position.x;
-				data_3d.matrix.m42 = tmp->get_mesh()->position.y;
-				data_3d.matrix.m43 = tmp->get_mesh()->position.z;
-			}
+			fvector_3d position = tmp->get_mesh()->position;
+			fvector_3d scale = tmp->get_mesh()->scale;
 
-			//缩放
-			{
-				data_3d.matrix.m11 = tmp->get_mesh()->scale.x;
-				data_3d.matrix.m22 = tmp->get_mesh()->scale.y;
-				data_3d.matrix.m33 = tmp->get_mesh()->scale.z;
-				data_3d.matrix.m44 = 1.f;
-			}
+			//UVN矩阵
+			//矫正
+			fvector_3d dot_position;
+			dot_position.x = fvector_3d::dot(position, right_vector);
+			dot_position.y = fvector_3d::dot(position, up_vector);
+			dot_position.z = fvector_3d::dot(position, forward_vector);
+
+			data_3d.matrix = {
+			right_vector.x * scale.x,	up_vector.x,			forward_vector.x,			0.f,
+			right_vector.y,				up_vector.y * scale.y,	forward_vector.y,			0.f,
+			right_vector.z,				up_vector.z,			forward_vector.z * scale.z, 0.f,
+			dot_position.x,				dot_position.y,			dot_position.z,				1.f
+		};
 
 			//保存
-			tmp->get_transform()->view_matrix = data_3d.matrix;
+			tmp->get_transform()->matrix = data_3d.matrix;
 		}
 	}
 
@@ -389,7 +394,11 @@ namespace soft_rasterization
 
 	ftransform_component::ftransform_component()
 		:scale(1.f)
+		, forward_vector(0.f, 0.f, 1.f)
+		, right_vector(1.f, 0.f, 0.f)
+		, up_vector(0.f, 1.f, 0.f)
 	{
+
 	}
 
 	void ftransform_component::tick(float in_time)
@@ -402,9 +411,41 @@ namespace soft_rasterization
 				in_component->rotation = rotation;
 				in_component->scale = scale;
 
+				in_component->forward_vector = forward_vector;
+				in_component->up_vector = up_vector;
+				in_component->right_vector = right_vector;
+
 				in_component->viewProj_matrix = viewProj_matrix;
-				in_component->view_matrix = view_matrix;
+				in_component->matrix = matrix;
 			}
 		}
+	}
+
+	void ftransform_component::set_rot(const frotator& in_rot)
+	{
+		//保存一下
+		rotation = in_rot;
+
+		//新的方法
+		//将原先保存的矩阵转为欧拉角
+		frotator last_rotator;
+		fmatrix_3x3 last_matrix_3x3(matrix);
+		last_rotator.object_to_inertia(last_matrix_3x3);
+
+		frotator new_rotator =  rotation - last_rotator;
+
+		//构建为旋转矩阵
+		fmatrix_3x3 rot_matrix_3x3;
+		//rot_matrix_3x3.object_to_inertia(in_rot); //旋转roll会出现问题
+
+		fquat q;
+		q.object_to_inertia(new_rotator);
+
+		math_utils::object_to_inertia(q, rot_matrix_3x3);
+
+		//构建新的for right up
+		forward_vector = math_utils::mul(forward_vector, rot_matrix_3x3);
+		right_vector = math_utils::mul(right_vector, rot_matrix_3x3);
+		up_vector = math_utils::mul(up_vector, rot_matrix_3x3);
 	}
 }

@@ -513,6 +513,45 @@
     <ClCompile Include="Engine\Interface\OpenGLDeviceInterface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Collision\CollisionSceneQuery.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Library\RaycastSystemLibrary.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EngineType.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SelectRenderLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinystr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxml.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlerror.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlparser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\Core\EditorBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\LogEditor\LogObject\LogSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\LogEditor\LogEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\ToolbarEditor\ToolbarEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\EditorEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.h">
@@ -1083,6 +1122,42 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Interface\OpenGLDeviceInterface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\CollisionSceneQuery.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Library\RaycastSystemLibrary.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EngineType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SelectRenderLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EngineMacro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="simple_library\third_party_library\tinyxml\tinystr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="simple_library\third_party_library\tinyxml\tinyxml.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\Core\EditorBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\LogEditor\LogObject\LogSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\LogEditor\LogEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\ToolbarEditor\ToolbarEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\EditorEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

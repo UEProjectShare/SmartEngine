@@ -38,13 +38,16 @@ void FDynamicCubeMap::BuildViewport(const fvector_3d& InCenterPoint)
 
 	for (size_t i = 0; i < 6; i++)
 	{
-		CubeMapViewport.push_back(CreateObject<GClientViewport>(new GClientViewport()));
+		CubeMapViewport.push_back(CreateObject<GClientViewport>(FCreateObjectParam(), new GClientViewport()));
 		GClientViewport* Viewport = CubeMapViewport[CubeMapViewport.size() - 1];
 
 		Viewport->SetPosition(XMFLOAT3(InCenterPoint.x, InCenterPoint.y, InCenterPoint.z));
 		Viewport->FaceTarget(InCenterPoint, Capture.TargetPoint[i], Capture.UP[i]);
 		Viewport->SetFrustum(0.5f * XM_PI, 1.f, 0.1f, 5000.f);
 		Viewport->BuildViewMatrix(0.3f);
+
+		Viewport->ViewportInfo = RenderTarget->GetViewport();
+		Viewport->ViewportRect = RenderTarget->GetScissorRect();
 	}
 }
 

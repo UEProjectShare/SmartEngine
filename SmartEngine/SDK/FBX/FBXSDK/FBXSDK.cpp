@@ -12,7 +12,7 @@ void InitializeSdkObjects(FbxManager*& InManager, FbxScene*& InScene)
 	FbxIOSettings* FBXIO = FbxIOSettings::Create(InManager, IOSROOT);
 	InManager->SetIOSettings(FBXIO);
 
-	FbxString FBXPath = FbxGetApplicationDirectory();
+	const FbxString FBXPath = FbxGetApplicationDirectory();
 	InManager->LoadPluginsDirectory(FBXPath);
 
 	InScene = FbxScene::Create(InManager, "OK My");
@@ -64,8 +64,8 @@ bool LoadScene(FbxManager* InManager, FbxDocument* InScene, const char* InFilena
 
 void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 {
-	int PolygonCount = InMesh->GetPolygonCount();
-	FbxVector4* ControlPoints = InMesh->GetControlPoints();
+	const int PolygonCount = InMesh->GetPolygonCount();
+	const FbxVector4* ControlPoints = InMesh->GetControlPoints();
 
 	int VertexID = 0;
 	for (int i = 0; i < PolygonCount; i++)//图元
@@ -73,10 +73,10 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 		OutData.VertexData.push_back(FFBXTriangle());
 		FFBXTriangle& InTriangle = OutData.VertexData[OutData.VertexData.size() - 1];
 
-		int PolygonSize = InMesh->GetPolygonSize(i);
+		const int PolygonSize = InMesh->GetPolygonSize(i);
 		for (int j = 0; j < PolygonSize; j++)
 		{
-			int ControlPointIndex = InMesh->GetPolygonVertex(i, j);
+			const int ControlPointIndex = InMesh->GetPolygonVertex(i, j);
 
 			//Coordinates
 			//拿到位置
@@ -105,23 +105,23 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 				{
 					if (ReferenceMode == fbxsdk::FbxLayerElement::eDirect)
 					{
-						FbxVector2 UV = TextureUV->GetDirectArray().GetAt(ControlPointIndex);
+						const FbxVector2 UV = TextureUV->GetDirectArray().GetAt(ControlPointIndex);
 
 						InTriangle.Vertexs[j].UV.X = UV.mData[0];
 						InTriangle.Vertexs[j].UV.Y = 1.f - UV.mData[1];//V是反的 DX 和 OpenGL不一样
 					}
 					else if (ReferenceMode == fbxsdk::FbxLayerElement::eIndexToDirect)
 					{
-						int ID = TextureUV->GetIndexArray().GetAt(ControlPointIndex);
+						const int ID = TextureUV->GetIndexArray().GetAt(ControlPointIndex);
 
-						FbxVector2 UV = TextureUV->GetDirectArray().GetAt(ID);
+						const FbxVector2 UV = TextureUV->GetDirectArray().GetAt(ID);
 						InTriangle.Vertexs[j].UV.X = UV.mData[0];
 						InTriangle.Vertexs[j].UV.Y = 1.f - UV.mData[1];//V是反的 DX 和 OpenGL不一样
 					}
 				}
 				else if (ModeType == fbxsdk::FbxLayerElement::eByPolygonVertex)
 				{
-					int TextureUVIndex = InMesh->GetTextureUVIndex(i, j);
+					const int TextureUVIndex = InMesh->GetTextureUVIndex(i, j);
 					FbxVector2 UV = TextureUV->GetDirectArray().GetAt(TextureUVIndex);
 					switch (ReferenceMode)
 					{
@@ -142,7 +142,7 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 			for (int l = 0; l < InMesh->GetElementNormalCount(); ++l)
 			{
 				FbxGeometryElementNormal* Normal = InMesh->GetElementNormal(l);
-				auto NormalReferenceMode = Normal->GetReferenceMode();
+				const auto NormalReferenceMode = Normal->GetReferenceMode();
 
 				if (Normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 				{
@@ -150,7 +150,7 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 					{
 					case fbxsdk::FbxLayerElement::eDirect:
 					{
-						FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(VertexID);
+						const FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(VertexID);
 
 						InTriangle.Vertexs[j].Normal.X = NormalPoint.mData[0];
 						InTriangle.Vertexs[j].Normal.Y = NormalPoint.mData[2];
@@ -160,9 +160,9 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 					}
 					case fbxsdk::FbxLayerElement::eIndexToDirect:
 					{
-						int ID = Normal->GetIndexArray().GetAt(VertexID);
+						const int ID = Normal->GetIndexArray().GetAt(VertexID);
 
-						FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(ID);
+						const FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(ID);
 						InTriangle.Vertexs[j].Normal.X = NormalPoint.mData[0];
 						InTriangle.Vertexs[j].Normal.Y = NormalPoint.mData[2];
 						InTriangle.Vertexs[j].Normal.Z = NormalPoint.mData[1];
@@ -175,7 +175,7 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 					{
 					case fbxsdk::FbxLayerElement::eDirect:
 					{
-						FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(ControlPointIndex);
+						const FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(ControlPointIndex);
 						InTriangle.Vertexs[j].Normal.X = NormalPoint.mData[0];
 						InTriangle.Vertexs[j].Normal.Y = NormalPoint.mData[2];
 						InTriangle.Vertexs[j].Normal.Z = NormalPoint.mData[1];
@@ -183,8 +183,8 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 					}
 					case fbxsdk::FbxLayerElement::eIndexToDirect:
 					{
-						int ID = Normal->GetIndexArray().GetAt(ControlPointIndex);
-						FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(ID);
+						const int ID = Normal->GetIndexArray().GetAt(ControlPointIndex);
+						const FbxVector4 NormalPoint = Normal->GetDirectArray().GetAt(ID);
 						InTriangle.Vertexs[j].Normal.X = NormalPoint.mData[0];
 						InTriangle.Vertexs[j].Normal.Y = NormalPoint.mData[2];
 						InTriangle.Vertexs[j].Normal.Z = NormalPoint.mData[1];
@@ -205,7 +205,7 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 					{
 					case FbxGeometryElement::eDirect:
 					{
-						FbxVector4 TangentValue = Tangent->GetDirectArray().GetAt(VertexID);
+						const FbxVector4 TangentValue = Tangent->GetDirectArray().GetAt(VertexID);
 
 						InTriangle.Vertexs[j].Tangent.X = TangentValue.mData[0];
 						InTriangle.Vertexs[j].Tangent.Y = TangentValue.mData[2];
@@ -216,7 +216,7 @@ void GetPolygons(FbxMesh* InMesh, FFBXMesh& OutData)
 					{
 						int ID = Tangent->GetIndexArray().GetAt(VertexID);
 
-						FbxVector4 TangentValue = Tangent->GetDirectArray().GetAt(ID);
+						const FbxVector4 TangentValue = Tangent->GetDirectArray().GetAt(ID);
 						InTriangle.Vertexs[j].Tangent.X = TangentValue.mData[0];
 						InTriangle.Vertexs[j].Tangent.Y = TangentValue.mData[2];
 						InTriangle.Vertexs[j].Tangent.Z = TangentValue.mData[1];
@@ -253,7 +253,7 @@ void GetMaterial() {}
 
 void GetIndex(FFBXMesh& InMesh)
 {
-	uint16_t VertexDataSize = InMesh.VertexData.size() * 3.f;
+	const uint16_t VertexDataSize = InMesh.VertexData.size() * 3.f;
 	InMesh.IndexData.resize(InMesh.VertexData.size() * 3.f);
 
 	for (uint16_t i = 0; i < VertexDataSize; i++)
@@ -264,7 +264,7 @@ void GetIndex(FFBXMesh& InMesh)
 
 void GetMesh(FbxNode* InNode, FFBXModel& InModel)
 {
-	FbxMesh* NodeMesh = (FbxMesh*)InNode->GetNodeAttribute();
+	FbxMesh* NodeMesh = static_cast<FbxMesh*>(InNode->GetNodeAttribute());
 
 	InModel.MeshData.push_back(FFBXMesh());
 	FFBXMesh& InMesh = InModel.MeshData[InModel.MeshData.size() - 1];
@@ -279,7 +279,7 @@ void GetMesh(FbxNode* InNode, FFBXModel& InModel)
 void RecursiveLoadMesh(FbxNode* InNode, FFBXRenderData& OutData)
 {
 	//XML
-	if (InNode->GetNodeAttribute() == NULL)
+	if (InNode->GetNodeAttribute() == nullptr)
 	{
 		//NULL Node
 	}
@@ -316,8 +316,8 @@ void DestroySdkObjects(FbxManager* InManager)
 void FFBXAssetImport::LoadMeshData(const char* InPath, FFBXRenderData& OutData)
 {
 	//创建基础管理和场景
-	FbxManager* SdkManager = NULL;
-	FbxScene* Scene = NULL;
+	FbxManager* SdkManager = nullptr;
+	FbxScene* Scene = nullptr;
 
 	//初始化场景对象
 	InitializeSdkObjects(SdkManager, Scene);

@@ -30,7 +30,7 @@ public:
 	
 	virtual void PostDraw(float DeltaTime);
 
-	virtual void DrawObject(float DeltaTime, const FRenderingData& InRenderingData, ERenderingConditions RC = ERenderingConditions::RC_None);
+	virtual void DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC = ERenderingConditions::RC_None);
 	
 	virtual void FindObjectDraw(float DeltaTime, const CMeshComponent* InKey);
 
@@ -51,6 +51,12 @@ public:
 	virtual void DrawMesh(float DeltaTime, ERenderingConditions RC = ERenderingConditions::RC_None);
 
 	UINT GetRenderPriority() const { return RenderPriority; }
+
+	void Add(const std::weak_ptr<FRenderingData>& InRenderingData);
+	
+	void Remove(const std::weak_ptr<FRenderingData>& InRenderingData);
+
+	void Clear();
 	
 	virtual void BuildShader() {};
 	
@@ -64,7 +70,7 @@ protected:
 	
 	std::vector<D3D12_INPUT_ELEMENT_DESC> InputElementDesc;
 
-	std::vector<FRenderingData> RenderDatas;
+	std::vector<std::weak_ptr<FRenderingData>> RenderDatas;
 
 	FGeometryMap* GeometryMap;
 	

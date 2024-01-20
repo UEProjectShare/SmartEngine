@@ -7,7 +7,10 @@ float index_test = 0.f;
 GSpotLight::GSpotLight()
 	: Super()
 {
-	SetLightComponent(CreateObject<CSpotLightComponent>(new CSpotLightComponent()));
+	FCreateObjectParam Param;
+	Param.Outer = this;
+
+	SetLightComponent(CreateObject<CSpotLightComponent>(Param, new CSpotLightComponent()));
 	index_test = 0.f;
 }
 
