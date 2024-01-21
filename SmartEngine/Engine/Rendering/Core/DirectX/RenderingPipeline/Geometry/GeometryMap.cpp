@@ -911,3 +911,13 @@ D3D12_INDEX_BUFFER_VIEW FGeometry::GetIndexBufferView() const
 	return IBV;
 }
 
+void FGeometry::FindRenderingDatas(const std::function<EFindValueType(std::shared_ptr<FRenderingData>&)>& InFun)
+{
+	for (auto& Tmp : RenderingDatas)
+	{
+		if (InFun(Tmp) == EFindValueType::TYPE_COMPLETE)
+		{
+			break;
+		}
+	}
+}

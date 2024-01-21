@@ -232,12 +232,8 @@ void GCamera::OnClickedScreen(int X, int Y)
 		Engine_Log("Clicked successfully.[time]=%f", CollisionResult.Time);
 		
 		if (FRenderLayerManage* InLayer = GetRenderLayerManage())
-		{
-			//清除旧的物体
-			InLayer->Clear(EMeshRenderLayerType::RENDERLAYER_SELECT);
-
-			//设置新的
-			InLayer->Add(EMeshRenderLayerType::RENDERLAYER_SELECT, CollisionResult.RenderingData);
+		{ 
+			InLayer->HighlightDisplayObject(CollisionResult.RenderingData);
 		}
 	}
 	else

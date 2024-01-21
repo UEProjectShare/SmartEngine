@@ -2,7 +2,11 @@
 #include "../../../../../Interface/DirectXDeviceInterface.h"
 #include "Core/RenderLayer.h"
 
-class FRenderLayerManage
+class GActorObject;
+class CComponent;
+struct FRenderingData;
+
+class FRenderLayerManage : public IDirectXDeviceInterface
 {
 	friend class FRenderLayer;
 	
@@ -30,6 +34,12 @@ public:
 	virtual void FindObjectDraw(float DeltaTime, int InLayer, const CMeshComponent* InKey);
 
 	virtual void BuildPSO();
+
+	virtual void HighlightDisplayObject(GActorObject* InObject);
+	
+	virtual void HighlightDisplayObject(std::weak_ptr<FRenderingData> RenderingData);
+	
+	virtual void HighlightDisplayObject(CComponent* RenderingData);
 
 	//≈≈–Ú
 	virtual void Sort();

@@ -136,10 +136,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Common\EngineVariableTable.cpp" />
     <ClCompile Include="EditorEngine\Core\EditorBase.cpp" />
     <ClCompile Include="EditorEngine\EditorEngine.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogEditor.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogObject\LogSystem.cpp" />
+    <ClCompile Include="EditorEngine\OutLineEditor\OutLineEditor.cpp" />
     <ClCompile Include="EditorEngine\ToolbarEditor\ToolbarEditor.cpp" />
     <ClCompile Include="Engine\Actor\Core\ActorObject.cpp" />
     <ClCompile Include="Engine\Actor\Light\Core\Light.cpp" />
@@ -291,6 +293,8 @@
     <ClCompile Include="simple_library\private\simple_core_minimal\simple_c_time\simple_c_time.c" />
     <ClCompile Include="simple_library\private\simple_core_minimal\simple_c_windows\simple_c_windows_register.c" />
     <ClCompile Include="simple_library\private\simple_core_minimal\simple_c_windows\simple_c_windows_setting.c" />
+    <ClCompile Include="simple_library\private\simple_cpp_core_minimal\simple_cpp_helper_file\simple_cpp_helper_file.cpp" />
+    <ClCompile Include="simple_library\private\simple_cpp_core_minimal\simple_cpp_string_algorithm\simple_cpp_string_algorithm.cpp" />
     <ClCompile Include="simple_library\private\simple_c_log\simple_c_log.c" />
     <ClCompile Include="simple_library\private\simple_image\Core\simple_image_bmp.cpp" />
     <ClCompile Include="simple_library\private\simple_image\simple_image.cpp" />
@@ -317,10 +321,12 @@
     <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\EngineVariableTable.h" />
     <ClInclude Include="EditorEngine\Core\EditorBase.h" />
     <ClInclude Include="EditorEngine\EditorEngine.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogEditor.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogObject\LogSystem.h" />
+    <ClInclude Include="EditorEngine\OutLineEditor\OutLineEditor.h" />
     <ClInclude Include="EditorEngine\ToolbarEditor\ToolbarEditor.h" />
     <ClInclude Include="Engine\Actor\Core\ActorObject.h" />
     <ClInclude Include="Engine\Actor\Light\Core\Light.h" />
@@ -492,12 +498,15 @@
     <ClInclude Include="simple_library\public\simple_cpp_core_minimal\shared\simple_cpp_shared_ptr.h" />
     <ClInclude Include="simple_library\public\simple_cpp_core_minimal\shared\simple_cpp_shared_ptr_type.h" />
     <ClInclude Include="simple_library\public\simple_cpp_core_minimal\simple_cpp_core_minimal.h" />
+    <ClInclude Include="simple_library\public\simple_cpp_core_minimal\simple_cpp_helper_file\simple_cpp_helper_file.h" />
+    <ClInclude Include="simple_library\public\simple_cpp_core_minimal\simple_cpp_string_algorithm\simple_cpp_string_algorithm.h" />
     <ClInclude Include="simple_library\public\simple_c_log\simple_c_log.h" />
     <ClInclude Include="simple_library\public\simple_delegate\simple_delegate.h" />
     <ClInclude Include="simple_library\public\simple_image\Core\simple_image_bmp.h" />
     <ClInclude Include="simple_library\public\simple_image\Core\simple_image_type.h" />
     <ClInclude Include="simple_library\public\simple_image\simple_image.h" />
     <ClInclude Include="simple_library\public\simple_library.h" />
+    <ClInclude Include="simple_library\public\simple_library_macro.h" />
     <ClInclude Include="simple_library\public\simple_math\math_libray.hpp" />
     <ClInclude Include="simple_library\public\simple_math\math_utils.h" />
     <ClInclude Include="simple_library\public\simple_math\simple_core_math.h" />

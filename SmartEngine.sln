@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmartEngine", "SmartEngine\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBXSDK", "SmartEngine\SDK\FBX\FBXSDK\FBXSDK.vcxproj", "{38AF0E7F-E910-426C-B862-B15ABB32BFB3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmartBuildTool", "SmartBuildTool\SmartBuildTool.vcxproj", "{E09E9501-AC02-44D6-978A-FDE57F1C569C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{38AF0E7F-E910-426C-B862-B15ABB32BFB3}.Release|x64.Build.0 = Release|x64
 		{38AF0E7F-E910-426C-B862-B15ABB32BFB3}.Release|x86.ActiveCfg = Release|Win32
 		{38AF0E7F-E910-426C-B862-B15ABB32BFB3}.Release|x86.Build.0 = Release|Win32
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Debug|x64.ActiveCfg = Debug|x64
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Debug|x64.Build.0 = Debug|x64
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Debug|x86.ActiveCfg = Debug|Win32
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Debug|x86.Build.0 = Debug|Win32
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Release|x64.ActiveCfg = Release|x64
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Release|x64.Build.0 = Release|x64
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Release|x86.ActiveCfg = Release|Win32
+		{E09E9501-AC02-44D6-978A-FDE57F1C569C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

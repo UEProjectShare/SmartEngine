@@ -6,6 +6,12 @@
 #include "RenderLayer/OpaqueReflectorRenderLayer.h"
 #include "RenderLayer/OpaqueShadowRenderLayer.h"
 #include "RenderLayer/SelectRenderLayer.h"
+#include "../../../../../Component/Mesh/Core/MeshComponentType.h"
+#include "../../../../../Component/Mesh/Core/MeshComponent.h"
+#include "../Geometry/GeometryMap.h"
+#include "../Geometry/RenderingData.h"
+#include "../../../../../Core/World.h"
+#include "../../../../../Actor/Core/ActorObject.h"
 
 std::vector<std::shared_ptr<FRenderLayer>> FRenderLayerManage::RenderLayers;
 
@@ -48,6 +54,69 @@ void FRenderLayerManage::BuildPSO()
 	for (const auto& Tmp : RenderLayers)
 	{
 		Tmp->BuildPSO();
+	}
+}
+
+void FRenderLayerManage::HighlightDisplayObject(GActorObject* InObject)
+{
+	FGeometry::FindRenderingDatas(
+	[&](const std::shared_ptr<FRenderingData>& InRender) -> EFindValueType
+	{
+		if (const GActorObject* InActor = dynamic_cast<GActorObject*>(InRender->Mesh->GetOuter()))
+		{
+			if (InObject == InActor)
+			{
+				HighlightDisplayObject(InRender);
+
+				return EFindValueType::TYPE_COMPLETE;
+			}
+		}
+
+		return EFindValueType::TYPE_IN_PROGRAM;
+	});
+}
+
+extern int ActorSelected;
+void FRenderLayerManage::HighlightDisplayObject(std::weak_ptr<FRenderingData> RenderingData)
+{
+	//清除旧的物体
+	Clear(EMeshRenderLayerType::RENDERLAYER_SELECT);
+
+	//设置新的
+	Add(EMeshRenderLayerType::RENDERLAYER_SELECT,RenderingData);
+
+	//记录index
+#if EDITOR_ENGINE
+	if (const GActorObject* InActor = dynamic_cast<GActorObject*>(RenderingData.lock()->Mesh->GetOuter()))
+	{
+		const vector<GActorObject*>& InActors = GetWorld()->GetActors();
+		for (size_t i = 0; i < InActors.size(); i++)
+		{
+			if (InActors[i] == InActor)
+			{
+				ActorSelected = i;
+				break;
+			}
+		}
+	}
+#endif // EDITOR_ENGINE
+}
+
+void FRenderLayerManage::HighlightDisplayObject(CComponent* InComponent)
+{
+	if (const CMeshComponent* InMeshComponent = dynamic_cast<CMeshComponent*>(InComponent))
+	{
+		FGeometry::FindRenderingDatas(
+		[&](const std::shared_ptr<FRenderingData>& InRender) -> EFindValueType
+		{
+			if (InRender->Mesh == InMeshComponent)
+			{
+				HighlightDisplayObject(InRender);
+				return EFindValueType::TYPE_COMPLETE;
+			}
+
+			return EFindValueType::TYPE_IN_PROGRAM;
+		});
 	}
 }
 
