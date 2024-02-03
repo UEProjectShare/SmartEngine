@@ -133,8 +133,9 @@ void FDynamicShadowCubeMap::PreDraw(float DeltaTime)
 
 				//更新CubeMap
 				//Debug 看
-				//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(6, InRenderTarget->GetGPUSRVOffset());
-
+#if DEBUG_SHADOWMAP
+				GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(6, InRenderTarget->GetGPUSRVOffset());
+#endif
 				//绘制到ShadowCubeMap
 				GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(8, InRenderTarget->GetGPUSRVOffset());
 			

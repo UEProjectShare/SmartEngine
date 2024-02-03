@@ -1,19 +1,23 @@
-#include "DirectXRootSignature.h"
+#include "DefaultDirectXRootSignature.h"
 
-FDirectXRootSignature::FDirectXRootSignature()
+FDefaultDirectXRootSignature::FDefaultDirectXRootSignature()
 {
 
 }
 
-void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
+void FDefaultDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
 {
     //构建根签名
-    CD3DX12_ROOT_PARAMETER RootParam[9];
+    CD3DX12_ROOT_PARAMETER RootParam[10];
    
     //texture描述表
     CD3DX12_DESCRIPTOR_RANGE DescriptorRangeTextureSRV;
     DescriptorRangeTextureSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 
-        InTextureNum, 3);
+        InTextureNum, 4);
+
+    //SSAO
+    CD3DX12_DESCRIPTOR_RANGE DescriptorSSAOMapSRV;
+    DescriptorSSAOMapSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 3);
 
     //静态CubeMap
     CD3DX12_DESCRIPTOR_RANGE DescriptorRangeCubeMapSRV;
@@ -47,11 +51,14 @@ void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
     //ShadowMap
     RootParam[8].InitAsDescriptorTable(1, &DescriptorShadowCubeMapSRV, D3D12_SHADER_VISIBILITY_PIXEL);
 
+    //SSAO
+    RootParam[9].InitAsDescriptorTable(1, &DescriptorSSAOMapSRV, D3D12_SHADER_VISIBILITY_PIXEL);
+    
     //构建静态采样
     StaticSamplerObject.BuildStaticSampler();
 
     const CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(
-        9,
+        10,
         RootParam,
         StaticSamplerObject.GetSize(),//采样数量
         StaticSamplerObject.GetData(),//采样PTR
@@ -68,7 +75,7 @@ void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
 
     if (ErrorBlob)
     {
-       char* p = static_cast<char*>(ErrorBlob->GetBufferPointer());
+       char *p = static_cast<char*>(ErrorBlob->GetBufferPointer());
        Engine_Log_Error("%s", p);
     }
 
@@ -80,15 +87,15 @@ void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
         IID_PPV_ARGS(&RootSignature));
 }
 
-void FDirectXRootSignature::PreDraw(float DeltaTime)
+void FDefaultDirectXRootSignature::PreDraw(float DeltaTime)
 {
-    GetGraphicsCommandList()->SetGraphicsRootSignature(RootSignature.Get());
+    Super::PreDraw(DeltaTime);
 }
 
-void FDirectXRootSignature::Draw(float DeltaTime)
+void FDefaultDirectXRootSignature::Draw(float DeltaTime)
 {
 }
 
-void FDirectXRootSignature::PostDraw(float DeltaTime)
+void FDefaultDirectXRootSignature::PostDraw(float DeltaTime)
 {
 }

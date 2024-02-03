@@ -17,7 +17,7 @@
 //https://zhuanlan.zhihu.com/p/144558934
 //视频版本：
 //https://www.bilibili.com/video/BV1x5411s7s3
-#include "../simple_c_core/simple_core_minimal.h"
+#include "simple_library/public/simple_core_minimal/simple_c_core/simple_core_minimal.h"
 
 //运行批处理 以管理员启动
 //mshta vbscript:CreateObject("Shell.Application").ShellExecute("%~dp0git_install.exe","1 F:\c\c\20\20.exe F:\c\c\git_install\git_install\icon1.ico test_git1","","runas",1)(window.close)&&exit

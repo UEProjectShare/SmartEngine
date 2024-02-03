@@ -8,6 +8,8 @@ struct FObjectTransformation
 	XMFLOAT4X4 World;
 	
 	XMFLOAT4X4 TextureTransformation;
+
+	XMFLOAT4X4 NormalTransformation;
 	
 	UINT MaterialIndex;
 	

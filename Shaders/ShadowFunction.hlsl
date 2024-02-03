@@ -321,4 +321,26 @@ float4 DebugCubeViewport(int Index)
     return float4(0.f, 0.f, 0.f, 1.f);
 }
 
+float SampleBuildCDTexture(float2 InTexCoord)
+{
+    float PI = 3.1415926f;//180°
+    float PI2 = PI * 2.f;//360°
+
+    float2 TexCoord = InTexCoord - 0.5f;
+    float2 ATan2Value = atan2(TexCoord.x, TexCoord.y);//
+    float A = ATan2Value.y;
+
+    float R = 0.f;
+    if (A > 0.f)
+    {
+        R = ATan2Value / PI2;//把正值映射到 0-1
+    }
+    else if (A < 0.f)
+    {
+        R = (ATan2Value.y + PI2) / PI2; //映射到 0-1空间里面
+    }
+
+    return R;
+}
+
 #endif

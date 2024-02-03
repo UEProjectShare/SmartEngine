@@ -37,7 +37,7 @@ public:
 	
 	CWorld* GetWorld() const { return World; }
 
-	bool InitWindows(FWinMainCommandParameters InParameters);
+	bool InitWindows(const FWinMainCommandParameters& InParameters);
 
 protected:
 	HWND MainWindowsHandle;//Ö÷windows¾ä±ú

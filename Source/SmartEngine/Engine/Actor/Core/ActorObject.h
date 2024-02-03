@@ -7,16 +7,24 @@ class CTransformationComponent;
 class GActorObject : public CCoreMinimalObject
 {
 	CVARIABLE()
-	CTransformationComponent* TransformationComponent;
+	CTransformationComponent* RootComponent;
 
 public:
 	GActorObject();
 	
-	FORCEINLINE CTransformationComponent* GetTransformationComponent() const {return TransformationComponent;}
+	FORCEINLINE CTransformationComponent* GetRootComponent() const {return RootComponent;}
+	
+	void GetBoundingBox(BoundingBox& OutBoundingBox) const;
+	
+	BoundingBox GetBoundingBox() const;
 	
 	virtual void SetPosition(const XMFLOAT3& InNewPosition);
 	
 	virtual void SetRotation(const fvector_3d& InRotation);
+	
+	virtual void SetRotation(const frotator& InNewRotation);
+	
+	virtual void SetRotationQuat(const fquat& InNewQuatRotation);
 	
 	virtual void SetScale(const fvector_3d& InNewScale);
 
@@ -24,15 +32,16 @@ public:
 	
 	XMFLOAT3& GetPosition() const;
 	
-	fvector_3d GetRotation() const;
+	frotator GetRotation() const;
 	
 	fvector_3d GetScale() const;
+	
+	fquat GetRotationQuat() const;
 
 	XMFLOAT3& GetForwardVector() const;
 	
 	XMFLOAT3& GetRightVector() const;
 	
 	XMFLOAT3& GetUPVector() const;
-
 
 };

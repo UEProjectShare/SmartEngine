@@ -1,5 +1,5 @@
 // Copyright (C) RenZhai.2022.All Rights Reserved.
-#include "../../../../public/simple_core_minimal/simple_c_core/simple_c_string_algorithm/string_algorithm.h"
+#include "simple_library/public/simple_core_minimal/simple_c_core/simple_c_string_algorithm/string_algorithm.h"
 
 void remove_char_end(char *str, char sub_str)
 {
@@ -20,7 +20,7 @@ bool c_str_contain(const char* buff_str, const char* sub_str)
 	return find_string(buff_str, sub_str,0) != -1;
 }
 
-void SIMPLE_LIBRARY_API trim_start_and_end_inline(char* buff)
+void trim_start_and_end_inline(char* buff)
 {
 	trim_start_inline(buff);
 	trim_end_inline(buff);

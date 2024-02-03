@@ -1,5 +1,5 @@
-#include "../../../../public/simple_math/transformation/matrix/matrix_4x4.h"
-#include "../../../../public/simple_math/transformation/matrix/matrix_3x3.h"
+#include "simple_library/public/simple_math/transformation/matrix/matrix_4x4.h"
+#include "simple_library/public/simple_math/transformation/matrix/matrix_3x3.h"
 
 fmatrix_4x4::fmatrix_4x4()
 {

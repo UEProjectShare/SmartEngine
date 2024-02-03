@@ -2,7 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif // !_CRT_SECURE_NO_WARNINGS
 
-#include "../../../../public/simple_math/transformation/vector/vector_4d.h"
+#include "simple_library/public/simple_math/transformation/vector/vector_4d.h"
 #include <math.h>
 #include <stdio.h>
 

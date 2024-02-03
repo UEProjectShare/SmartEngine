@@ -16,6 +16,10 @@ public:
 	virtual void BuildMesh(const FMeshRenderingData* InRenderingData);
 	
 	void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
+
+	void GetBoundingBox(BoundingBox& OutBoundingBox) const;
+	
+	BoundingBox GetBoundingBox() const;
 	
 	UINT GetMaterialNum() const;
 
@@ -35,9 +39,15 @@ public:
 	void SetPickup(bool bNewPickup) { bPickup = bNewPickup; }
 	
 	bool IsPickup()const { return bPickup; }
+	
+	void SetVisible(bool bNewVisible) { bVisible = bNewVisible; }
+	
+	bool IsVisible()const { return bVisible; }
 
 protected:
 	bool bCastShadow;
+
+	bool bVisible;
 	
 	bool bPickup;
 };

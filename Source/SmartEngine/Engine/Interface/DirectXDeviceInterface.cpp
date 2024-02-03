@@ -180,6 +180,19 @@ HWND IDirectXDeviceInterface::GetMainWindowsHandle() const
 	return HWND();
 }
 
+ID3D12Resource* IDirectXDeviceInterface::GetDepthStencilBuffer() const
+{
+	if (const CWindowsEngine* InEngine = GetEngine())
+	{
+		if (InEngine->GetRenderingEngine())
+		{
+			return InEngine->GetRenderingEngine()->DepthStencilBuffer.Get();
+		}
+	}
+
+	return nullptr;
+}
+
 FRenderingPipeline* IDirectXDeviceInterface::GetRenderingPipeline() const
 {
 	if (const CMeshManage* MeshManage = GetMeshManage())
@@ -323,6 +336,11 @@ CEditorEngine* IDirectXDeviceInterface::GetEditorEngine() const
 	}
 
 	return nullptr;
+}
+
+ID3D12Resource* IDirectXDeviceInterface_Struct::GetDepthStencilBuffer() const
+{
+	return Interface.GetDepthStencilBuffer();
 }
 
 CEditorEngine* IDirectXDeviceInterface_Struct::GetEditorEngine() const

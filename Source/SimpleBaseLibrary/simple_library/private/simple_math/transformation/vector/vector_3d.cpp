@@ -2,7 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include "../../../../public/simple_math/transformation/vector/vector_3d.h"
+#include "simple_library/public/simple_math/transformation/vector/vector_3d.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -50,6 +50,11 @@ void fvector_3d::normalize()
 	float value = sqrtf(x * x + y * y + z * z);
 
 	*this /= value;
+}
+
+float fvector_3d::len()
+{
+	return sqrtf(x * x + y * y + z * z);
 }
 
 fvector_3d fvector_3d::cross_product(const fvector_3d& a, const fvector_3d& b)

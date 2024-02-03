@@ -297,9 +297,6 @@
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\ShadowMapRenderTarget.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\StaticSampler\StaticSamplerObject.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -427,6 +424,78 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EditorEngine\OutLineEditor\OutLineEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\Core\OperationHandleBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\MoveArrow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\RotatorArrow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\ScalingArrow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\AmbientOcclusion\ScreenSpace\ScreenSpaceAmbientOcclusion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\AmbientOcclusion\ScreenSpace\SSAOType.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\Core\RenderBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\AmbientBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\DepthBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\NormalBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\BufferRenderLayer\NormalBufferRenderLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OperationHandleRenderLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SSAORenderLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\BufferRenderTarget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\Core\DirectXRootSignature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DefaultDirectXRootSignature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\SSAODirectXRootSignature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\OperationHandleSelectManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\TimelineComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Construction\ConstructionComponents.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\NoiseBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\SampleVolumeBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OperationHandleRotPlaneRenderLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SSAOBilateralRenderLayer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -728,9 +797,6 @@
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\ShadowMapRenderTarget.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DirectXRootSignature.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\StaticSampler\StaticSamplerObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -873,6 +939,78 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="EditorEngine\OutLineEditor\OutLineEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\Core\OperationHandleBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\MoveArrow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\RotatorArrow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\ScalingArrow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\AmbientOcclusion\ScreenSpace\ScreenSpaceAmbientOcclusion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\AmbientOcclusion\ScreenSpace\SSAOType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\Core\RenderBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\AmbientBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\DepthBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\NormalBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\BufferRenderLayer\NormalBufferRenderLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OperationHandleRenderLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SSAORenderLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderTarget\BufferRenderTarget.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\Core\DirectXRootSignature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\DefaultDirectXRootSignature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RootSignature\SSAODirectXRootSignature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\OperationHandleSelectManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\TimelineComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Construction\ConstructionComponents.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\NoiseBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderBuffer\SampleVolumeBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\OperationHandleRotPlaneRenderLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Core\DirectX\RenderingPipeline\RenderLayer\RenderLayer\SSAOBilateralRenderLayer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,6 +14,9 @@ public:
 	
 	CVARIABLE(xxx, aaaa)
 	FCaptureOnMouseDelegate OnLMouseButtonDownDelegate;
+
+	CVARIABLE(xxx, aaaa)
+	FCaptureOnMouseDelegate OnLMouseButtonUpDelegate;
 	
 	CVARIABLE(xxx, aaaa)
 	FCaptureOnMouseDelegate OnMouseButtonDownDelegate;
@@ -32,6 +35,8 @@ public:
 	void Tick(float DeltaTime) override;
 
 	virtual void OnLeftMouseButtonDown(int X, int Y);
+
+	virtual void OnLeftMouseButtonUp(int X, int Y);
 	
 	virtual void OnMouseButtonDown(int X, int Y);
 	

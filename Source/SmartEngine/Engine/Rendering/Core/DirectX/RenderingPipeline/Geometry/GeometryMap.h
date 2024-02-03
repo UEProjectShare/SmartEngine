@@ -82,7 +82,7 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 
 	void PreDraw(float DeltaTime);
 	
-	void Draw(float DeltaTime);
+	void Draw(float DeltaTime) const;
 	
 	void PostDraw(float DeltaTime);
 
@@ -93,7 +93,7 @@ struct FGeometryMap : public IDirectXDeviceInterface_Struct
 		const FViewportInfo& ViewportInfo,
 		UINT InConstantBufferOffset) const;
 
-	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo);
+	void UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 	
 	void UpdateLight(float DeltaTime, const FViewportInfo& ViewportInfo) const;
 	

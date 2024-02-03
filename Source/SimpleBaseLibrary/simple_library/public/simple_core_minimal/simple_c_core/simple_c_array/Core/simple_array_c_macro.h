@@ -17,7 +17,7 @@
 //https://zhuanlan.zhihu.com/p/144558934
 // ”∆µ∞Ê±æ£∫
 //https://www.bilibili.com/video/BV1x5411s7s3
-#include "../../simple_core_minimal.h"
+#include "simple_library/public/simple_core_minimal/simple_c_core/simple_core_minimal.h"
 
 #define SIMPLE_ARRAY_C_STRUCT(array_c_name,data_type) \
 typedef struct array_c_name##_type \

@@ -2,12 +2,15 @@
 #include "../../Engine/Core/World.h"
 #include "../../Engine/Actor/Core/ActorObject.h"
 #include "../../Engine/Rendering/Core/DirectX/RenderingPipeline/RenderLayer/RenderLayerManage.h"
+#include "../SelectEditor/OperationHandle/MoveArrow.h"
+#include "../../Common/OperationHandleSelectManage.h"
+
+extern int ActorSelected;
 
 void FOutLineEditor::BuildEditor()
 {
 }
 
-extern int ActorSelected;
 void FOutLineEditor::DrawEditor(float DeltaTime)
 {
 	ImGui::Begin("OutLine");
@@ -24,6 +27,12 @@ void FOutLineEditor::DrawEditor(float DeltaTime)
 			if (ImGui::Selectable(ObjectNameString, ActorSelected == i))
 			{
 				HighlightDisplayObject(Actors[i]);
+
+				//设置选择对象
+				FOperationHandleSelectManage::Get()->SetNewSelectedObject(Actors[i]);
+
+				//显示操作手柄
+				FOperationHandleSelectManage::Get()->DisplaySelectedOperationHandle();
 			}
 		}
 		

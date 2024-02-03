@@ -1,5 +1,6 @@
 #include "RenderingPipeline.h"
 #include "../../../../Component/Mesh/Core/MeshComponentType.h"
+#include "../../../../Config/EngineRenderConfig.h"
 
 FRenderingPipeline::FRenderingPipeline()
 {
@@ -23,6 +24,10 @@ bool FRenderingPipeline::FindMeshRenderingDataByHash(const size_t& InHash, std::
 
 void FRenderingPipeline::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
+#if USE_SSAO
+	SSAO.UpdateCalculations(DeltaTime, ViewportInfo);
+#endif
+	
 	GeometryMap.DynamicShadowCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	DynamicCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	GeometryMap.UpdateCalculations(DeltaTime, ViewportInfo);
@@ -52,6 +57,17 @@ void FRenderingPipeline::BuildPipeline()
 		&DirectXPipelineState,
 		&RenderLayer);
 
+#if USE_SSAO
+	SSAO.Init(
+	&GeometryMap,
+	&DirectXPipelineState,
+	&RenderLayerManager);
+
+	SSAO.Init(
+		FEngineRenderConfig::GetRenderConfig()->ScreenWidth,
+		FEngineRenderConfig::GetRenderConfig()->ScreenHeight);
+#endif
+	
 	GeometryMap.DynamicShadowMap.Init(
 		&GeometryMap,
 		&DirectXPipelineState,
@@ -74,6 +90,10 @@ void FRenderingPipeline::BuildPipeline()
 
 	//构建常量描述堆
 	GeometryMap.BuildDescriptorHeap();
+
+#if USE_SSAO
+	SSAO.BuildDescriptors();
+#endif
 	
 	//初始化我们的UI管线
 	UIPipeline.Init(
@@ -117,6 +137,14 @@ void FRenderingPipeline::BuildPipeline()
 	//构建雾气常量缓冲区
 	GeometryMap.BuildFogConstantBuffer();
 
+#if USE_SSAO
+	//构建SSAO
+	SSAO.Build();
+#endif
+	
+	//存储一个默认的GPS描述数据
+	DirectXPipelineState.SaveGPSDescAsDefault();
+
 	//通过层级来构建PSO
 	RenderLayer.BuildPSO();
 }
@@ -129,11 +157,26 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 	GeometryMap.PreDraw(DeltaTime);
 	RootSignature.PreDraw(DeltaTime);
 
-	//主视口清除画布
-	ClearMainSwapChainCanvas();
-
 	//渲染灯光材质贴图等(必须要放在 这个位置 否则天崩地裂)
 	GeometryMap.Draw(DeltaTime);
+
+#if USE_SSAO
+	//渲染SSAO
+	SSAO.Draw(DeltaTime);
+#endif
+	
+	RootSignature.PreDraw(DeltaTime);
+
+#if USE_SSAO
+	//存储我们的SSAO到指定的buffer
+	SSAO.SaveToSSAOBuffer();
+#endif
+
+	//主视口清除画布
+	ClearMainSwapChainCanvas();
+	
+	//重新绑定贴图
+	GeometryMap.Draw2DTexture(DeltaTime);
 
 	//渲染
 	GeometryMap.DynamicShadowCubeMap.PreDraw(DeltaTime);
@@ -141,12 +184,14 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 	//渲染阴影
 	GeometryMap.DrawShadow(DeltaTime);
 
+#if !DEBUG_SHADOWMAP
 	//为了ShadowCubeMap暂时注释掉
 	//动态反射
 	if (DynamicCubeMap.IsExistDynamicReflectionMesh())
 	{
 		DynamicCubeMap.PreDraw(DeltaTime);
 	}
+#endif
 
 	RenderLayer.PreDraw(DeltaTime);
 }
@@ -155,10 +200,12 @@ void FRenderingPipeline::Draw(float DeltaTime)
 {
 	//主视口
 	GeometryMap.DrawViewport(DeltaTime);
-
+	
+#if !DEBUG_SHADOWMAP
 	//为了ShadowCubeMap暂时注释掉
 	//CubeMap 覆盖原先被修改的CubeMap
 	GeometryMap.DrawCubeMapTexture(DeltaTime);
+#endif
 
 	//各类层级
 	RenderLayer.Draw(RENDERLAYER_BACKGROUND, DeltaTime);
@@ -167,6 +214,12 @@ void FRenderingPipeline::Draw(float DeltaTime)
 
 	//渲染选择层
 	RenderLayer.Draw(RENDERLAYER_SELECT, DeltaTime);
+
+	//渲染旋转面片
+	RenderLayer.Draw(RENDERLAYER_OPERATION_HANDLE_ROT_PLANE, DeltaTime);
+
+	//渲染操作手柄
+	RenderLayer.Draw(RENDERLAYER_OPERATION_HANDLE, DeltaTime);
 
 	//渲染UI
 	UIPipeline.Draw(DeltaTime);

@@ -12,6 +12,11 @@ enum EPipelineState
 	PerspectiveShadow = 7,
 	VientianeShadow = 8,
 	Select = 9,
+	Operation_Handle = 10,
+	Operation_Handle_Rot_Plane = 11,
+	State_Normal = 20,
+	State_SSAO = 21,
+	State_SSAO_Bilateral = 22,
 };
 
 enum ERenderingConditions

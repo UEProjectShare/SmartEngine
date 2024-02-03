@@ -18,7 +18,6 @@
 // ”∆µ∞Ê±æ£∫
 //https://www.bilibili.com/video/BV1x5411s7s3
 #include "Core/simple_array_c_macro.h"
-#include "../../../simple_library_macro.h"
 
 typedef struct
 {

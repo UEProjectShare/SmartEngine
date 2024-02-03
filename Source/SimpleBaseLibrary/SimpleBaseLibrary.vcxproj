@@ -164,7 +164,7 @@
     <ClCompile Include="simple_library\private\simple_image\Core\simple_image_bmp.cpp" />
     <ClCompile Include="simple_library\private\simple_image\simple_image.cpp" />
     <ClCompile Include="simple_library\private\simple_math\math_utils.cpp" />
-    <ClCompile Include="simple_library\private\simple_math\simple_math.c" />
+    <ClCompile Include="simple_library\private\simple_math\simple_math.cpp" />
     <ClCompile Include="simple_library\private\simple_math\soft_rasterization\soft_rasterization.cpp" />
     <ClCompile Include="simple_library\private\simple_math\transformation\matrix\matrix_2x2.cpp" />
     <ClCompile Include="simple_library\private\simple_math\transformation\matrix\matrix_3x3.cpp" />

@@ -97,15 +97,20 @@ void FRenderLayer::DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InW
 	{
 		auto GetRenderingConditions = [&]() -> bool
 		{
-			switch (RC)
+			if (InRenderingData->Mesh->IsVisible())
 			{
-				case RC_Shadow:
+				switch (RC)
 				{
-					return InRenderingData->Mesh->IsCastShadow();
+				case RC_Shadow:
+					{
+						return InRenderingData->Mesh->IsCastShadow();
+					}
 				}
+
+				return true;
 			}
 
-			return true;
+			return false;
 		};
 
 		if (GetRenderingConditions())
@@ -168,11 +173,16 @@ void FRenderLayer::FindObjectDraw(float DeltaTime, const CMeshComponent* InKey)
 
 void FRenderLayer::BuildPSO()
 {
+	DirectXPipelineState->BuildParam();
+
 	BuildShader();
 
-	DirectXPipelineState->BuildParam();
+	//需要额外定制，走代理
+	if (BuildPSODelegate.IsBound())
+	{
+		BuildPSODelegate.Execute(DirectXPipelineState->GetGPSDesc());
+	}
 }
-
 void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
 	for (auto& InWeakRenderingData : RenderDatas)//暂时先这么写
@@ -190,21 +200,28 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 					XMFLOAT3 UPVector = InRenderingData->Mesh->GetUPVector();
 					XMFLOAT3 ForwardVector = InRenderingData->Mesh->GetForwardVector();
 
-					InRenderingData->WorldMatrix = {
-						RightVector.x * Scale.x,	UPVector.x,				ForwardVector.x,			0.f,
-						RightVector.y,				UPVector.y * Scale.y,	ForwardVector.y,			0.f,
-						RightVector.z,				UPVector.z ,			ForwardVector.z * Scale.z,	0.f,
-						Position.x,					Position.y,				Position.z,					1.f };
+					EngineMath::BuildMatrix(
+						InRenderingData->WorldMatrix,
+						Position,
+						Scale,
+						RightVector,
+						UPVector, 
+						ForwardVector);
 				}
 
 				//更新模型位置
 				const XMMATRIX ATRIXWorld = XMLoadFloat4x4(&InRenderingData->WorldMatrix);
 				const XMMATRIX ATRIXTextureTransform = XMLoadFloat4x4(&InRenderingData->TextureTransform);
-
+				
+				//法线矩阵
+				XMVECTOR AATRIXWorldDeterminant = XMMatrixDeterminant(ATRIXWorld);
+				XMMATRIX NormalInverseMatrix = XMMatrixInverse(&AATRIXWorldDeterminant, ATRIXWorld);
+				
 				FObjectTransformation ObjectTransformation;
 				XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));
 				XMStoreFloat4x4(&ObjectTransformation.TextureTransformation, XMMatrixTranspose(ATRIXTextureTransform));
-
+				XMStoreFloat4x4(&ObjectTransformation.NormalTransformation, NormalInverseMatrix);
+				
 				//收集材质Index
 				if (const auto& InMater = (*InRenderingData->Mesh->GetMaterials())[0])
 				{

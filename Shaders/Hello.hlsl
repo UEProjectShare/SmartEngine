@@ -14,7 +14,8 @@ struct MeshVertexIn
 
 struct MeshVertexOut
 {
-	float4 WorldPosition : POSITION;
+	float4 WorldPosition : POSITION0;
+	float4 TexPositionHome : POSITION1;
 	float4 Position : SV_POSITION;
 	float4 Color : COLOR;
 	float3 Normal : NORMAL;
@@ -34,6 +35,8 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	//世界坐标
 	Out.WorldPosition = mul(float4(MV.Position, 1.f), WorldMatrix);
 
+	Out.TexPositionHome = mul(Out.WorldPosition, TexViewProjectionMatrix);
+
 	//变换到齐次剪辑空间
 	Out.Position = mul(Out.WorldPosition, ViewProjectionMatrix);
 
@@ -44,11 +47,11 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	else
 	{
 		//转法线
-		Out.Normal = mul(MV.Normal, (float3x3)WorldMatrix);
+		Out.Normal = mul(MV.Normal, (float3x3)NormalTransformation);
 	}
 
 	//切线
-	Out.UTangent = mul(MV.UTangent, (float3x3)WorldMatrix);
+	Out.UTangent = mul(MV.UTangent, (float3x3)NormalTransformation);
 
 	//uv坐标
 	float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
@@ -61,9 +64,13 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 {
 	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
 
+	MVOut.TexPositionHome /= MVOut.TexPositionHome.w;
+	float AmbientAccessibility = SimpleSSAOMap.Sample(TextureSampler, MVOut.TexPositionHome.xy, 0.0f).r;
+	
 	if (MatConstBuffer.MaterialType == 101)
 	{
-		return float4(SimpleShadowMap.Sample(TextureSampler, MVOut.TexCoord).rrr, 1.f);
+		return float4(AmbientAccessibility, AmbientAccessibility, AmbientAccessibility, 1.f);
+		//return float4(SimpleShadowMap.Sample(TextureSampler, MVOut.TexCoord).rrr, 1.f);
 	}
 	
 	FMaterial Material;
@@ -372,9 +379,12 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 		}
 	}
 
+	//通过渲染方程推出来的
+	float4 Ambient = (AmbientAccessibility + 0.1f) * AmbientLight * Material.BaseColor;
+
 	//最终颜色贡献
 	MVOut.Color = FinalColor + //最终颜色
-		AmbientLight * Material.BaseColor; //间接光
+		Ambient; //间接光
 
 	switch (MatConstBuffer.MaterialType)
 	{

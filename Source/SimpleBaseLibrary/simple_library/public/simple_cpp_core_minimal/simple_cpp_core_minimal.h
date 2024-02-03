@@ -2,6 +2,7 @@
 #pragma once
 #include <iostream>
 #include <sstream>
+#include <functional>
 #include <thread>
 #include <string>
 #include <mutex>

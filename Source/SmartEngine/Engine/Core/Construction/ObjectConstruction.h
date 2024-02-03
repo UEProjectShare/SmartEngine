@@ -2,6 +2,7 @@
 
 class CCoreMinimalObject;
 #include "../../Core/CoreObject/CoreMinimalObject.h"
+#include "ConstructionComponents.h"
 
 struct FCreateObjectParam
 {
@@ -15,6 +16,9 @@ struct FCreateObjectParam
 template<class T>
 T* CreateObject(const FCreateObjectParam& InObjectParam, CCoreMinimalObject* NewObject)
 {
+	//检测是不是组件 是组件按照组件规则注册
+	ConstructionComponent::ConstructionComponents(InObjectParam.Outer, NewObject);
+	
 	T* Obj = dynamic_cast<T*>(NewObject);
 	Obj->SetOuter(InObjectParam.Outer);
 

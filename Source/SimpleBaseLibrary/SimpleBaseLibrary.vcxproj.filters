@@ -135,9 +135,6 @@
     <ClCompile Include="simple_library\private\simple_math\math_utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="simple_library\private\simple_math\simple_math.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="simple_library\third_party_library\tinyxml\tinystr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -148,6 +145,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlparser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simple_library\private\simple_math\simple_math.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

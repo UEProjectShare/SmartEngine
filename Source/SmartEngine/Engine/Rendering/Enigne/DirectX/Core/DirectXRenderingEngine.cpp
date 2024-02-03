@@ -29,6 +29,16 @@
 #if defined(_WIN32)
 #include "../../../../Core/WinMainCommandParameters.h"
 
+#if EDITOR_ENGINE
+#include "../../../../../EditorEngine/SelectEditor/OperationHandle/MoveArrow.h"
+#include "../../../../../EditorEngine/SelectEditor/OperationHandle/RotatorArrow.h"
+#include "../../../../../EditorEngine/SelectEditor/OperationHandle/ScalingArrow.h"
+
+extern GMoveArrow* MoveArrow;
+extern GScalingArrow* ScalingArrow;
+extern GRotatorArrow* RotatorArrow;
+#endif
+
 //class FVector
 //{
 //	unsigned char r;//255 ->[0,1]
@@ -89,6 +99,29 @@ int CDirectXRenderingEngine::PostInit()
 
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
+#if EDITOR_ENGINE
+		if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
+		{
+			InMoveArrow->CreateMesh();
+
+			MoveArrow = InMoveArrow;
+		}
+
+		if (GScalingArrow* InScalingArrow = World->CreateActorObject<GScalingArrow>())
+		{
+			InScalingArrow->CreateMesh();
+
+			ScalingArrow = InScalingArrow;
+		}
+
+		if (GRotatorArrow* InRotatorArrow = World->CreateActorObject<GRotatorArrow>())
+		{
+			InRotatorArrow->CreateMesh();
+
+			RotatorArrow = InRotatorArrow;
+		}
+#endif
+		
 		//灯光生成
 		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		{
@@ -97,6 +130,17 @@ int CDirectXRenderingEngine::PostInit()
 			ParallelLight->SetScale(fvector_3d(1));
 			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
 		}
+
+#if DEBUG_SHADOWMAP
+		if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
+		{
+			PointLight->SetPosition(XMFLOAT3(0.f, -6.f, 10.f));
+			PointLight->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+			
+			PointLight->SetLightIntensity(fvector_3d(0.9f));
+			PointLight->SetEndAttenuation(190.f);
+		}
+#endif
 		
 		//点灯光生成
 		/*if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
@@ -1071,7 +1115,10 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	RTVDescriptorHeapDesc.NumDescriptors = 
 		FEngineRenderConfig::GetRenderConfig()->SwapChainCount + //交换链
 		6 + //反射的CubeMap RTV
-		6; //ShadowCubeMap RTV Point Light
+		6 + //ShadowCubeMap RTV Point Light
+		1 + //屏幕法线
+		1 + //SSAO
+		1;  //双边模糊
 
 	RTVDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	RTVDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;

@@ -5,8 +5,6 @@ class FViewport
 {
 public:
 	FViewport();
-
-	void ViewportInit();
 	
 	void ResetViewport(UINT InWidth, UINT InHeight);
 	

@@ -44,7 +44,14 @@ void FShader::BuildShaders(
 	if (ErrorShaderMsg)
 	{
 		char* p = static_cast<char*>(ErrorShaderMsg->GetBufferPointer());
-		Engine_Log_Error("%s", static_cast<char*>(ErrorShaderMsg->GetBufferPointer()));
+		if (SUCCEEDED(R))
+		{
+			Engine_Log_Warning("%s", p);
+		}
+		else
+		{
+			Engine_Log_Error("%s", p);
+		}
 
 		//µØ≥ˆ»’÷æ
 		//open_url(get_log_filename());

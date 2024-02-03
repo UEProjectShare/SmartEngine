@@ -1,6 +1,6 @@
 // Copyright (C) RenZhai.2022.All Rights Reserved.
 #pragma once
-#include "../../../simple_library_macro.h"
+#include "simple_library/public/simple_library_macro.h"
 
 struct SIMPLE_LIBRARY_API fvector_2d
 {
@@ -12,6 +12,8 @@ public:
 	fvector_2d(float in_x, float in_y);
 
 	fvector_2d(float in_value);
+
+	float len();
 
 	static float dot(const fvector_2d& a, const fvector_2d& b);
 

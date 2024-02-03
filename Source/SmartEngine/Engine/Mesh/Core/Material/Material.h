@@ -37,6 +37,11 @@ public:
 	
 	void SetMetallicity(float InMetallicity);
 	
+	//自定义参数
+	void SetFloatParam(int ParamIndex,float InValue);
+	
+	float GetFloatParam(int ParamIndex) const;
+	
 	//动态反射
 	FORCEINLINE float IsDynamicReflection() const { 
 		 return bDynamicReflection && 
@@ -111,4 +116,11 @@ private:
 	
 	//折射
 	float Refractive;
+
+	//自定义参数
+	float Param0;//自定义
+	
+	float Param1;//自定义
+	
+	float Param2;//自定义
 };

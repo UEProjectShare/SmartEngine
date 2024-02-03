@@ -12,6 +12,16 @@
 #include "../Geometry/RenderingData.h"
 #include "../../../../../Core/World.h"
 #include "../../../../../Actor/Core/ActorObject.h"
+#include "../RenderLayer/BufferRenderLayer/NormalBufferRenderLayer.h"
+#include "RenderLayer/SSAORenderLayer.h"
+#include "RenderLayer/SSAOBilateralRenderLayer.h"
+#include "RenderLayer/OperationHandleRotPlaneRenderLayer.h"
+
+#if EDITOR_ENGINE
+#include "RenderLayer/OperationHandleRenderLayer.h"
+#endif
+
+extern int ActorSelected;
 
 std::vector<std::shared_ptr<FRenderLayer>> FRenderLayerManage::RenderLayers;
 
@@ -19,6 +29,14 @@ FRenderLayerManage::FRenderLayerManage()
 {
 	RenderLayers.clear();
 
+#if EDITOR_ENGINE
+	CreateRenderLayer<FOperationHandleRenderLayer>();
+#endif
+
+	CreateRenderLayer<FOperationHandleRotPlaneRenderLayer>();
+	CreateRenderLayer<FSSAOBilateralRenderLayer>();
+	CreateRenderLayer<FSSAORenderLayer>();
+	CreateRenderLayer<FNormalBufferRenderLayer>();
 	CreateRenderLayer<FSelectRenderLayer>();
 	CreateRenderLayer<FOpaqueShadowRenderLayer>();
 	CreateRenderLayer<FBackgroundRenderLayer>();
@@ -76,7 +94,6 @@ void FRenderLayerManage::HighlightDisplayObject(GActorObject* InObject)
 	});
 }
 
-extern int ActorSelected;
 void FRenderLayerManage::HighlightDisplayObject(std::weak_ptr<FRenderingData> RenderingData)
 {
 	//清除旧的物体

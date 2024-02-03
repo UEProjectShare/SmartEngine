@@ -43,7 +43,7 @@ void FGeometryMap::PreDraw(float DeltaTime)
 	DescriptorHeap.PreDraw(DeltaTime);
 }
 
-void FGeometryMap::Draw(float DeltaTime)
+void FGeometryMap::Draw(float DeltaTime) const
 {
 	//渲染视口
 	//DrawViewport(DeltaTime);
@@ -91,8 +91,17 @@ void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportIn
 	const XMMATRIX ProjectMatrix = XMLoadFloat4x4(&ViewportInfo.ProjectMatrix);
 	const XMMATRIX ViewProject = XMMatrixMultiply(ViewMatrix, ProjectMatrix);
 
+	const XMMATRIX HalfLambert(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
+
+	const XMMATRIX TexViewProjectionMatrix = XMMatrixMultiply(ViewProject, HalfLambert);
+
 	FViewportTransformation ViewportTransformation;
 	XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, XMMatrixTranspose(ViewProject));
+	XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, XMMatrixTranspose(TexViewProjectionMatrix));
 
 	//拿到视口位置
 	ViewportTransformation.ViewportPosition = ViewportInfo.ViewPosition;
@@ -100,7 +109,7 @@ void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportIn
 	ViewportConstantBufferViews.Update(InConstantBufferOffset, &ViewportTransformation);
 }
 
-void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo)
+void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo) const
 {
 	FMaterialConstantBuffer MaterialConstantBuffer;
 	for (size_t i = 0; i < Materials.size(); i++)
@@ -175,6 +184,12 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 					XMMatrixTranspose(MaterialTransform));
 
 				InMaterial->SetDirty(false);
+
+				//自定义项
+				//float
+				MaterialConstantBuffer.Param0 = InMaterial->GetFloatParam(0);
+				MaterialConstantBuffer.Param1 = InMaterial->GetFloatParam(1);
+				MaterialConstantBuffer.Param2 = InMaterial->GetFloatParam(2);
 
 				MaterialConstantBufferViews.Update(InMaterial->GetMaterialIndex(), &MaterialConstantBuffer);
 			}
@@ -451,8 +466,13 @@ void FGeometryMap::BuildDescriptorHeap()
 		GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
 		1 + //动态Cube贴图 反射
 		1 + //Shadow 直射灯 聚光灯 Shadow
-		1 +//ShadowCubeMap 点光源的 Shadow
-		1);//UI
+		1 + //ShadowCubeMap 点光源的 Shadow
+		1 + //UI
+		1 + //法线
+		1 + //深度
+		1 + //Noise图
+		1 + //SSAO
+		1); //双边模糊
 }
 
 void FGeometryMap::BuildMeshConstantBuffer()
@@ -477,22 +497,16 @@ void FGeometryMap::BuildMaterialShaderResourceView()
 {
 	//收集材质
 	//正真更新Shader-Index
-	for (const auto& Tmp : FRenderLayerManage::RenderLayers)
+	for (auto& InData : FGeometry::RenderingDatas)
 	{
-		for (auto& InData : Tmp->RenderDatas)
+		if (auto InMaterials = InData->Mesh->GetMaterials())
 		{
-			if (!InData.expired())
+			for (size_t j = 0; j < InMaterials->size(); j++)
 			{
-				if (const auto InMaterials = InData.lock()->Mesh->GetMaterials())
-				{
-					for (size_t j = 0; j < InMaterials->size(); j++)
-					{
-						//做ShaderIndex所有
-						(*InMaterials)[j]->SetMaterialIndex(Materials.size());
+				//做ShaderIndex所有
+				(*InMaterials)[j]->SetMaterialIndex(Materials.size());
 
-						Materials.push_back((*InMaterials)[j]);
-					}
-				}
+				Materials.push_back((*InMaterials)[j]);
 			}
 		}
 	}

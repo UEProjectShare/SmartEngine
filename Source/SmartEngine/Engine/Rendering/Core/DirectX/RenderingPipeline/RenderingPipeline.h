@@ -3,11 +3,13 @@
 #include "Geometry/GeometryMap.h"
 #include "../../../../Shader/Core/Shader.h"
 #include "PipelineState/DirectXPipelineState.h"
-#include "RootSignature/DirectXRootSignature.h"
+#include "RootSignature/DefaultDirectXRootSignature.h"
+#include "RootSignature/Core/DirectXRootSignature.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
 #include "DynamicMap/CubeMap/DynamicReflectionCubeMap.h"
 #include "RenderLayer/RenderLayerManage.h"
 #include "UI/IMGUIPipeline.h"
+#include "AmbientOcclusion/ScreenSpace/ScreenSpaceAmbientOcclusion.h"
 
 class CMeshComponent;
 //提供渲染内容的接口
@@ -39,12 +41,14 @@ protected:
 	FRenderLayerManage RenderLayer;
 
 	FDirectXPipelineState DirectXPipelineState;
-	
-	FDirectXRootSignature RootSignature;
+
+	FDefaultDirectXRootSignature RootSignature;
 	
 	FGeometryMap GeometryMap;
 
 	FDynamicReflectionCubeMap DynamicCubeMap;
 
 	FIMGUIPipeline UIPipeline;
+	
+	FScreenSpaceAmbientOcclusion SSAO;
 };

@@ -6,6 +6,7 @@ DEFINITION_MULTICAST_SINGLE_DELEGATE(FCaptureOnMousesWheelsDelegate, void, int, 
 
 extern FCaptureOnMousesWheelsDelegate MousesWheelsDelegate;
 extern FCaptureOnMousesDelegate LMouseDownDelegate;
+extern FCaptureOnMousesDelegate LMouseUpDelegate;
 extern FCaptureOnMousesDelegate MouseDownDelegate;
 extern FCaptureOnMousesDelegate MouseUpDelegate;
 extern FCaptureOnMousesDelegate MouseMoveDelegate;

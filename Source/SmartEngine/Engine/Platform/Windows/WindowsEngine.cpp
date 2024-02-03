@@ -88,12 +88,13 @@ int CWindowsEngine::Init(FWinMainCommandParameters InParameters)
 int CWindowsEngine::PostInit()
 {
 	Engine_Log("Engine post initialization complete.");
+
+	RenderingEngine->PostInit();
+	
 	for (const auto& Tmp : GObjects)
 	{
 		Tmp->BeginInit();
 	}
-	RenderingEngine->PostInit();
-
 
 	return 0;
 }
@@ -184,7 +185,7 @@ CMeshManage* CWindowsEngine::GetMeshManage() const
 	return RenderingEngine->GetMeshManage();
 }
 
-bool CWindowsEngine::InitWindows(FWinMainCommandParameters InParameters)
+bool CWindowsEngine::InitWindows(const FWinMainCommandParameters& InParameters)
 {
 	//×¢²á´°¿Ú
 	WNDCLASSEX WindowsClass;

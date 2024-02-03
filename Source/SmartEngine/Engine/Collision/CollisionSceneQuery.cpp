@@ -4,6 +4,43 @@
 #include "../Component/Mesh/Core/MeshComponent.h"
 #include "../Actor/Core/ActorObject.h"
 
+void GetRaycastDataByLocal(
+	const std::shared_ptr<FRenderingData>& InRenderingData,
+	const XMVECTOR& OriginPoint,
+	const XMVECTOR& Direction,
+	const XMMATRIX& ViewInverseMatrix,
+	XMVECTOR& OutLocalOriginPoint,
+	XMVECTOR& OutLocalDirection)
+{
+	//转模型局部
+	const XMMATRIX WorldMatrix = XMLoadFloat4x4(&InRenderingData->WorldMatrix);
+	XMVECTOR WorldMatrixDeterminant = XMMatrixDeterminant(WorldMatrix);
+	const XMMATRIX WorldMatrixInverse = XMMatrixInverse(&WorldMatrixDeterminant, WorldMatrix);
+
+	//局部矩阵
+	const XMMATRIX LocalMatrix = XMMatrixMultiply(ViewInverseMatrix, WorldMatrixInverse);
+
+	//局部空间的射线点位置
+	OutLocalOriginPoint = XMVector3TransformCoord(OriginPoint, LocalMatrix);
+	OutLocalDirection = XMVector3TransformNormal(Direction, LocalMatrix);
+
+	//单位化
+	OutLocalDirection = XMVector3Normalize(OutLocalDirection);
+}
+
+bool FCollisionSceneQuery::IsIgnoreComponents(const CComponent* InComponent, const std::vector<CComponent*>& IgnoreComponents)
+{
+	for (auto& Tmp : IgnoreComponents)
+	{
+		if (Tmp == InComponent)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool FCollisionSceneQuery::RaycastSingle(
 	CWorld* InWorld,
 	const XMVECTOR& OriginPoint,
@@ -14,24 +51,20 @@ bool FCollisionSceneQuery::RaycastSingle(
 	float FinalTime = FLT_MAX;
 	for (size_t i = 0; i < FGeometry::RenderingDatas.size(); i++)
 	{
-		const std::shared_ptr<FRenderingData>& InRenderingData = FGeometry::RenderingDatas[i];
+		std::shared_ptr<FRenderingData>& InRenderingData = FGeometry::RenderingDatas[i];
 
 		if (InRenderingData->Mesh->IsPickup())
 		{
-			//转模型局部
-			const XMMATRIX WorldMatrix = XMLoadFloat4x4(&InRenderingData->WorldMatrix);
-			XMVECTOR WorldMatrixDeterminant = XMMatrixDeterminant(WorldMatrix);
-			XMMATRIX WorldMatrixInverse = XMMatrixInverse(&WorldMatrixDeterminant, WorldMatrix);
+			XMVECTOR LocalOriginPoint;
+			XMVECTOR LocalDirection;
 
-			//局部矩阵
-			const XMMATRIX LocalMatrix = XMMatrixMultiply(ViewInverseMatrix, WorldMatrixInverse);
-
-			//局部空间的射线点位置
-			const XMVECTOR LocalOriginPoint = XMVector3TransformCoord(OriginPoint, LocalMatrix);
-			XMVECTOR LocalDirection = XMVector3TransformNormal(Direction, LocalMatrix);
-
-			//单位化
-			LocalDirection = XMVector3Normalize(LocalDirection);
+			GetRaycastDataByLocal(
+				InRenderingData,
+				OriginPoint, 
+				Direction,
+				ViewInverseMatrix, 
+				LocalOriginPoint,
+				LocalDirection);
 
 			//射线是否可以和AABB相交
 			float BoundTime = 0.f;
@@ -85,5 +118,57 @@ bool FCollisionSceneQuery::RaycastSingle(
 		}
 	}
 
-	return false;
+	return OutResult.bHit;
+}
+
+bool FCollisionSceneQuery::RaycastSingle(
+	CWorld* InWorld,
+	const GActorObject* InSpecificObjects,
+	const std::vector<CComponent*>& IgnoreComponents,
+	const XMVECTOR& OriginPoint,
+	const XMVECTOR& Direction,
+	const XMMATRIX& ViewInverseMatrix,
+	FCollisionResult& OutResult)
+{
+	for (size_t i = 0; i < FGeometry::RenderingDatas.size(); i++)
+	{
+		std::shared_ptr<FRenderingData>& InRenderingData = FGeometry::RenderingDatas[i];
+
+		if (InRenderingData->Mesh->IsPickup())
+		{
+			if (!IsIgnoreComponents(InRenderingData->Mesh,IgnoreComponents))
+			{		
+				XMVECTOR LocalOriginPoint;
+				XMVECTOR LocalDirection;
+
+				GetRaycastDataByLocal(
+					InRenderingData,
+					OriginPoint,
+					Direction,
+					ViewInverseMatrix,
+					LocalOriginPoint,
+					LocalDirection);
+
+				float BoundTime = 0.f;
+				if (InRenderingData->Bounds.Intersects(LocalOriginPoint, LocalDirection, BoundTime))
+				{
+					if (GActorObject* InActorObject = dynamic_cast<GActorObject*>(InRenderingData->Mesh->GetOuter()))
+					{
+						if (InActorObject == InSpecificObjects)
+						{
+							OutResult.bHit = true;
+							OutResult.Component = InRenderingData->Mesh;
+							OutResult.Time = BoundTime;
+							OutResult.Actor = InActorObject;
+
+							//拿到渲染数据
+							OutResult.RenderingData = InRenderingData;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return OutResult.bHit;
 }

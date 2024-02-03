@@ -55,25 +55,7 @@ void FDirectXPipelineState::BindShader(const FShader& InVertexShader, const FSha
 
 void FDirectXPipelineState::BuildParam()
 {
-    //配置光栅化状态
-    GPSDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    GPSDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;//以固体方式显示
-
-    //0000..0000
-    GPSDesc.SampleMask = UINT_MAX;
-
-    GPSDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    GPSDesc.NumRenderTargets = 1;
-
-    GPSDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-    GPSDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-
-    GPSDesc.SampleDesc.Count = GetEngine()->GetRenderingEngine()->GetDXGISampleCount();
-    GPSDesc.SampleDesc.Quality = GetEngine()->GetRenderingEngine()->GetDXGISampleQuality();
-
-    //RTV 和 DSV格式
-    GPSDesc.RTVFormats[0] = GetEngine()->GetRenderingEngine()->GetBackBufferFormat();
-    GPSDesc.DSVFormat = GetEngine()->GetRenderingEngine()->GetDepthStencilFormat();
+    GPSDesc = DefaultGPSDesc;
 }
 
 void FDirectXPipelineState::Build(int InPSOType)
@@ -119,6 +101,31 @@ void FDirectXPipelineState::SetRasterizerState(const CD3DX12_RASTERIZER_DESC& In
 void FDirectXPipelineState::SetDepthStencilState(const CD3DX12_DEPTH_STENCIL_DESC& InDepthStencilDesc)
 {
     GPSDesc.DepthStencilState = InDepthStencilDesc;
+}
+
+void FDirectXPipelineState::SaveGPSDescAsDefault()
+{
+    //配置光栅化状态
+    GPSDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    GPSDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;//以固体方式显示
+
+    //0000..0000
+    GPSDesc.SampleMask = UINT_MAX;
+
+    GPSDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    GPSDesc.NumRenderTargets = 1;
+
+    GPSDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    GPSDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+    GPSDesc.SampleDesc.Count = GetEngine()->GetRenderingEngine()->GetDXGISampleCount();
+    GPSDesc.SampleDesc.Quality = GetEngine()->GetRenderingEngine()->GetDXGISampleQuality();
+
+    //RTV 和 DSV格式
+    GPSDesc.RTVFormats[0] = GetEngine()->GetRenderingEngine()->GetBackBufferFormat();
+    GPSDesc.DSVFormat = GetEngine()->GetRenderingEngine()->GetDepthStencilFormat();
+
+    DefaultGPSDesc = GPSDesc;
 }
 
 void FDirectXPipelineState::CaptureKeyboardKeys()

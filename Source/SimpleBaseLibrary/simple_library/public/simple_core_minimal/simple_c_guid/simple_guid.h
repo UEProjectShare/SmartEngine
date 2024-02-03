@@ -17,7 +17,7 @@
 //https://zhuanlan.zhihu.com/p/144558934
 // ”∆µ∞Ê±æ£∫
 //https://www.bilibili.com/video/BV1x5411s7s3
-#include "../simple_c_core/simple_core_minimal.h"
+#include "simple_library/public/simple_core_minimal/simple_c_core/simple_core_minimal.h"
 
 _CRT_BEGIN_C_HEADER
 typedef struct
