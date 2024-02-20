@@ -7,6 +7,7 @@
 #include "../Rendering/Core/DirectX/RenderingPipeline/RenderLayer/RenderLayerManage.h"
 #include "../Component/Mesh/Core/MeshComponentType.h"
 #include "../Math/EngineMath.h"
+#include "../Core/Construction/MacroConstruction.h"
 
 #if EDITOR_ENGINE
 #include "../../Common/OperationHandleSelectManage.h"
@@ -18,8 +19,7 @@ extern GActorObject* SelectedObject;
 GCamera::GCamera()
 	: Super()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(, this);
 	InputComponent = CreateObject<CInputComponent>(Param, new CInputComponent());
 	
 	MouseSensitivity = 0.7f;

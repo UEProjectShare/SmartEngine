@@ -1,10 +1,10 @@
 #include "Fog.h"
 #include "../../Component/Sky/FogComponent.h"
+#include "../../Core/Construction/MacroConstruction.h"
 
 GFog::GFog()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(, this);
 
 	FogComponent = CreateObject<CFogComponent>(Param, new CFogComponent());
 }

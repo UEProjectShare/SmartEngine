@@ -82,4 +82,20 @@ namespace simple_cpp_string_algorithm
 
 		return false;
 	}
+
+	std::string printf(const char* format, ...)
+	{
+		char buf[STRING_SIZE_PRINTF] = { 0 };
+		memset(buf, 0, sizeof(char) * STRING_SIZE_PRINTF);
+		va_list args;
+		va_start(args, format);
+		_vsnprintf_s(buf, STRING_SIZE_PRINTF - 1, STRING_SIZE_PRINTF, format, args);
+		va_end(args);
+		buf[STRING_SIZE_PRINTF - 1] = 0;
+
+		char out_buf[STRING_SIZE_PRINTF] = { 0 };
+		strcat(out_buf, buf);
+
+		return std::string(out_buf);
+	}
 }

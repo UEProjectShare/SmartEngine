@@ -7,8 +7,7 @@
 
 GPlaneMesh::GPlaneMesh()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(, this);
 	SetMeshComponent(ConstructionObject<CPlaneMeshComponent>(Param));
 }
 

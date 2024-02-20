@@ -7,6 +7,7 @@
 //Á´½ÓEngineCore
 #include "Core/Path/EnginePath.h"
 #pragma comment(lib, "SmartEngineCore.lib")
+#pragma comment(lib, "SmartCoreObject.lib")
 
 #include "Debug/Log/SimpleLog.h"
 

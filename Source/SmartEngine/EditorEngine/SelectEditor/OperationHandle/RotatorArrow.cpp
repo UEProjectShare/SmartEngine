@@ -15,12 +15,11 @@ extern CMeshComponent* SelectAxisComponent;
 GRotatorArrow::GRotatorArrow()
 	: Super()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(Type, this);
 
-	XPlaneComponent = ConstructionObject<CPlaneMeshComponent>(Param);
-	YPlaneComponent = ConstructionObject<CPlaneMeshComponent>(Param);
-	ZPlaneComponent = ConstructionObject<CPlaneMeshComponent>(Param);
+	XPlaneComponent = ConstructionObject<CPlaneMeshComponent>(ParamType);
+	YPlaneComponent = ConstructionObject<CPlaneMeshComponent>(ParamType);
+	ZPlaneComponent = ConstructionObject<CPlaneMeshComponent>(ParamType);
 
 	//射线检测中 希望这些组件不会被检测
 	IgnoreComponents.push_back(XPlaneComponent);

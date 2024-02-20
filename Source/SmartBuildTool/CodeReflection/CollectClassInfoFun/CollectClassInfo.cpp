@@ -27,19 +27,24 @@ namespace CollectClassInfo
 		vector<string> ElementStr;
 		simple_cpp_string_algorithm::parse_into_vector_array(L, ElementStr, ",");
 
-		if (ElementStr[0].find("Event"))
+		if (simple_cpp_string_algorithm::string_contain(ElementStr[0], "Event"))
 		{
 			FunctionAnalysis.CodeType = "Event";
 
 			return true;
 		}
-		else if (ElementStr[0].find("Describe"))
+		else if (simple_cpp_string_algorithm::string_contain(ElementStr[0], "Function"))
 		{
-			FunctionAnalysis.CodeType = "Describe";
+			FunctionAnalysis.CodeType = "Function";
 
 			return true;
 		}
+		else if (simple_cpp_string_algorithm::string_contain(ElementStr[0], "PureFunction"))
+		{
+			FunctionAnalysis.CodeType = "PureFunction";
 
+			return true;
+		}
 		return false;
 	}
 
@@ -102,7 +107,7 @@ namespace CollectClassInfo
 	
 		// "Resources" 0 
 		// Group = "SimpleCodeLibrary")) 1
-		if (ElementStr[0].find("Resources"))
+		if (simple_cpp_string_algorithm::string_contain(ElementStr[0], "Resources"))
 		{
 			VariableAnalysis->CodeType = "Resources";
 			return true;
@@ -116,6 +121,9 @@ namespace CollectClassInfo
 		std::vector<std::string> StringArray;
 		simple_cpp_helper_file::load_file_to_strings(Paths, StringArray);
 
+		//收集filname
+		ClassAnalysis.Filename = Paths;
+
 		//遍历每一行代码
 		for (int i = 0; i < StringArray.size(); i++)
 		{
@@ -128,7 +136,7 @@ namespace CollectClassInfo
 				return simple_cpp_string_algorithm::string_contain(Row, InSubString);
 			};
 
-			if (Contain("GENERATED_BODY"))
+			if (Contain("CODEREFLECTION"))
 			{
 				ClassAnalysis.CodeLine = i + 1;
 			}
@@ -167,6 +175,17 @@ namespace CollectClassInfo
 				trim_start_and_end_inline(const_cast<char*>(ElementStr[0].c_str()));
 			
 				ClassAnalysis.ClassName = ElementStr[0];
+				ClassAnalysis.CodeCPPName = ElementStr[0];
+				//去除C和G前缀
+				{
+					char* ClearClassNamePtr = const_cast<char*>(ClassAnalysis.CodeCPPName.c_str());
+
+					trim_start_and_end_inline(ClearClassNamePtr);
+
+					// 移除头部C开头或者G开头
+					remove_char_start(ClearClassNamePtr, 'C');
+					remove_char_start(ClearClassNamePtr, 'G');
+				}
 
 				//考虑到多继承问题
 				//public GObject ,public Interxx
@@ -194,12 +213,13 @@ namespace CollectClassInfo
 			}
 		
 			//获取标记的成员函数
-			if (Contain("UFUNCTION"))
+			if (Contain("CDIAPER"))
 			{
 				FFunctionAnalysis FunctionAnalysis;
 				if (GetCodeTypeByFunc(Row, FunctionAnalysis))
 				{
 					Row = StringArray[i + 1];
+					RowPtr = const_cast<char*>(Row.c_str());
 					//static void Hello1(GObject *Context, int32 &A,float b,bool C);
 				
 					if (Contain("\tstatic") || Contain("static "))
@@ -270,6 +290,11 @@ namespace CollectClassInfo
 						{
 							char* ElePtr = const_cast<char*>(Ele.c_str());
 							
+							if (Ele == "")
+							{
+								continue;
+							}
+
 							//int32 &A
 							//移除前后空格
 							trim_start_and_end_inline(ElePtr);
@@ -320,7 +345,7 @@ namespace CollectClassInfo
 			}	
 
 			////获取标记的成员变量
-			if (Contain("UPROPERTY"))
+			if (Contain("CVARIABLE"))
 			{
 				if (Contain("CodeType"))
 				{
@@ -331,6 +356,7 @@ namespace CollectClassInfo
 						char L[1024] = { 0 };
 
 						Row = StringArray[i + 1];
+						RowPtr = const_cast<char*>(Row.c_str());
 
 						//Row = \tTSubclassOf<UStaticMesh> Mesh;
 						remove_char_start(RowPtr, '\t');

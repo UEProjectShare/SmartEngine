@@ -15,6 +15,21 @@ std::string FEnginePathHelper::GetEngineLogsPath()
 	return "..\\..\\Saved\\Logs";
 }
 
+std::string FEnginePathHelper::GetEngineSourcePath()
+{
+	return "..\\..\\Source";
+}
+
+std::string FEnginePathHelper::GetEngineIntermediatePath()
+{
+	return "..\\..\\Intermediate";
+}
+
+std::string FEnginePathHelper::GetEngineCodeReflectionPath()
+{
+	return "..\\..\\Intermediate\\CodeReflection";
+}
+
 std::string FEnginePathHelper::GetEngineContentPath()
 {
 	return "..\\..\\Content";

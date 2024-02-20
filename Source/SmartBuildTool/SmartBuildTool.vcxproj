@@ -80,14 +80,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
-    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngineCore;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
-    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngineCore;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -129,6 +129,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <StackReserveSize>100000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,10 +147,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <StackReserveSize>100000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CodeReflection\CollectClassInfoFun\CollectClassInfo.cpp" />
+    <ClCompile Include="CodeReflection\CppSourceCodeType.cpp" />
     <ClCompile Include="CodeReflection\IntermediateFile\SpawnIntermediateFile.cpp" />
     <ClCompile Include="SmartBuildToolMain.cpp" />
   </ItemGroup>

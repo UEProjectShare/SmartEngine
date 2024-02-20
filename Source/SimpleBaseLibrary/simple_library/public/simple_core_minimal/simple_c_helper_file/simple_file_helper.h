@@ -41,6 +41,8 @@ void init_def_c_paths_w(def_c_paths_w* c_paths);
 
 int copy_file(char *Src, char *Dest);
 
+void remove_dir_all_files(const char* file_dir);
+
 void find_files(char const *in_path, def_c_paths *str,bool b_recursion);
 
 bool is_file_exists(char const* filename);

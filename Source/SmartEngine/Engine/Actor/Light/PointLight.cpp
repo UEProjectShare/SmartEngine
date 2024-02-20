@@ -1,11 +1,11 @@
 #include "PointLight.h"
 #include "../../Component/Light/PointLightComponent.h"
+#include "../../Core/Construction/MacroConstruction.h"
 
 GPointLight::GPointLight()
 	: Super()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(, this);
 	SetLightComponent(CreateObject<CPointLightComponent>(Param, new CPointLightComponent()));
 	time = 0.f;
 }

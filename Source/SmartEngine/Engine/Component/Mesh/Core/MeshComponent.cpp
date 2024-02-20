@@ -1,13 +1,13 @@
 #include "MeshComponent.h"
 #include "../../../Mesh/Core/Material/Material.h"
 #include "../../../Rendering/Core/DirectX/RenderingPipeline/Geometry/GeometryMap.h"
+#include "../../../Core/Construction/MacroConstruction.h"
 
 CMeshComponent::CMeshComponent()
 {
 	MeshRenderLayerType = EMeshRenderLayerType::RENDERLAYER_OPAQUE;
 	
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
 	Materials.push_back(CreateObject<CMaterial>(Param,new CMaterial()));
 	
 	bCastShadow = true;

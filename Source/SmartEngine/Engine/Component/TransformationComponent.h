@@ -1,5 +1,6 @@
 #pragma once
-#include "Core/Component.h"
+#include "Component/Component.h"
+#include "../EngineMinimal.h"
 
 class CTransformationComponent : public CComponent
 {

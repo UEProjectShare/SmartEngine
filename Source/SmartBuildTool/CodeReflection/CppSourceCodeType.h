@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simple_library/public/simple_library.h"
+#include "../SmartBuildTool.h"
 
 //参数
 struct FParamElement
@@ -59,6 +59,7 @@ struct FClassAnalysis
 	std::vector<string> InheritName;//继承者名字
 
 	string CodeCPPName;//CPP名字
+	string Filename;//.h文件路径
 	int CodeLine;//反射宏标记在哪行？
 };
 
@@ -67,3 +68,5 @@ enum ECollectionParmType
 	Type_Return,//是返回
 	Type_Parm,//参数
 };
+
+bool IsCheckAllowCodeReflection(const std::vector<std::string>& InContent);

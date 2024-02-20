@@ -1,4 +1,6 @@
 #include "WindowsEngine.h"
+#include "CoreObject/CoreMinimalObject.h"
+#include "../../Core/Construction/MacroConstruction.h"
 #include "../../Debug/EngineDebug.h"
 #include "../../Config/EngineRenderConfig.h"
 #include "../../Rendering/Core/Rendering.h"
@@ -8,7 +10,6 @@
 #include "../../Mesh/ConeMesh.h"
 #include "../../Mesh/PlaneMesh.h"
 #include "../../Mesh/CustomMesh.h"
-#include "../../Core/CoreObject/CoreMinimalObject.h"
 #include "../../Core/World.h"
 #include "../../Core/Camera.h"
 #include "../../Mesh/Core/MeshManage.h"
@@ -172,6 +173,9 @@ void CWindowsEngine::InitPath()
 	//Content
 	CreateFileDirectory(FEnginePathHelper::GetEngineContentPath());
 
+	//·´Éä´úÂëÂ·¾¶
+	CreateFileDirectory(FEnginePathHelper::GetEngineCodeReflectionPath());
+	
 	const wstring ShadersPathW = FEnginePathHelper::GetEngineShadersPath();
 	char ShaderPath[1024] = { 0 };
 	wchar_t_to_char(ShaderPath, 1024, ShadersPathW.c_str());

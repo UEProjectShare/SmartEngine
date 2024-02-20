@@ -1,6 +1,7 @@
 #pragma once
-#include "../../../Core/CoreObject/CoreMinimalObject.h"
+#include "CoreObject/CoreMinimalObject.h"
 #include "MaterialType.h"
+#include "../../../EngineMinimal.h"
 
 class CMaterial : public CCoreMinimalObject
 {

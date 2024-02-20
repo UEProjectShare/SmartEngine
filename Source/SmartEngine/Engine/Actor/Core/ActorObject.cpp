@@ -2,12 +2,12 @@
 #include "../../Component/TransformationComponent.h"
 #include "../../Component/Mesh/Core/MeshComponent.h"
 #include "../../Math/EngineMath.h"
+#include "../../Core/Construction/MacroConstruction.h"
 
 GActorObject::GActorObject()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
-	RootComponent = CreateObject<CTransformationComponent>(Param,new CTransformationComponent());
+	BUILD_OBJECT_PARAMETERS(Type, this);
+	RootComponent = CreateObject<CTransformationComponent>(ParamType, new CTransformationComponent());
 }
 
 void GActorObject::GetBoundingBox(BoundingBox& OutBoundingBox) const
@@ -30,9 +30,9 @@ void GActorObject::GetBoundingBox(BoundingBox& OutBoundingBox) const
 				fvector_3d ComponentMaxPoint = Extents + Center;
 				fvector_3d ComponentMinPoint = Center - Extents;
 
-				//TODO:»¹ĞèÒª¿¼ÂÇ×é¼şµÄÏà¶ÔÎ»ÖÃºÍĞı×ª
+				//TODO:è¿˜éœ€è¦è€ƒè™‘ç»„ä»¶çš„ç›¸å¯¹ä½ç½®å’Œæ—‹è½¬
 
-				//ÌáÈ¡×î´ó×îĞ¡Öµ
+				//æå–æœ€å¤§æœ€å°å€¼
 				MinPoint.x = math_libray::Min(ComponentMinPoint.x, MinPoint.x);
 				MinPoint.y = math_libray::Min(ComponentMinPoint.y, MinPoint.y);
 				MinPoint.z = math_libray::Min(ComponentMinPoint.z, MinPoint.z);
@@ -43,7 +43,7 @@ void GActorObject::GetBoundingBox(BoundingBox& OutBoundingBox) const
 			}
 		}
 
-		//×îÖÕµÄAABBµÄºÏ²¢
+		//æœ€ç»ˆçš„AABBçš„åˆå¹¶
 		if (MaxPoint != fvector_3d(-FLT_MAX) || 
 			MinPoint != fvector_3d(+FLT_MAX))
 		{

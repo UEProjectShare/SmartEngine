@@ -98,6 +98,27 @@ int copy_file(char *Src, char *Dest)
 
 	return -1;
 }
+
+void remove_dir_all_files(const char* file_dir)
+{
+	if (!file_dir)
+	{
+		return;
+	}
+
+	def_c_paths Paths;
+	init_def_c_paths(&Paths);
+
+	//Engine_Log("Load texture root path: [%s]", ContentPath.c_str());
+
+	find_files(file_dir, &Paths, true);
+
+	for (int i = 0; i < Paths.index; i++)
+	{
+		remove(Paths.paths[i]);
+	}	
+}
+
 void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
 {
 #ifdef  _WIN64

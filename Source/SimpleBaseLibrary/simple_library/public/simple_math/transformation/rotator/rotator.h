@@ -64,7 +64,6 @@ public:
 	{
 		return frotator(pitch * a, yaw * a, roll * a);
 	}
-
 public:
 	
 	frotator();

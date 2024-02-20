@@ -1,8 +1,6 @@
 #include "ConstructionComponents.h"
-#include "../../Core/CoreObject/CoreMinimalObject.h"
-#include "../../Component/Core/Component.h"
-#include "../../Actor/Core/ActorObject.h"
-#include "../../Component/TransformationComponent.h"
+#include "../CoreObject/CoreMinimalObject.h"
+#include "../Component/Component.h"
 
 namespace ConstructionComponent
 {
@@ -11,7 +9,7 @@ namespace ConstructionComponent
 		if (InParentComponent != InComponent)//不能Attach自己
 		{
 			//设置到子类
-			InParentComponent->AddChild(InComponent);
+			InParentComponent->AddChildren(InComponent);
 
 			//设置父类是谁
 			InComponent->SetParentComponent(InParentComponent);
@@ -30,13 +28,13 @@ namespace ConstructionComponent
 					UpdateConstructionComponents(InComponent, InOuterComponent);
 				}
 				//Outer是一个对象
-				else if (const GActorObject* InOuterActor = dynamic_cast<GActorObject*>(InOuter))
-				{
-					if (InOuterActor->GetRootComponent())
-					{
-						UpdateConstructionComponents(InComponent, InOuterActor->GetRootComponent());
-					}
-				}
+				//else if (GActorObject* InOuterActor = dynamic_cast<GActorObject*>(InOuter))
+				//{
+				//	if (InOuterActor->GetRootComponent())
+				//	{
+				//		UpdateConstructionComponents(InComponent, InOuterActor->GetRootComponent());
+				//	}
+				//}
 			}
 		}
 	}

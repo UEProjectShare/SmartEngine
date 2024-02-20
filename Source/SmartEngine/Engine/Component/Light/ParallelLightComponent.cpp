@@ -2,6 +2,7 @@
 #include "../../Mesh/Core/MeshManage.h"
 #include "../../Component/Mesh/Core/MeshComponent.h"
 #include "../../Mesh/Core/Material/Material.h"
+#include "../../Core/Construction/MacroConstruction.h"
 
 CParallelLightComponent::CParallelLightComponent()
 	: Super()
@@ -9,8 +10,7 @@ CParallelLightComponent::CParallelLightComponent()
 	//读取模型资源
 	string MeshPath = FEnginePathHelper::GetEngineContentPath() + "/SunMesh.obj";
 	
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
 	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param,MeshPath));
 
 	//设置太阳为线框模式

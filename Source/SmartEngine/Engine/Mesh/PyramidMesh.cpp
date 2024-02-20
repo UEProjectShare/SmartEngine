@@ -7,8 +7,7 @@
 
 GPyramidMesh::GPyramidMesh()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(, this);
 	SetMeshComponent(ConstructionObject<CPyramidMeshComponent>(Param));
 }
 

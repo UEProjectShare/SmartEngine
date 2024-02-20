@@ -12,15 +12,15 @@
 
 static float get_float_random_static()
 {
-    //重置时间戳
-    //srand((unsigned int)time(nullptr));
+	//重置时间戳
+	//srand((unsigned int)time(nullptr));
 
-    return (float)(rand()) / (float)RAND_MAX;
+	return (float)(rand()) / (float)RAND_MAX;
 }
 
 static float get_float_random_in_range(float in_min, float in_max)
 {
-    return in_max + get_float_random_static() * (in_max - in_min);
+	return in_max + get_float_random_static() * (in_max - in_min);
 }
 
 unsigned int SIMPLE_LIBRARY_API get_uint32_random(unsigned int in_max);

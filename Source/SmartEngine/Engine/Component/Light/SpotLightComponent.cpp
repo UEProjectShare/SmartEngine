@@ -2,6 +2,7 @@
 #include "../../Mesh/Core/MeshManage.h"
 #include "../../Component/Mesh/Core/MeshComponent.h"
 #include "../../Mesh/Core/Material/Material.h"
+#include "../../Core/Construction/MacroConstruction.h"
 
 CSpotLightComponent::CSpotLightComponent()
 	: Super()
@@ -11,8 +12,7 @@ CSpotLightComponent::CSpotLightComponent()
 	//读取模型资源
 	string MeshPath = FEnginePathHelper::GetEngineContentPath() + "/SpotMesh.obj";
 	
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
 	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param, MeshPath));
 
 	if (GetLightMesh())

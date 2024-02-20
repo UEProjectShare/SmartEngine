@@ -1,11 +1,14 @@
 #pragma once
 #include "../../EngineMinimal.h"
-#include "../../Core/CoreObject/CoreMinimalObject.h"
+#include "CoreObject/CoreMinimalObject.h"
+#include "ActorObject.CodeReflection.h"
 
 class CTransformationComponent;
 //G -> Game
 class GActorObject : public CCoreMinimalObject
 {
+	CODEREFLECTION()
+	
 	CVARIABLE()
 	CTransformationComponent* RootComponent;
 
@@ -44,4 +47,19 @@ public:
 	
 	XMFLOAT3& GetUPVector() const;
 
+	//≤‚ ‘
+	CVARIABLE(CodeType = Resources)
+	bool PlayerState;
+
+	CDIAPER(CodeType = Event)
+	static void Hello123(int c, float b);
+
+	CDIAPER(CodeType = Event)
+	static void Hello();
+
+	CDIAPER(CodeType = Function)
+	static void Hello1(){}
+
+	CDIAPER(CodeType = PureFunction)
+	static void Hello2() {}
 };

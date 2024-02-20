@@ -71,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(SolutionDir)Source\SmartCoreObject;$(SolutionDir)Intermediate\CodeReflection;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
     <LibraryPath>$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(SolutionDir)Source\SmartCoreObject;$(SolutionDir)Intermediate\CodeReflection;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
     <LibraryPath>$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
@@ -126,6 +126,9 @@
     <PostBuildEvent>
       <Command>copy $(SolutionDir)Source\SmartMeshImportExportTool\ThirdPartyLibrary\FBX\lib\x64\debug\libfbxsdk.dll $(SolutionDir)Binaries\Win64\</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)Binaries\Win64\SmartBuildTool.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -147,6 +150,9 @@
     <PostBuildEvent>
       <Command>copy $(SolutionDir)Source\SmartMeshImportExportTool\ThirdPartyLibrary\FBX\lib\x64\release\libfbxsdk.dll $(SolutionDir)Binaries\Win64\</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)Binaries\Win64\SmartBuildTool.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\EngineVariableTable.cpp" />
@@ -170,7 +176,6 @@
     <ClCompile Include="Engine\Actor\Sky\Fog.cpp" />
     <ClCompile Include="Engine\Actor\Sky\Sky.cpp" />
     <ClCompile Include="Engine\Collision\CollisionSceneQuery.cpp" />
-    <ClCompile Include="Engine\Component\Core\Component.cpp" />
     <ClCompile Include="Engine\Component\InputComponent.cpp" />
     <ClCompile Include="Engine\Component\Input\Input.cpp" />
     <ClCompile Include="Engine\Component\Input\InputType.cpp" />
@@ -200,11 +205,7 @@
     <ClCompile Include="Engine\Config\EngineRenderConfig.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
     <ClCompile Include="Engine\Core\Construction\ActorMeshConstruction.cpp" />
-    <ClCompile Include="Engine\Core\Construction\ConstructionComponents.cpp" />
     <ClCompile Include="Engine\Core\Construction\MeshConstruction.cpp" />
-    <ClCompile Include="Engine\Core\Construction\ObjectConstruction.cpp" />
-    <ClCompile Include="Engine\Core\CoreObject\CoreMinimalObject.cpp" />
-    <ClCompile Include="Engine\Core\CoreObject\GuidInterface.cpp" />
     <ClCompile Include="Engine\Core\Engine.cpp" />
     <ClCompile Include="Engine\Core\Viewport\ClientViewport.cpp" />
     <ClCompile Include="Engine\Core\Viewport\Viewport.cpp" />
@@ -332,9 +333,7 @@
     <ClInclude Include="Engine\Actor\Light\SpotLight.h" />
     <ClInclude Include="Engine\Actor\Sky\Fog.h" />
     <ClInclude Include="Engine\Actor\Sky\Sky.h" />
-    <ClInclude Include="Engine\CodeReflection\CodeReflectionMacroTag.h" />
     <ClInclude Include="Engine\Collision\CollisionSceneQuery.h" />
-    <ClInclude Include="Engine\Component\Core\Component.h" />
     <ClInclude Include="Engine\Component\InputComponent.h" />
     <ClInclude Include="Engine\Component\Input\Input.h" />
     <ClInclude Include="Engine\Component\Input\InputType.h" />
@@ -368,9 +367,6 @@
     <ClInclude Include="Engine\Core\Construction\ConstructionComponents.h" />
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h" />
     <ClInclude Include="Engine\Core\Construction\MeshConstruction.h" />
-    <ClInclude Include="Engine\Core\Construction\ObjectConstruction.h" />
-    <ClInclude Include="Engine\Core\CoreObject\CoreMinimalObject.h" />
-    <ClInclude Include="Engine\Core\CoreObject\GuidInterface.h" />
     <ClInclude Include="Engine\Core\Engine.h" />
     <ClInclude Include="Engine\Core\Viewport\ClientViewport.h" />
     <ClInclude Include="Engine\Core\Viewport\Viewport.h" />

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Core/CoreObject/GuidInterface.h"
+#include "CoreObject/GuidInterface.h"
 #include "../../Core/Engine.h"
 #if defined(_WIN32)
 #include "../../Platform/Windows/WindowsEngine.h"

@@ -122,10 +122,10 @@ namespace soft_rasterization
 			dot_position.z = fvector_3d::dot(position, forward_vector);
 
 			data_3d.matrix = {
-				right_vector.x*scale.x,		up_vector.x*scale.y,	forward_vector.x*scale.z,	0.f,
-				right_vector.y*scale.x,		up_vector.y*scale.y,	forward_vector.y*scale.z,	0.f,
-				right_vector.z*scale.x,		up_vector.z*scale.y,	forward_vector.z*scale.z,	0.f,
-				dot_position.x,				dot_position.y,			dot_position.z,				1.f
+			right_vector.x*scale.x,up_vector.x*scale.y,forward_vector.x*scale.z,0.f,
+			right_vector.y*scale.x,up_vector.y*scale.y,forward_vector.y*scale.z,0.f,
+			right_vector.z*scale.x,up_vector.z*scale.y,forward_vector.z*scale.z,0.f,
+			dot_position.x,dot_position.y,dot_position.z,				1.f
 		};
 
 			//±£´æ

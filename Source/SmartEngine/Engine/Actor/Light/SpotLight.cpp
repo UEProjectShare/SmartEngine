@@ -1,5 +1,6 @@
 #include "SpotLight.h"
 #include "../../Component/Light/SpotLightComponent.h"
+#include "../../Core/Construction/MacroConstruction.h"
 
 //Ö»Îª²âÊÔ
 float index_test = 0.f;
@@ -7,8 +8,7 @@ float index_test = 0.f;
 GSpotLight::GSpotLight()
 	: Super()
 {
-	FCreateObjectParam Param;
-	Param.Outer = this;
+	BUILD_OBJECT_PARAMETERS(, this);
 
 	SetLightComponent(CreateObject<CSpotLightComponent>(Param, new CSpotLightComponent()));
 	index_test = 0.f;

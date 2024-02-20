@@ -24,6 +24,9 @@
     <ClCompile Include="SmartBuildToolMain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CodeReflection\CppSourceCodeType.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodeReflection\CollectClassInfoFun\CollectClassInfo.h">
