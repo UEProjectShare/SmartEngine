@@ -61,6 +61,8 @@ struct FClassAnalysis
 	string CodeCPPName;//CPP名字
 	string Filename;//.h文件路径
 	int CodeLine;//反射宏标记在哪行？
+
+	string ModularPath;
 };
 
 enum ECollectionParmType

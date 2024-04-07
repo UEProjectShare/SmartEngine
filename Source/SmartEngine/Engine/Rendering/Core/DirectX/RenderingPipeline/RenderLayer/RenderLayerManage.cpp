@@ -67,6 +67,10 @@ void FRenderLayerManage::UpdateCalculations(float DeltaTime, const FViewportInfo
 	}
 }
 
+void FRenderLayerManage::OnResetSize(int InWidth, int InHeight)
+{
+}
+
 void FRenderLayerManage::BuildPSO()
 {
 	for (const auto& Tmp : RenderLayers)

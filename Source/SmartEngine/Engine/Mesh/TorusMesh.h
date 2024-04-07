@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Mesh.h"
+#include "TorusMesh.CodeReflection.h"
 
 class GTorusMesh : public GMesh
 {
-	typedef GMesh Super;
+	CODEREFLECTION()
 public:
 	GTorusMesh();
 

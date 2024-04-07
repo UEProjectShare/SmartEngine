@@ -1,11 +1,12 @@
 #pragma once
 #include "../../Core/ActorObject.h"
+#include "Light.CodeReflection.h"
 
 class CLightComponent;
-//G -> Game
+
 class GLight : public GActorObject
 {
-	typedef GActorObject Super;
+	CODEREFLECTION()
 
 	CVARIABLE()
 	CLightComponent* LightComponent;

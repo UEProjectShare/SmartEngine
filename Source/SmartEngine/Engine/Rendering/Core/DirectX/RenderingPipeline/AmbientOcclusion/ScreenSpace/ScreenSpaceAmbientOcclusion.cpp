@@ -36,6 +36,13 @@ void FScreenSpaceAmbientOcclusion::Init(int InWidth, int InHeight)
 	NoiseBuffer.Init(InWidth, InHeight);
 }
 
+void FScreenSpaceAmbientOcclusion::OnResetSize(int InWidth, int InHeight)
+{
+	Init(InWidth, InHeight);
+
+	BuildDescriptors();
+}
+
 void FScreenSpaceAmbientOcclusion::Draw(float DeltaTime)
 {
 	NormalBuffer.Draw(DeltaTime);
@@ -266,36 +273,39 @@ void FScreenSpaceAmbientOcclusion::DrawBlurConstantBufferViews(float DeltaTime, 
 
 void FScreenSpaceAmbientOcclusion::BuildDescriptors()
 {
-	//保证CPU GPU SRV
-	BuildDepthBuffer();
+	if (GeometryMap && RenderLayerManager)
+	{
+		//保证CPU GPU SRV
+		BuildDepthBuffer();
 
-	NormalBuffer.SetSRVOffset(GetNormalBufferSRVOffset());
-	NormalBuffer.SetRTVOffset(GetNormalBufferRTVOffset());
-	NormalBuffer.BuildDescriptors();
-	NormalBuffer.BuildRenderTargetRTV();
-	NormalBuffer.BuildSRVDescriptors();
-	NormalBuffer.BuildRTVDescriptors();
+		NormalBuffer.SetSRVOffset(GetNormalBufferSRVOffset());
+		NormalBuffer.SetRTVOffset(GetNormalBufferRTVOffset());
+		NormalBuffer.BuildDescriptors();
+		NormalBuffer.BuildRenderTargetRTV();
+		NormalBuffer.BuildSRVDescriptors();
+		NormalBuffer.BuildRTVDescriptors();
 
-	NoiseBuffer.SetSRVOffset(GetNoiseBufferSRVOffset());
-	NoiseBuffer.BuildDescriptors();
-	NoiseBuffer.BuildRenderTargetRTV();
-	NoiseBuffer.BuildSRVDescriptors();
-	NoiseBuffer.BuildRTVDescriptors();
+		NoiseBuffer.SetSRVOffset(GetNoiseBufferSRVOffset());
+		NoiseBuffer.BuildDescriptors();
+		NoiseBuffer.BuildRenderTargetRTV();
+		NoiseBuffer.BuildSRVDescriptors();
+		NoiseBuffer.BuildRTVDescriptors();
 
-	AmbientBuffer.SetSRVOffset(GetAmbientBufferSRVOffset());
-	AmbientBuffer.SetRTVOffset(GetAmbientBufferRTVOffset());
-	AmbientBuffer.BuildDescriptors();
-	AmbientBuffer.BuildRenderTargetRTV();
-	AmbientBuffer.BuildSRVDescriptors();
-	AmbientBuffer.BuildRTVDescriptors();
+		AmbientBuffer.SetSRVOffset(GetAmbientBufferSRVOffset());
+		AmbientBuffer.SetRTVOffset(GetAmbientBufferRTVOffset());
+		AmbientBuffer.BuildDescriptors();
+		AmbientBuffer.BuildRenderTargetRTV();
+		AmbientBuffer.BuildSRVDescriptors();
+		AmbientBuffer.BuildRTVDescriptors();
 
-	//初始化双边模糊
-	BilateralBlur.SetSRVOffset(GetBilateralBlurSRVOffset());
-	BilateralBlur.SetRTVOffset(GetBilateralBlurRTVOffset());
-	BilateralBlur.BuildDescriptors();
-	BilateralBlur.BuildRenderTargetRTV();
-	BilateralBlur.BuildSRVDescriptors();
-	BilateralBlur.BuildRTVDescriptors();
+		//初始化双边模糊
+		BilateralBlur.SetSRVOffset(GetBilateralBlurSRVOffset());
+		BilateralBlur.SetRTVOffset(GetBilateralBlurRTVOffset());
+		BilateralBlur.BuildDescriptors();
+		BilateralBlur.BuildRenderTargetRTV();
+		BilateralBlur.BuildSRVDescriptors();
+		BilateralBlur.BuildRTVDescriptors();
+	}
 }
 
 void FScreenSpaceAmbientOcclusion::Build()

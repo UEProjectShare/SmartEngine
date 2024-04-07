@@ -4,6 +4,7 @@
 #include "CodeReflection/CodeReflectionMacroTag.h"
 #include "../Interface/DirectXDeviceInterface.h"
 #include "../Component/TimelineComponent.h"
+#include "Camera.CodeReflection.h"
 
 enum ECameraType;
 struct FInputKey;
@@ -13,6 +14,8 @@ class CInputComponent;
 class GCamera : public GClientViewport
 	, public IDirectXDeviceInterface
 {
+	CODEREFLECTION()
+	
 	typedef GClientViewport Super;
 
 	CVARIABLE()

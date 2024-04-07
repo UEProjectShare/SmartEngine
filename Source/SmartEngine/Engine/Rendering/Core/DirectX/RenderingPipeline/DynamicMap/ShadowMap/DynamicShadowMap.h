@@ -13,6 +13,8 @@ class FDynamicShadowMap : public FDynamicMap
 public:
 
 	FDynamicShadowMap();
+
+	virtual void OnResetSize(int InWidth, int InHeight);
 	
 	void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo) override;
 	

@@ -36,6 +36,11 @@ void CMeshManage::UpdateCalculations(float DeltaTime, const FViewportInfo& Viewp
     RenderingPipeline.UpdateCalculations(DeltaTime, ViewportInfo);
 }
 
+void CMeshManage::OnResetSize(int InWidth, int InHeight)
+{
+    RenderingPipeline.OnResetSize(InWidth, InHeight);
+}
+
 void CMeshManage::PostDraw(float DeltaTime)
 {
     RenderingPipeline.PostDraw(DeltaTime);

@@ -20,6 +20,10 @@ FDynamicShadowMap::FDynamicShadowMap()
 	CreateRenderTarget<FShadowMapRenderTarget>();
 }
 
+void FDynamicShadowMap::OnResetSize(int InWidth, int InHeight)
+{
+}
+
 void FDynamicShadowMap::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
 	Super::UpdateCalculations(DeltaTime, ViewportInfo);

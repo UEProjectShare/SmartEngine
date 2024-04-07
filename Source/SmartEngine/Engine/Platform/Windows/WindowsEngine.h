@@ -3,12 +3,15 @@
 #if defined(_WIN32)
 #include "../../Core/Engine.h"
 #include "../../Rendering/Enigne/Core/RenderingEngine.h"
+#include "WindowsEngine.CodeReflection.h"
 
 class CDirectXRenderingEngine;
 class CWorld;
 class CMeshManage;
 class CWindowsEngine : public CEngine
 {
+	CODEREFLECTION()
+	
 	friend class IDirectXDeviceInterface;
 public:
 	CWindowsEngine();
@@ -23,6 +26,8 @@ public:
 
 	void Tick(float DeltaTime) override;
 
+	void OnResetSize(int InWidth, int InHeight) override;
+	
 	int PreExit() override;
 	
 	int Exit() override;

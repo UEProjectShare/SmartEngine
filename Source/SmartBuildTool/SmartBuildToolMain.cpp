@@ -37,6 +37,22 @@ int main()
 
 		find_files(SourcePath.c_str(), &Paths, true);
 
+		//先收集它的模块
+		map<string, vector<string>> Modulars;
+		for (int i = 0; i < Paths.index; i++)
+		{
+			if (find_string(Paths.paths[i], ".vcxproj", 0) != -1)
+			{
+				//单位化路径
+				normalization_path(Paths.paths[i]);
+
+				char Buff[1024] = { 0 };
+				get_path_directory(Buff, Paths.paths[i]);
+
+				Modulars.insert(make_pair(Buff, vector<string>()));
+			}
+		}
+
 		for (int i = 0; i < Paths.index; i++)
 		{
 			if (find_string(Paths.paths[i], ".h", 0) != -1)
@@ -53,6 +69,18 @@ int main()
 					
 					//收集类型
 					FClassAnalysis ClassAnalysis;
+					
+					vector<string>* PathReflectionCodeCpp = nullptr;
+					for (auto& Tmp : Modulars)
+					{
+						//E:\RenZhaiEngine\Source\RenZhaiBuildTool\CodeReflection\xx.j
+						if (find_string(Paths.paths[i], Tmp.first.c_str(),0) != -1)
+						{
+							ClassAnalysis.ModularPath = Tmp.first;
+							PathReflectionCodeCpp = &Tmp.second;
+							break;
+						}
+					}
 					CollectClassInfo::Collection(Paths.paths[i], ClassAnalysis);
 
 					//构建.h和.cpp代码
@@ -72,12 +100,41 @@ int main()
 
 					simple_cpp_helper_file::save_file_to_strings(PathH, OutAnalysisRawH);
 					simple_cpp_helper_file::save_file_to_strings(PathCPP, OutAnalysisRawCPP);
+					
+					if (PathReflectionCodeCpp)
+					{
+						//绝对路径
+						if (1)
+						{
+							PathReflectionCodeCpp->push_back(
+								simple_cpp_string_algorithm::printf(
+									"#include \"%s\"", PathCPP.c_str()));
+						}
+						else //相对路径
+						{
+							PathReflectionCodeCpp->push_back(
+								simple_cpp_string_algorithm::printf(
+									"#include \"%s.CodeReflection.cpp\"", Buff));
+						}
+					}
 				}
 			}
 		}
+
+		//链接
+		for (auto &Tmp : Modulars)
+		{
+			if (Tmp.second.size() > 0)
+			{
+				string LinkCodeReflection = simple_cpp_string_algorithm::printf(
+				"%sLinkCodeReflection.build.cpp", Tmp.first.c_str());
+
+				simple_cpp_helper_file::save_file_to_strings(LinkCodeReflection, Tmp.second);
+			}
+		}
 	}
-	
+
 	std::cout << "End Generate Reflection Code" << endl;
-	
+
 	return 0;
 }

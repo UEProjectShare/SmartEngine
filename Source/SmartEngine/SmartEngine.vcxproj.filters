@@ -483,6 +483,12 @@
     <ClCompile Include="Engine\SmartEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Manage\ViewportDataManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkCodeReflection.build.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h">
@@ -981,6 +987,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EngineType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manage\ViewportDataManage.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,14 +6,13 @@
 #include "../../Interface/DirectXDeviceInterface.h"
 #include "../../Core/Viewport/ViewportInfo.h"
 #include "../../Rendering/Core/DirectX/RenderingPipeline/RenderingPipeline.h"
+#include "MeshManage.CodeReflection.h"
 
 class FRenderingResourcesUpdate;
 class CMeshComponent;
-class CMeshManage 
-	: public CCoreMinimalObject
-	, public IRenderingInterface
-	, public IDirectXDeviceInterface
+class CMeshManage : public CCoreMinimalObject, public IRenderingInterface, public IDirectXDeviceInterface
 {
+	CODEREFLECTION()
 public:
 	CMeshManage();
 
@@ -23,6 +22,8 @@ public:
 	
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
+	virtual void OnResetSize(int InWidth, int InHeight);
+	
 	void PreDraw(float DeltaTime) override;
 	
 	void Draw(float DeltaTime) override;

@@ -1,9 +1,11 @@
 #pragma once
 #include "Component/Component.h"
 #include "../EngineMinimal.h"
+#include "TransformationComponent.CodeReflection.h"
 
 class CTransformationComponent : public CComponent
 {
+	CODEREFLECTION()
 public:
 	CTransformationComponent();
 

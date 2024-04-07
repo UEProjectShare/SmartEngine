@@ -2,17 +2,17 @@
 #include "../../../../Engine/Actor/Core/ActorObject.h"
 #include "../../../../Engine/Interface/DirectXDeviceInterface.h"
 #include "../../../../Engine/Component/Input/InputType.h"
+#include "OperationHandleBase.CodeReflection.h"
 
 class CCustomMeshComponent;
 class CInputComponent;
 enum EMeshRenderLayerType;
 class CComponent;
 
-class GOperationHandleBase 
-	: public GActorObject
-	, public IDirectXDeviceInterface
+class GOperationHandleBase : public GActorObject, public IDirectXDeviceInterface
 {
-	typedef GActorObject Super;
+	CODEREFLECTION()
+	
 protected:
 	enum ESelectAxisType
 	{

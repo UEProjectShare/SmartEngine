@@ -2,10 +2,11 @@
 
 #include "Core/Mesh.h"
 #include "Core/MeshType.h"
+#include "PyramidMesh.CodeReflection.h"
 
 class GPyramidMesh : public GMesh
 {
-	typedef GMesh Super;
+	CODEREFLECTION()
 
 public:
 	GPyramidMesh();

@@ -34,7 +34,11 @@ LRESULT CALLBACK EngineWindowProc(const HWND hwnd, const UINT msg, WPARAM wParam
 	case WM_MOUSEWHEEL:
 		MousesWheelsDelegate.Broadcast(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), static_cast<short>(HIWORD(wParam)));
 		return 0;
-	default: ;
+	case WM_SIZE:
+		const int ViewportWidth = LOWORD(lParam);
+		const int ViewportHeight = HIWORD(lParam);
+
+		OnResetSizeDelegate.Broadcast(ViewportWidth, ViewportHeight);
 	}
 
 	//交给windows自己处理完成

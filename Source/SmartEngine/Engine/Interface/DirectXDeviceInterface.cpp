@@ -4,6 +4,8 @@
 #include "../Rendering/Core/DirectX/RenderingPipeline/RenderingPipeline.h"
 #include "../Mesh/Core/MeshManage.h"
 #include "../Rendering/Core/DirectX/RenderingPipeline/RenderLayer/RenderLayerManage.h"
+#include "../Core/World.h"
+#include "../Core/Camera.h"
 
 void IDirectXDeviceInterface::StartSetMainViewportRenderTarget() const
 {
@@ -74,6 +76,16 @@ CWorld* IDirectXDeviceInterface::GetWorld() const
 	return nullptr;
 }
 
+GCamera* IDirectXDeviceInterface::GetCamera() const
+{
+	if (GetWorld())
+	{
+		return GetWorld()->GetCamera();
+	}
+
+	return nullptr;
+}
+
 ComPtr<ID3D12GraphicsCommandList> IDirectXDeviceInterface::GetGraphicsCommandList() const
 {
 	if (const CWindowsEngine* InEngine = GetEngine())
@@ -137,6 +149,26 @@ ID3D12DescriptorHeap* IDirectXDeviceInterface::GetDSVHeap() const
 	}
 
 	return nullptr;
+}
+
+int IDirectXDeviceInterface::GetViewportWidth() const
+{
+	if (const GCamera* InCamera = GetCamera())
+	{
+		return InCamera->GetWidth();
+	}
+
+	return 0;
+}
+
+int IDirectXDeviceInterface::GetViewportHeight() const
+{
+	if (const GCamera* InCamera = GetCamera())
+	{
+		return InCamera->GetHeight();
+	}
+
+	return 0;
 }
 
 UINT IDirectXDeviceInterface::GetDescriptorHandleIncrementSizeByDSV() const

@@ -15,6 +15,8 @@ class FDynamicReflectionCubeMap : public FDynamicCubeMap
 public:
 	FDynamicReflectionCubeMap();
 
+	virtual void OnResetSize(int InWidth, int InHeight);
+
 	void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo) override;
 	
 	void Init(FGeometryMap* InGeometryMap, FDirectXPipelineState* InDirectXPipelineState,FRenderLayerManage* InRenderLayer) override;

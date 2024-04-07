@@ -26,6 +26,8 @@ public:
 
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
+	virtual void OnResetSize(int InWidth, int InHeight);
+
 	void BuildPipeline();
 
 	virtual void PreDraw(float DeltaTime);

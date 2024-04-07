@@ -2,11 +2,12 @@
 #include "../../TransformationComponent.h"
 #include "../../../Interface\DirectXDeviceInterface.h"
 #include "LightType.h"
+#include "LightComponent.CodeReflection.h"
 
 class CMeshComponent;
 class CLightComponent : public CTransformationComponent,public IDirectXDeviceInterface
 {
-	typedef CTransformationComponent Super;
+	CODEREFLECTION()
 
 	CVARIABLE()
 	CMeshComponent* LightMesh;

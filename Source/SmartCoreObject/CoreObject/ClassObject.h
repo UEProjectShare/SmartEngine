@@ -3,5 +3,5 @@
 
 class SMARTENGINECORE_API CClassObject : public CFieldObject
 {
-
+    typedef CFieldObject Super;
 };

@@ -13,8 +13,8 @@ bool FRaycastSystemLibrary::GetRaycastByScreenParam(
 {
 	if (const GCamera* InCamera = InWorld->GetCamera())
 	{
-		const int H = FEngineRenderConfig::GetRenderConfig()->ScreenHeight;
-		const int W = FEngineRenderConfig::GetRenderConfig()->ScreenWidth;
+		const int H = InCamera->GetHeight();
+		const int W = InCamera->GetWidth();
 
 		fvector_2d View;
 		View.x = (2.f * ScreenXY.x / W - 1.f) / InCamera->ProjectMatrix._11;

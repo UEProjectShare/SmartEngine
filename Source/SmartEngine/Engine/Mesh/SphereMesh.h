@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Mesh.h"
+#include "SphereMesh.CodeReflection.h"
 
 class GSphereMesh : public GMesh
 {
-	typedef GMesh Super;
+	CODEREFLECTION()
 public:
 
 	GSphereMesh();

@@ -1,12 +1,15 @@
 #pragma once
 #include "../../Core/RenderingEngine.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
+#include "DirectXRenderingEngine.CodeReflection.h"
 
 class CLightManage;
 class CMeshManage;
 class CWorld;
 class CDirectXRenderingEngine : public CRenderingEngine
 {
+	CODEREFLECTION()
+	
 	friend class IDirectXDeviceInterface;
 	
 	friend class CWindowsEngine;
@@ -24,6 +27,8 @@ public:
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 	
 	void Tick(float DeltaTime) override;
+
+	void OnResetSize(int InWidth, int InHeight) override;
 
 	int PreExit() override;
 	

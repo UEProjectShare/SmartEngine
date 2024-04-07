@@ -1,8 +1,10 @@
 #pragma once
 #include "Core/ShellMeshComponent.h"
+#include "PlaneMeshComponent.CodeReflection.h"
 
 class CPlaneMeshComponent : public CShellMeshComponent
 {
+	CODEREFLECTION()
 public:
 	CPlaneMeshComponent();
 	

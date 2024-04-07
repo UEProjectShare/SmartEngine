@@ -1,12 +1,13 @@
 #pragma once
 #include "Core/OperationHandleBase.h"
+#include "RotatorArrow.CodeReflection.h"
 
 class CPlaneMeshComponent;
 class CMeshComponent;
 
 class GRotatorArrow : public GOperationHandleBase
 {
-	typedef GOperationHandleBase Super;
+	CODEREFLECTION()
 
 	CVARIABLE()
 	CPlaneMeshComponent* XPlaneComponent;

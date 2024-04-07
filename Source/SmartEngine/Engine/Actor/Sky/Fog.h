@@ -1,11 +1,12 @@
 #pragma once
 #include "../Core/ActorObject.h"
+#include "Fog.CodeReflection.h"
 
 class CFogComponent;
 
 class GFog : public GActorObject
 {
-	typedef GActorObject Super;
+	CODEREFLECTION()
 
 	CVARIABLE()
 	CFogComponent* FogComponent;

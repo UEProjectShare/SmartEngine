@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Mesh.h"
+#include "CylinderMesh.CodeReflection.h"
 
 class GCylinderMesh : public GMesh
 {
-	typedef GMesh Super;
+	CODEREFLECTION()
 public:
 	GCylinderMesh();
 

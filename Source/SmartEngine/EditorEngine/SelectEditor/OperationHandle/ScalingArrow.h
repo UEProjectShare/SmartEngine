@@ -1,9 +1,10 @@
 #pragma once
 #include "Core/OperationHandleBase.h"
+#include "ScalingArrow.CodeReflection.h"
 
 class GScalingArrow : public GOperationHandleBase
 {
-	typedef GOperationHandleBase Super;
+	CODEREFLECTION()
 
 public:
 	GScalingArrow();

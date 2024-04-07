@@ -3,6 +3,7 @@
 #include "CoreObject/CoreMinimalObject.h"
 #include "CodeReflection/CodeReflectionMacroTag.h"
 #include "../EngineType.h"
+#include "World.CodeReflection.h"
 
 struct FInputKey;
 class CTransformationComponent;
@@ -12,6 +13,7 @@ class GActorObject;
 
 class CWorld : public CCoreMinimalObject
 {
+	CODEREFLECTION()
 public:
 	CWorld();
 
@@ -22,9 +24,12 @@ public:
 	{
 		T *InArray = new T();
 		InArray->SetOuter(this);
+		InArray->InitMinimalObject();
 
 		char ObjectName[128] = { 0 };
-		sprintf(ObjectName, "Actor_%d", ActorObjects.size());
+		sprintf(ObjectName, "%s_%d",
+			InArray->GetName().c_str(),
+			ActorObjects.size());
 
 		InArray->Rename(ObjectName);
 		

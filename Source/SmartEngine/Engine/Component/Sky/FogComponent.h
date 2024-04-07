@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Component/Component.h"
+#include "FogComponent.CodeReflection.h"
 
 class CFogComponent : public CComponent
 {
+	CODEREFLECTION()
 public:
 	CFogComponent();
 

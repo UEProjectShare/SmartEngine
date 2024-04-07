@@ -1,8 +1,10 @@
 #pragma once
 #include "Core/ShellMeshComponent.h"
+#include "TorusMeshComponent.CodeReflection.h"
 
 class CTorusMeshComponent : public CShellMeshComponent
 {
+	CODEREFLECTION()
 public:
 	CTorusMeshComponent();
 

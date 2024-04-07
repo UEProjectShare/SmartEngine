@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/MeshComponent.h"
+#include "CustomMeshComponent.CodeReflection.h"
 
 //模型读取类型
 enum EMeshLoadAssetType
@@ -10,6 +11,7 @@ enum EMeshLoadAssetType
 
 class CCustomMeshComponent : public CMeshComponent
 {
+	CODEREFLECTION()
 public:
 	CCustomMeshComponent();
 

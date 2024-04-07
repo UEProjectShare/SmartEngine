@@ -220,6 +220,7 @@
     <ClCompile Include="Engine\Interface\OpenGLDeviceInterface.cpp" />
     <ClCompile Include="Engine\Library\RaycastSystemLibrary.cpp" />
     <ClCompile Include="Engine\Manage\LightManage.cpp" />
+    <ClCompile Include="Engine\Manage\ViewportDataManage.cpp" />
     <ClCompile Include="Engine\Math\EngineMath.cpp" />
     <ClCompile Include="Engine\Mesh\BoxMesh.cpp" />
     <ClCompile Include="Engine\Mesh\ConeMesh.cpp" />
@@ -311,6 +312,7 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="imgui\libs\usynergy\uSynergy.c" />
+    <ClCompile Include="LinkCodeReflection.build.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\EngineVariableTable.h" />
@@ -384,6 +386,7 @@
     <ClInclude Include="Engine\Interface\OpenGLDeviceInterface.h" />
     <ClInclude Include="Engine\Library\RaycastSystemLibrary.h" />
     <ClInclude Include="Engine\Manage\LightManage.h" />
+    <ClInclude Include="Engine\Manage\ViewportDataManage.h" />
     <ClInclude Include="Engine\Math\EngineMath.h" />
     <ClInclude Include="Engine\Mesh\BoxMesh.h" />
     <ClInclude Include="Engine\Mesh\ConeMesh.h" />

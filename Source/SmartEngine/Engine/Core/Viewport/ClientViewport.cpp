@@ -5,20 +5,21 @@
 GClientViewport::GClientViewport()
     : SuperV()
     , SuperA()
-    , YFOV(0.f)
-    , Aspect(0.f)
-    , ZNear(0.f)
-    , ZFar(0.f)
     , bDirty(true)
 {
 }
 
+void GClientViewport::SetFrustum(float InYFOV, float InZNear, float InZFar)
+{
+    SetFrustum(InYFOV, ViewportData.Aspect, InZNear, InZFar);
+}
+
 void GClientViewport::SetFrustum(float InYFOV, float InAspect, float InZNear, float InZFar)
 {
-    YFOV = InYFOV;
-    Aspect = InAspect;
-    ZNear = InZNear;
-    ZFar = InZFar;
+    ViewportData.YFOV = InYFOV;
+    ViewportData.Aspect = InAspect;
+    ViewportData.ZNear = InZNear;
+    ViewportData.ZFar = InZFar;
 
 #if USE_SIMPLE_LIB_MATH
     ProjectMatrix = EngineMath::ToFloat4x4(math_utils::matrix_perspective(
@@ -93,6 +94,13 @@ void GClientViewport::BuildViewMatrix(float DeltaTime)
 		RightVector.y,	UPVector.y,	 ForwardVector.y,	0.f,
 		RightVector.z,	UPVector.z,	 ForwardVector.z,	0.f,
 		V3.x,			V3.y,		 V3.z,				1.f };
+}
+
+void GClientViewport::OnResetSize(int InWidth, int InHeight)
+{
+    SuperV::OnResetSize(InWidth, InHeight);
+
+    ViewportData.ResetSize(InWidth, InHeight);
 }
 
 void GClientViewport::BuildOrthographicOffCenterLHMatrix(float InRadius, const fvector_3d& InTargetPosition)

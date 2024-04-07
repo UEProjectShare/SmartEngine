@@ -14,6 +14,7 @@
 #include "../../Core/Camera.h"
 #include "../../Mesh/Core/MeshManage.h"
 #include "../../Rendering/Enigne/DirectX/DirectX12RenderingEngine.h"
+#include "../../Component/Input/Input.h"
 
 #if EDITOR_ENGINE
 #include "../../../EditorEngine/EditorEngine.h"
@@ -46,6 +47,9 @@ CWindowsEngine::~CWindowsEngine()
 
 int CWindowsEngine::PreInit(FWinMainCommandParameters InParameters)
 {
+	//自适应屏幕大小绑定
+	OnResetSizeDelegate.AddFunction(this, &CWindowsEngine::OnResetSize);
+	
 	InitPath();
 
 	//日志系统初始化
@@ -128,6 +132,15 @@ void CWindowsEngine::Tick(float DeltaTime)
 			RenderingEngine->Tick(DeltaTime);
 		}
 	}
+}
+
+void CWindowsEngine::OnResetSize(int InWidth, int InHeight)
+{
+	RenderingEngine->OnResetSize(InWidth, InHeight);
+
+#if EDITOR_ENGINE
+	EditorEngine->OnResetSize(InWidth, InHeight);
+#endif
 }
 
 int CWindowsEngine::PreExit()
@@ -229,7 +242,7 @@ bool CWindowsEngine::InitWindows(const FWinMainCommandParameters& InParameters)
 		L"SmartEngine", // 窗口名称
 		L"SmartEngine",//会显示在窗口的标题栏上去
 		WS_OVERLAPPEDWINDOW, //窗口风格
-		100, 100,//窗口的坐标
+		0, 100,//窗口的坐标
 		WindowWidth, WindowHeight,//
 		nullptr, //副窗口句柄
 		nullptr, //菜单句柄

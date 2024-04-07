@@ -1,11 +1,14 @@
 #pragma once
 #include "../../TransformationComponent.h"
 #include "MeshComponentType.h"
+#include "MeshComponent.CodeReflection.h"
 
 class CMaterial;
 struct FMeshRenderingData;
 class CMeshComponent : public CTransformationComponent
 {
+	CODEREFLECTION()
+	
 	CVARIABLE()
 	vector<CMaterial*> Materials;
 public:

@@ -4,17 +4,16 @@
 #include "../../Actor/Core/ActorObject.h"
 #include "../../Interface/DirectXDeviceInterface.h"
 #include "../Core/MeshManage.h"
+#include "Mesh.CodeReflection.h"
+
 class CTransformationComponent;
 class CMeshComponent;
 class CMaterial;
 enum EMeshRenderLayerType;
 
-class GMesh 
-	: public GActorObject,
-	public IRenderingInterface,
-	public IDirectXDeviceInterface
+class GMesh : public GActorObject, public IRenderingInterface, public IDirectXDeviceInterface
 {
-	typedef GActorObject Super;
+	CODEREFLECTION()
 
 	CVARIABLE()
 	CTransformationComponent* TransformationComponent;

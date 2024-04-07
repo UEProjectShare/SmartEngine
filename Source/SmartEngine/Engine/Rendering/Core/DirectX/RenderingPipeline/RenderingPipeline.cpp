@@ -34,6 +34,16 @@ void FRenderingPipeline::UpdateCalculations(float DeltaTime, const FViewportInfo
 	RenderLayer.UpdateCalculations(DeltaTime, ViewportInfo);
 }
 
+void FRenderingPipeline::OnResetSize(int InWidth, int InHeight)
+{
+#if USE_SSAO
+	SSAO.OnResetSize(InWidth,InHeight);
+#endif
+	DynamicCubeMap.OnResetSize(InWidth, InHeight);
+	GeometryMap.OnResetSize(InWidth, InHeight);
+	RenderLayer.OnResetSize(InWidth, InHeight);
+}
+
 void FRenderingPipeline::BuildPipeline()
 {
 	//³õÊ¼»¯GPSÃèÊö
@@ -63,9 +73,7 @@ void FRenderingPipeline::BuildPipeline()
 	&DirectXPipelineState,
 	&RenderLayerManager);
 
-	SSAO.Init(
-		FEngineRenderConfig::GetRenderConfig()->ScreenWidth,
-		FEngineRenderConfig::GetRenderConfig()->ScreenHeight);
+	SSAO.Init(GetVieportWidth(), GetVieportHeight());
 #endif
 	
 	GeometryMap.DynamicShadowMap.Init(

@@ -69,6 +69,11 @@ void FGeometryMap::PostDraw(float DeltaTime)
 
 }
 
+void FGeometryMap::OnResetSize(int InWidth, int InHeight)
+{
+	DynamicShadowCubeMap.OnResetSize(InWidth, InHeight);
+}
+
 void FGeometryMap::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
 	UpdateMaterialShaderResourceView(DeltaTime, ViewportInfo);

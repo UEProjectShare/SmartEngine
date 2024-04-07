@@ -1,10 +1,10 @@
 #pragma once
 #include "Light.h"
+#include "RangeLight.CodeReflection.h"
 
-//G -> Game
 class GRangeLight : public GLight
 {
-	typedef GLight Super;
+	CODEREFLECTION()
 
 public:
 	float GetStartAttenuation() const;

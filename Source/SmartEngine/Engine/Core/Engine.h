@@ -6,8 +6,11 @@
 #include "WinMainCommandParameters.h"
 #endif // 1
 
+#include "Engine.CodeReflection.h"
+
 class CEngine : public CCoreMinimalObject
 {
+	CODEREFLECTION()
 public:
 	CEngine();
 
@@ -26,6 +29,8 @@ public:
 	virtual int PostInit() = 0;
 
 	void Tick(float DeltaTime) override {};
+
+	virtual void OnResetSize(int InWidth, int InHeight) = 0;
 
 	virtual int PreExit() = 0;
 	

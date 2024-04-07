@@ -2,6 +2,34 @@
 
 namespace IntermediateFile
 {
+	void RemoveEnd(const std::vector<std::string>& ParamArray,char EndChar)
+	{
+		if (simple_cpp_string_algorithm::index_valid(
+			ParamArray.size(),
+			ParamArray.size() - 1))
+		{
+			remove_char_end(
+				const_cast<char*>(ParamArray[ParamArray.size() - 1].c_str()),
+				EndChar);
+		}
+	}
+
+	const string* GetGOrCInheritName(const std::vector<string>& InheritName)
+	{
+		for (auto& Tmp: InheritName)
+		{
+			if (!Tmp.empty())
+			{
+				if (Tmp.c_str()[0] == 'C' || Tmp.c_str()[0] == 'G')
+				{
+					return &Tmp;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
 	std::string GetCombineParamString(
 		const FFunctionAnalysis& Function,
 		std::vector<std::string>& ParamArray)
@@ -56,19 +84,22 @@ namespace IntermediateFile
 
 		//#define  Z_BT_GActorObject
 		AnalysisRaw.push_back(
-			simple_cpp_string_algorithm::printf("#define %s %s", 
-				MClassName.c_str(),
-				string((ClassAnalysis.Function.size() > 0) ? "\\" : "").c_str()));
+			simple_cpp_string_algorithm::printf("#define %s \\", 
+				MClassName.c_str()));
+
+		AnalysisRaw.push_back("public: \\");
 
 		//类名
 		const std::string ClearClassName = ClassAnalysis.ClassName;
 		{
 			char* ClearClassNamePtr = const_cast<char*>(ClearClassName.c_str());
 			trim_start_and_end_inline(ClearClassNamePtr);
-
+			
 			//移除头部C开头或者G开头
-			remove_char_start(ClearClassNamePtr, 'C');
-			remove_char_start(ClearClassNamePtr, 'G');
+			if (!remove_char_start(ClearClassNamePtr, 'G'))
+			{
+				remove_char_start(ClearClassNamePtr, 'C');
+			}
 		}
 
 		if (ClassAnalysis.Function.size() > 0)
@@ -157,7 +188,7 @@ namespace IntermediateFile
 					//FunctionManage::SetNativeFuncPtr(FunctionID(("ActorObject"),("Hello1"),GActorObject::Script_Hello1));
 					StaticRegistration.push_back(
 						simple_cpp_string_algorithm::printf(
-							"\tFunctionManage::SetNativeFuncPtr(FunctionID((\"%s\"),(\"%s\"),%s::%s));",
+							"\tFFunctionManage::SetNativeFuncPtr(FFunctionID((\"%s\"),(\"%s\"),%s::%s));",
 							ClearClassName.c_str(),
 							Function.FunctionName.c_str(),
 							ClassAnalysis.ClassName.c_str(),
@@ -166,43 +197,88 @@ namespace IntermediateFile
 			}
 
 			//移除函数拼接的 "\"
-			if (simple_cpp_string_algorithm::index_valid(
-				AnalysisRaw.size(), 
-				AnalysisRaw.size() - 1))
-			{
-				remove_char_end(
-					const_cast<char*>(AnalysisRaw[AnalysisRaw.size() - 1].c_str()),
-					'\\');
-			}
-
-			AnalysisRaw.push_back((""));
-
-			//#define GActorObject_10_GENERATED_BODY_BT 
-			AnalysisRaw.push_back(
-				simple_cpp_string_algorithm::printf(
-					"#define %s_%i_GENERATED_BODY_BT \\",
-					ClassAnalysis.ClassName.c_str(),
-					ClassAnalysis.CodeLine));
-
-			// Z_BT_GActorObject
-			AnalysisRaw.push_back(MClassName);
-
-			AnalysisRaw.push_back((""));
-
-			//#define CURRENT_FILE_ID_BT  GActorObject
-			AnalysisRaw.push_back(
-				simple_cpp_string_algorithm::printf(
-					"#define %s %s",
-					std::string("CURRENT_FILE_ID_BT ").c_str(),
-					ClassAnalysis.ClassName.c_str()));
-
-			//#define NewLine 10
-			AnalysisRaw.push_back(
-				simple_cpp_string_algorithm::printf(
-					"#define %s %i",
-					std::string("NewLine").c_str(),
-					ClassAnalysis.CodeLine));
+			//RemoveEnd(AnalysisRaw,'\\');
 		}
+		AnalysisRaw.push_back("private:");
+
+		AnalysisRaw.push_back((""));
+
+		//合并内部的函数
+		//GActorObject_10_Internal_Fun
+		const std::string InternalFunMacro = simple_cpp_string_algorithm::printf(
+			"%s_%i_Internal_Fun",
+			ClassAnalysis.ClassName.c_str(),
+			ClassAnalysis.CodeLine);
+
+		//#define GActorObject_10_Internal_Fun 
+		AnalysisRaw.push_back(
+			simple_cpp_string_algorithm::printf(
+				"#define %s \\",
+				InternalFunMacro.c_str()));
+
+		if (const string* InheritName = GetGOrCInheritName(ClassAnalysis.InheritName))
+		{
+			AnalysisRaw.push_back(
+				simple_cpp_string_algorithm::printf(
+					"typedef %s Super; \\",
+					InheritName->c_str()));
+		}
+		AnalysisRaw.push_back("protected: \\");
+		AnalysisRaw.push_back("virtual void InitReflectionContent(); \\");
+		AnalysisRaw.push_back("private:");
+
+		AnalysisRaw.push_back("");
+
+		//#define GActorObject_10_GENERATED_BODY_BT 
+		AnalysisRaw.push_back(
+			simple_cpp_string_algorithm::printf(
+				"#define %s_%i_GENERATED_BODY_BT \\",
+				ClassAnalysis.ClassName.c_str(),
+				ClassAnalysis.CodeLine));
+
+		// Z_BT_GActorObject
+		AnalysisRaw.push_back(simple_cpp_string_algorithm::printf(
+			"%s \\", MClassName.c_str()));
+		AnalysisRaw.push_back(simple_cpp_string_algorithm::printf(
+			"%s ", InternalFunMacro.c_str()));
+
+		AnalysisRaw.push_back((""));
+
+		//解除前面的定义
+		/*
+		#ifdef CURRENT_FILE_ID_BT
+		#undef CURRENT_FILE_ID_BT
+		#endif // CURRENT_FILE_ID_BT
+
+		#ifdef NewLine
+		#undef NewLine
+		#endif
+		*/
+		AnalysisRaw.push_back("#ifdef CURRENT_FILE_ID_BT");
+		AnalysisRaw.push_back("#undef CURRENT_FILE_ID_BT");
+		AnalysisRaw.push_back("#endif // CURRENT_FILE_ID_BT");
+
+		AnalysisRaw.push_back("");
+
+		AnalysisRaw.push_back("#ifdef CodeReflectionTagLine");
+		AnalysisRaw.push_back("#undef CodeReflectionTagLine");
+		AnalysisRaw.push_back("#endif // NewLine");
+
+		AnalysisRaw.push_back("");
+
+		//#define CURRENT_FILE_ID_BT  GActorObject
+		AnalysisRaw.push_back(
+			simple_cpp_string_algorithm::printf(
+				"#define %s %s",
+				std::string("CURRENT_FILE_ID_BT ").c_str(),
+				ClassAnalysis.ClassName.c_str()));
+
+		//#define NewLine 10
+		AnalysisRaw.push_back(
+			simple_cpp_string_algorithm::printf(
+				"#define %s %i",
+				std::string("CodeReflectionTagLine").c_str(),
+				ClassAnalysis.CodeLine));
 	}
 
 	void GeneratePointCpp(
@@ -221,9 +297,9 @@ namespace IntermediateFile
 			ClassAnalysis.Filename.c_str()));
 
 		//反射的.h
-		AnalysisRaw.push_back(simple_cpp_string_algorithm::printf(
-			"#include \"%s.CodeReflection.h\"",
-			ClassAnalysis.CodeCPPName.c_str()));
+		//AnalysisRaw.push_back(simple_cpp_string_algorithm::printf(
+		//	"#include \"%s.CodeReflection.h\"",
+		//	ClassAnalysis.CodeCPPName.c_str()));
 
 		AnalysisRaw.push_back("#include \"CodeReflection/FunctionManage.h\"");
 
@@ -232,7 +308,7 @@ namespace IntermediateFile
 		AnalysisRaw.push_back("#pragma warning (push)");
 		AnalysisRaw.push_back("#pragma warning (disable : 4883)");
 		AnalysisRaw.push_back("#endif");
-		AnalysisRaw.push_back("PRAGMA_DISABLE_DEPRECATION_WARNINGS");
+	
 		AnalysisRaw.push_back("");
 		//代码定义区
 		{
@@ -315,10 +391,10 @@ namespace IntermediateFile
 								}
 							}
 
-							//ExecutionScript(FindScriptfunction(Name_Hello123), &Parm_Hello123);
+							//ExecutionScript(FindScriptStaticFunction(Name_Hello123), &Parm_Hello123);
 							AnalysisRaw.push_back(
 								simple_cpp_string_algorithm::printf(
-									"\tExecutionScript(FindScriptfunction(%s),%s);",
+									"\tExecutionScript(FindScriptStaticFunction(%s),%s);",
 									FunctionName.c_str(),
 									string(Function.ParamArray.size() == 0 ? ("NULL") : (("&") + StructName)).c_str()
 								));
@@ -327,6 +403,24 @@ namespace IntermediateFile
 					}
 				}
 			}
+
+			AnalysisRaw.push_back((""));
+
+			//void GActorObject::InitReflectionContent()
+			AnalysisRaw.push_back(
+				simple_cpp_string_algorithm::printf(
+				"void %s::InitReflectionContent()",
+					ClassAnalysis.ClassName.c_str()));
+			AnalysisRaw.push_back("{");
+			{
+				//Rename("ActorObject");
+				AnalysisRaw.push_back(
+					simple_cpp_string_algorithm::printf(
+						"\tRename(\"%s\");",
+						ClassAnalysis.CodeCPPName.c_str()));
+			}
+
+			AnalysisRaw.push_back("}");
 
 			AnalysisRaw.push_back((""));
 
@@ -362,7 +456,6 @@ namespace IntermediateFile
 
 		AnalysisRaw.push_back("");
 
-		AnalysisRaw.push_back("PRAGMA_ENABLE_DEPRECATION_WARNINGS");
 		AnalysisRaw.push_back("#ifdef _MSC_VER");
 		AnalysisRaw.push_back("#pragma warning (pop)");
 		AnalysisRaw.push_back("#endif");

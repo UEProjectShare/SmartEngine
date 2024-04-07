@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Mesh.h"
+#include "CustomMesh.CodeReflection.h"
 
 class GCustomMesh : public GMesh
 {
-	typedef GMesh Super;
+	CODEREFLECTION()
 public:
 	GCustomMesh();
 

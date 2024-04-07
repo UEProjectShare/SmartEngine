@@ -16,6 +16,8 @@ public:
 	
 	virtual void Init(int InWidth, int InHeight);
 
+	virtual void OnResetSize(int InWidth, int InHeight);
+
 	virtual void Draw(float DeltaTime);
 	
 	virtual void DrawSSAO(float DeltaTime);

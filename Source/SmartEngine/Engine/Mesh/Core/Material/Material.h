@@ -2,9 +2,11 @@
 #include "CoreObject/CoreMinimalObject.h"
 #include "MaterialType.h"
 #include "../../../EngineMinimal.h"
+#include "Material.CodeReflection.h"
 
 class CMaterial : public CCoreMinimalObject
 {
+	CODEREFLECTION()
 public:
 	CMaterial();
 

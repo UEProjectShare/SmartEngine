@@ -11,6 +11,7 @@ class CMeshManage;
 class CWorld;
 struct FRenderingPipeline;
 class FRenderLayerManage;
+class GCamera;
 
 //提供渲染内容的接口
 class IDirectXDeviceInterface
@@ -33,6 +34,8 @@ public:
 	
 	CWorld* GetWorld() const;
 
+	GCamera* GetCamera() const;
+
 	ComPtr<ID3D12GraphicsCommandList> GetGraphicsCommandList() const;
 	
 	ComPtr<ID3D12CommandAllocator> GetCommandAllocator() const;
@@ -42,6 +45,10 @@ public:
 	ID3D12DescriptorHeap* GetRTVHeap() const;
 	
 	ID3D12DescriptorHeap* GetDSVHeap() const;
+
+	int GetViewportWidth() const;
+	
+	int GetViewportHeight() const;
 
 	UINT GetDescriptorHandleIncrementSizeByDSV() const;
 	

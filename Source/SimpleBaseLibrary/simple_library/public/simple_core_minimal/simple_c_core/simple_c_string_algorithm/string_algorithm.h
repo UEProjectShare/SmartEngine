@@ -28,9 +28,9 @@ int find_string_from_end(const char* str, char const* sub_str, int start_pos);
 //从前往后找
 int find_string(const char *str, char const* sub_str,int start_pos);
 
-void remove_char_start(char *str, char sub_str);
+bool remove_char_start(char *str, char sub_str);
 
-void remove_char_end(char *str, char sub_str);
+bool remove_char_end(char *str, char sub_str);
 
 //判定字符串是否包含
 bool c_str_contain(const char* buff_str,const char *sub_str);

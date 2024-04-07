@@ -1,11 +1,12 @@
 #pragma once
 #include "../Engine/Core/Engine.h"
 #include "Core/EditorBase.h"
+#include "EditorEngine.CodeReflection.h"
 
-class CEditorEngine 
-	: public CEngine
-	, public FEditorBase
+class CEditorEngine : public CEngine, public FEditorBase
 {
+	CODEREFLECTION()
+	
 public:
 	CEditorEngine();
 
@@ -24,6 +25,8 @@ public:
 	int PostInit() override;
 
 	void Tick(float DeltaTime) override {};
+
+	void OnResetSize(int InWidth, int InHeight) override;
 
 	int PreExit() override;
 

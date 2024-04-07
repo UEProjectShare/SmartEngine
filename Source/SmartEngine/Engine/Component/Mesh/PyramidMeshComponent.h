@@ -1,9 +1,11 @@
 #pragma once
 #include "Core/ShellMeshComponent.h"
 #include "../../Mesh/Core/MeshType.h"
+#include "PyramidMeshComponent.CodeReflection.h"
 
 class CPyramidMeshComponent : public CShellMeshComponent
 {
+	CODEREFLECTION()
 public:
 	CPyramidMeshComponent();
 
