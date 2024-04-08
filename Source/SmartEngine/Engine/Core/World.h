@@ -20,7 +20,7 @@ public:
 	GCamera* GetCamera() const { return Camera; }
 
 	template<class T>
-	T *CreateActorObject()
+	T* CreateActorObject()
 	{
 		T *InArray = new T();
 		InArray->SetOuter(this);

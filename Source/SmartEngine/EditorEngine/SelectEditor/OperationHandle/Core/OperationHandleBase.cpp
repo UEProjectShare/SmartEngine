@@ -225,34 +225,37 @@ fvector_3d GOperationHandleBase::GetSelectedObjectDirection(
 
 void GOperationHandleBase::OnMouseMove(int X, int Y)
 {
-	if (IsCurrentSelectedHandle())
+	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
 	{
-		if (!bOperationHandleSelect)
+		if (IsCurrentSelectedHandle())
 		{
-			FCollisionResult CollisionResult;
-			FRaycastSystemLibrary::HitSpecificObjectsResultByScreen(
-				GetWorld(),
-				this,
-				IgnoreComponents,
-				X, Y,
-				CollisionResult);
-
-			ResetColor();
-
-			if (CollisionResult.bHit)
+			if (!bOperationHandleSelect)
 			{
-				CCustomMeshComponent* SelectCustomMeshComponent = dynamic_cast<CCustomMeshComponent*>(CollisionResult.Component);
+				FCollisionResult CollisionResult;
+				FRaycastSystemLibrary::HitSpecificObjectsResultByScreen(
+					GetWorld(),
+					this,
+					IgnoreComponents,
+					X, Y,
+					CollisionResult);
 
-				SelectAxisComponent = SelectCustomMeshComponent;
-				ResetColor(SelectCustomMeshComponent, fvector_4d(1.f, 1.f, 0.f, 1.f));
-			}
-			else
-			{
-				SelectAxisComponent = nullptr;
+				ResetColor();
 
-				if (!SelectedObject)
+				if (CollisionResult.bHit)
 				{
-					SetVisible(false);
+					CCustomMeshComponent* SelectCustomMeshComponent = dynamic_cast<CCustomMeshComponent*>(CollisionResult.Component);
+
+					SelectAxisComponent = SelectCustomMeshComponent;
+					ResetColor(SelectCustomMeshComponent, fvector_4d(1.f, 1.f, 0.f, 1.f));
+				}
+				else
+				{
+					SelectAxisComponent = nullptr;
+
+					if (!SelectedObject)
+					{
+						SetVisible(false);
+					}
 				}
 			}
 		}

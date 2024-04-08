@@ -263,44 +263,46 @@ void GCamera::MoveRight(float InValue)
 
 void GCamera::OnClickedScreen(int X, int Y)
 {
-	if (!SelectAxisComponent)
+#if EDITOR_ENGINE
+	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
 	{
-		FCollisionResult CollisionResult;
-		FRaycastSystemLibrary::HitResultByScreen(GetWorld(), X, Y, CollisionResult);
-
-		if (CollisionResult.bHit)
+		if (!SelectAxisComponent)
 		{
-			Engine_Log("Clicked successfully.[time]=%f", CollisionResult.Time);
+			FCollisionResult CollisionResult;
+			FRaycastSystemLibrary::HitResultByScreen(GetWorld(), X, Y, CollisionResult);
 
-			if (FRenderLayerManage* InLayer = GetRenderLayerManage())
+			if (CollisionResult.bHit)
 			{
-				InLayer->HighlightDisplayObject(CollisionResult.RenderingData);
+				Engine_Log("Clicked successfully.[time]=%f", CollisionResult.Time);
+
+				if (FRenderLayerManage* InLayer = GetRenderLayerManage())
+				{
+					InLayer->HighlightDisplayObject(CollisionResult.RenderingData);
+				}
+
+				//设置选择对象
+				FOperationHandleSelectManage::Get()->SetNewSelectedObject(CollisionResult.Actor);
+
+				//显示操作手柄
+				FOperationHandleSelectManage::Get()->DisplaySelectedOperationHandle();
+
 			}
-
-#if EDITOR_ENGINE
-			//设置选择对象
-			FOperationHandleSelectManage::Get()->SetNewSelectedObject(CollisionResult.Actor);
-
-			//显示操作手柄
-			FOperationHandleSelectManage::Get()->DisplaySelectedOperationHandle();
-#endif
-		}
-		else
-		{
-			if (FRenderLayerManage* InLayer = GetRenderLayerManage())
+			else
 			{
-				InLayer->Clear(EMeshRenderLayerType::RENDERLAYER_SELECT);
+				if (FRenderLayerManage* InLayer = GetRenderLayerManage())
+				{
+					InLayer->Clear(EMeshRenderLayerType::RENDERLAYER_SELECT);
+				}
+
+				//设置选择对象
+				FOperationHandleSelectManage::Get()->SetNewSelectedObject(nullptr);
+
+				//显示操作手柄
+				FOperationHandleSelectManage::Get()->HideSelectedOperationHandle();
 			}
-
-#if EDITOR_ENGINE
-			//设置选择对象
-			FOperationHandleSelectManage::Get()->SetNewSelectedObject(nullptr);
-
-			//显示操作手柄
-			FOperationHandleSelectManage::Get()->HideSelectedOperationHandle();
-#endif
 		}
 	}
+#endif
 }
 
 void GCamera::RotateAroundXAxis(float InRotateDegrees) const

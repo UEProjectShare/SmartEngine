@@ -11,10 +11,17 @@ struct FParamElement
 	bool bReference;//是否是引用&
 	string Type;//float int ...
 
+	//有可能是内部类型 类型可能是模板
+	vector<FParamElement> InternalType;//类似模板 vector<float> or vector123<float,int,float>...
+
+	//分类
+	string Category;
+
 	FParamElement()
 		: bPointer(false)
 		, bReference(false)
 		, bConst(false)
+		, Category("Default")
 	{}
 };
 
@@ -41,9 +48,13 @@ struct FFunctionAnalysis
 
 	string CodeType;//代码类型
 
+	//分类
+	string Category;
+
 	FFunctionAnalysis()
 		: bStatic(false)
 		, bVirtual(false)
+		, Category("Default")
 	{}
 };
 

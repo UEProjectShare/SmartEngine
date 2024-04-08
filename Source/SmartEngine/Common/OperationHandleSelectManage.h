@@ -13,6 +13,8 @@ public:
 	
 	static void Destroy();
 
+	bool IsCaptureMouseNotOnUI();
+
 	void AllOperationHandleHide();
 	
 	void DisplaySelectedOperationHandle(GActorObject* InNewSelectedObject);

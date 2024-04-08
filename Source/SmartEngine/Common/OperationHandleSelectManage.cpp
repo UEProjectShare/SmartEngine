@@ -37,6 +37,12 @@ void FOperationHandleSelectManage::Destroy()
 	}
 }
 
+bool FOperationHandleSelectManage::IsCaptureMouseNotOnUI()
+{
+	ImGuiIO& IO = ImGui::GetIO();
+	return !IO.WantCaptureMouseUnlessPopupClose;
+}
+
 void FOperationHandleSelectManage::AllOperationHandleHide()
 {
 	MoveArrow->SetVisible(false);

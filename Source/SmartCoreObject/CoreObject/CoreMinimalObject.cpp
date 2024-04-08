@@ -60,8 +60,8 @@ void CCoreMinimalObject::ExecutionScript(CFunctionObject* Function, void const* 
 CFunctionObject* CCoreMinimalObject::FindScriptFunction(const std::string& FuncName)
 {
 	CFunctionObject* NewFunction = nullptr;
-	auto It = FunctionList.find(FuncName);
-	if (It != FunctionList.end())
+	const auto It = NativeClass.FunctionList.find(FuncName);
+	if (It != NativeClass.FunctionList.end())
 	{
 		NewFunction = It->second;
 	}
@@ -76,5 +76,7 @@ CFunctionObject* CCoreMinimalObject::FindScriptStaticFunction(const std::string&
 
 void CCoreMinimalObject::InitMinimalObject()
 {
+	NativeClass.Outer = this;
+	
 	InitReflectionContent();
 }

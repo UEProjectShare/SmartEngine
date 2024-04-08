@@ -48,4 +48,6 @@ protected:
 	class FLogEditor* LogEditor;
 
 	class FOutLineEditor* OutLineEditor;
+
+	class FDetailsEditor* DetailsEditor;
 };

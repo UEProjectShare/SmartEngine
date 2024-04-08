@@ -49,7 +49,25 @@ public:
 
 	//≤‚ ‘
 	CVARIABLE(CodeType = Resources)
+	string NameXXXX;
+
+	CVARIABLE(CodeType = Resources)
 	bool PlayerState;
+
+	CVARIABLE(CodeType = Resources)
+	fvector_3d posxcxxx;
+
+	CVARIABLE(CodeType = Resources)
+	int helloInt;
+
+	CVARIABLE(CodeType = Resources)
+	float PlayerState123;
+
+	CVARIABLE(CodeType = Resources)
+	vector<int> TTTT;
+
+	CVARIABLE(CodeType = Resources)
+	map<int,string> TTTT1234567;
 
 	CDIAPER(CodeType = Event)
 	static void Hello123(int c, float b);

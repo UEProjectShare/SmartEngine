@@ -5,6 +5,7 @@
 #include "../CodeReflection/ScriptCommand.h"
 #include "../CodeReflection/ScriptMacro.h"
 #include "../Construction/ObjectConstruction.h"
+#include "../CodeReflection/NativeClass.h"
 
 class CFunctionObject;
 class CCoreMinimalObject;
@@ -16,7 +17,6 @@ class SMARTENGINECORE_API CCoreMinimalObject : public IGuidInterface
 public:
 
 	virtual void InitMinimalObject();//内部调用
-public:
 
 	CCoreMinimalObject();
 	
@@ -37,7 +37,6 @@ public:
 	void Rename(const std::string& InName) { Name = InName; }
 
 	//字节码表函数对应的内容
-public:
 	FUNCTION_DEFINITION(Script_Undefined);
 	
 	FUNCTION_DEFINITION(Script_Int);
@@ -47,7 +46,6 @@ public:
 	FUNCTION_DEFINITION(Script_Function);
 
 	//函数操作
-public:
 	static void CallFunction(FFrame& Stack, void const* Data, const CFunctionObject* Function);
 	
 	static void ExecutionScript(CFunctionObject* Function, void const* Data);
@@ -56,19 +54,20 @@ public:
 	CFunctionObject* FindScriptFunction(const std::string& FuncName);
 
 	static CFunctionObject* FindScriptStaticFunction(const std::string& FunName);
-//protected:
-	virtual void InitReflectionContent() {}
+	
+	FNativeClass& GetNativeClass() { return NativeClass; }
 
 protected:
+	virtual void InitReflectionContent() {};
+	
 	bool bTick;
 
 	//就是外层是谁
 	CCoreMinimalObject* Outer;
 	
 	std::string Name;
-
-private:
-	std::map<std::string, CFunctionObject*> FunctionList;
+	
+	FNativeClass NativeClass;
 };
 
 extern SMARTENGINECORE_API vector<CCoreMinimalObject*> GObjects;

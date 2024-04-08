@@ -39,6 +39,8 @@ LRESULT CALLBACK EngineWindowProc(const HWND hwnd, const UINT msg, WPARAM wParam
 		const int ViewportHeight = HIWORD(lParam);
 
 		OnResetSizeDelegate.Broadcast(ViewportWidth, ViewportHeight);
+
+		return 0;
 	}
 
 	//交给windows自己处理完成

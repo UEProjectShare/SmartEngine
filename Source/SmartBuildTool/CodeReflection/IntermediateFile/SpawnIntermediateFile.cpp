@@ -413,11 +413,58 @@ namespace IntermediateFile
 					ClassAnalysis.ClassName.c_str()));
 			AnalysisRaw.push_back("{");
 			{
+				AnalysisRaw.push_back("\tSuper::InitReflectionContent();");
+
+				AnalysisRaw.push_back("");
+				
 				//Rename("ActorObject");
 				AnalysisRaw.push_back(
 					simple_cpp_string_algorithm::printf(
 						"\tRename(\"%s\");",
 						ClassAnalysis.CodeCPPName.c_str()));
+
+				AnalysisRaw.push_back("");
+				for (auto& Tmp : ClassAnalysis.Variable)
+				{
+					if (Tmp.Type == "map")
+					{
+						if (Tmp.InternalType.size() >= 2)
+						{
+							AnalysisRaw.push_back(
+								simple_cpp_string_algorithm::printf(
+									"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(std::%s<%s,%s>),&%s);",
+									Tmp.Name.c_str(),
+									Tmp.Type.c_str(),
+									Tmp.Type.c_str(),
+									Tmp.InternalType[0].Type.c_str(),
+									Tmp.InternalType[1].Type.c_str(),
+									Tmp.Name.c_str()));
+						}
+					}
+					else if (Tmp.Type == "vector")
+					{
+						if (Tmp.InternalType.size() >= 1)
+						{
+							AnalysisRaw.push_back(
+								simple_cpp_string_algorithm::printf(
+									"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
+									Tmp.Name.c_str(),
+									Tmp.Type.c_str(),
+									Tmp.InternalType[0].Type.c_str(),
+									Tmp.Name.c_str()));
+						}
+					}
+					else
+					{
+						AnalysisRaw.push_back(
+							simple_cpp_string_algorithm::printf(
+								"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
+								Tmp.Name.c_str(),
+								Tmp.Type.c_str(),
+								Tmp.Type.c_str(),
+								Tmp.Name.c_str()));
+					}				
+				}
 			}
 
 			AnalysisRaw.push_back("}");
