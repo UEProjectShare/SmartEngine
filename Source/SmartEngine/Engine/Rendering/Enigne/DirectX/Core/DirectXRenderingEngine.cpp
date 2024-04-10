@@ -25,6 +25,7 @@
 #include "../../../../Actor/Sky/Sky.h"
 #include "../../../../Core/Camera.h"
 #include "../../../../Core/Construction/MacroConstruction.h"
+#include "CoreMacro.h"
 
 #if defined(_WIN32)
 #include "../../../../Core/WinMainCommandParameters.h"

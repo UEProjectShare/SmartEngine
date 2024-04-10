@@ -22,9 +22,9 @@ public:
 	template<class T>
 	T* CreateActorObject()
 	{
-		T *InArray = new T();
-		InArray->SetOuter(this);
-		InArray->InitMinimalObject();
+		FCreateObjectParam ParamType;
+		ParamType.Outer = this;
+		T* InArray = CreateObject<T>(ParamType, new T());
 
 		char ObjectName[128] = { 0 };
 		sprintf(ObjectName, "%s_%d",

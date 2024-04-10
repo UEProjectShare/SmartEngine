@@ -10,6 +10,15 @@ public:
 	void SetParentComponent(CComponent* InParent) { Parent = InParent; }
 	
 	void AddChildren(CComponent* InChildren);
+
+	template<class T>
+	void CallChildren(std::function<void(T*)> Func)
+	{
+		for (auto& Tmp : Children)
+		{
+			Func(dynamic_cast<T*>(Tmp));
+		}
+	}
 	
 	FORCEINLINE std::vector<CComponent*>& GetChildren(){ return Children; }
 

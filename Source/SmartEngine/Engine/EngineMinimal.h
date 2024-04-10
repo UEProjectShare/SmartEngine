@@ -1,5 +1,4 @@
 #pragma once
-#define CLOSE_DISABLE_DEBUG_INFOR 
 
 #include "simple_library/public/simple_library.h"
 #pragma comment(lib, "SimpleBaseLibrary.lib")

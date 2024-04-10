@@ -111,5 +111,7 @@
     <ClInclude Include="CoreObjectMinimal.h" />
     <ClInclude Include="SmartCoreObjectMacro.h" />
     <ClInclude Include="CodeReflection\NativeClass.h" />
+    <ClInclude Include="CodeReflection\ReflectionTag.h" />
+    <ClInclude Include="CoreMacro.h" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include "../CodeReflection/ScriptMacro.h"
 #include "../Construction/ObjectConstruction.h"
 #include "../CodeReflection/NativeClass.h"
+#include "../CoreMacro.h"
 
 class CFunctionObject;
 class CCoreMinimalObject;
@@ -36,6 +37,11 @@ public:
 	
 	void Rename(const std::string& InName) { Name = InName; }
 
+	//编辑器API
+#if EDITOR_ENGINE
+	virtual bool UpdateEditorPropertyDetails(CPropertyObject* InProperty) { return false; }
+#endif // EDITOR_ENGINE
+	
 	//字节码表函数对应的内容
 	FUNCTION_DEFINITION(Script_Undefined);
 	

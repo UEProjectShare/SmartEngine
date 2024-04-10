@@ -15,26 +15,22 @@ namespace ConstructionComponent
 			InComponent->SetParentComponent(InParentComponent);
 		}
 	}
-
-	void ConstructionComponents(CCoreMinimalObject* InOuter, CCoreMinimalObject* NewObject)
+	
+	void ConstructionComponents(const FCreateObjectParam& InObjectParam, CCoreMinimalObject* NewObject)
 	{
 		if (CComponent* InComponent = dynamic_cast<CComponent*>(NewObject))
 		{
-			if (InOuter)
+			if (InObjectParam.Outer)
 			{
 				//Outer是一个组件
-				if (CComponent* InOuterComponent = dynamic_cast<CComponent*>(InOuter))
+				if (CComponent* InOuterComponent = dynamic_cast<CComponent*>(InObjectParam.Outer))
 				{
 					UpdateConstructionComponents(InComponent, InOuterComponent);
 				}
-				//Outer是一个对象
-				//else if (GActorObject* InOuterActor = dynamic_cast<GActorObject*>(InOuter))
-				//{
-				//	if (InOuterActor->GetRootComponent())
-				//	{
-				//		UpdateConstructionComponents(InComponent, InOuterActor->GetRootComponent());
-				//	}
-				//}
+				else if(InObjectParam.ParentComponent)
+				{
+					UpdateConstructionComponents(InComponent, InObjectParam.ParentComponent);
+				}			
 			}
 		}
 	}

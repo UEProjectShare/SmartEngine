@@ -13,6 +13,8 @@ public:
 		return guid_equal(&Guid, &InOther.Guid);
 	}
 
+	string GetGuidString() const;
+	
 	simple_c_guid GetGuid() const { return Guid; }
 private:
 	simple_c_guid Guid;

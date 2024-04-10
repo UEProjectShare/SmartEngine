@@ -528,6 +528,15 @@
     <ClCompile Include="EditorEngine\DetailsEditor\DetailsEditor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\DetailsEditor\Mappings\RotatorDetailsMapping.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h">
@@ -1068,6 +1077,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="EditorEngine\DetailsEditor\DetailsEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsMacro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\DetailsEditor\Mappings\RotatorDetailsMapping.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

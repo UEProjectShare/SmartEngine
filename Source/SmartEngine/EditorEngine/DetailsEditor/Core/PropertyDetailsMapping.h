@@ -7,7 +7,7 @@ class CPropertyObject;
 class FPropertyDetailsMapping : public FDetailsMapping
 {
 public:
-	virtual void UpdateDetailsWidget(CPropertyObject* InProperty);
+	virtual bool UpdateDetailsWidget(CPropertyObject* InProperty);
 	
 	static shared_ptr<FPropertyDetailsMapping> MakeDetailsMapping() { return nullptr; }
 };

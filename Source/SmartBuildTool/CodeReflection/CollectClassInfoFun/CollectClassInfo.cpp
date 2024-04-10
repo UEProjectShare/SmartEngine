@@ -9,7 +9,75 @@ namespace CollectClassInfo
 	constexpr char StarString[] = "*";
 	constexpr char FetchAddressString[] = "&";
 	constexpr char CodeType[] = "CodeType";
+	constexpr char EqualSign[] = "=";
+	constexpr char Colon[] = "\"";
 
+	//CVARIABLE(CodeType = Resources,aaaa="asdasdas",www=dasdasd,xxxxx,wwww,ddd)
+	void ProcessingVariableReflexParameters(
+		const string& InRowStrong,
+		FVariableAnalysis& InVariableAnalysis)
+	{
+		//InRowStrong = "CVARIABLE(CodeType = Resources,aaaa="asdasdas",www=dasdasd,xxxxx,wwww,ddd)"
+		char* Ptr = const_cast<char*>(InRowStrong.c_str());
+
+		char R[1024] = { 0 };
+		char L[1024] = { 0 };
+
+		//L = CVARIABLE
+		//  CodeType = Resources,aaaa="asdasdas",www=dasdasd,xxxxx,wwww,ddd)  
+		split(Ptr, LeftParenthesisString, L, R, false);
+
+		//修剪空格
+		//CodeType = Resources,aaaa="asdasdas",www=dasdasd,xxxxx,wwww,ddd)
+		trim_start_and_end_inline(R);
+
+		//CodeType = Resources,aaaa="asdasdas",www=dasdasd,xxxxx,wwww,ddd
+		remove_char_end(R, ')');
+
+		//用逗号把它们切开
+		vector<string> ElementStr;
+		simple_cpp_string_algorithm::parse_into_vector_array(R, ElementStr, CommaString);
+
+		/*
+		CodeType = Resources
+		aaaa="asdasdas"
+		www=dasdasd
+		xxxxx  
+		wwww
+		ddd
+		*/
+		for (auto& Tmp : ElementStr)
+		{
+			char* RowPtr = const_cast<char*>(Tmp.c_str());
+			//判断是否为元数据
+			if (simple_cpp_string_algorithm::string_contain(Tmp, EqualSign))
+			{
+				//CodeType = Resources
+				char EqualR[1024] = { 0 };
+				char EqualL[1024] = { 0 };
+
+				split(RowPtr, EqualSign, EqualL, EqualR, false);
+
+				//EqualL = CodeType
+				//EqualR = Resources
+				trim_start_and_end_inline(EqualL);
+
+				if (simple_cpp_string_algorithm::string_contain(EqualR, Colon))
+				{
+					remove_all_char_end(EqualR,'\"');
+				}
+				// Resources
+				trim_start_and_end_inline(EqualR);
+				InVariableAnalysis.Metas.insert({ EqualL,EqualR });
+			}
+			else //是字段
+			{
+				trim_start_and_end_inline(RowPtr);
+				InVariableAnalysis.Fields.push_back(RowPtr);
+			}
+		}
+	}
+	
 	bool GetCodeTypeByFunc(
 		const string& RowStrong, 
 		FFunctionAnalysis& FunctionAnalysis)
@@ -362,6 +430,8 @@ namespace CollectClassInfo
 					FVariableAnalysis VariableAnalysis;
 					if (GetCodeTypeByProp(Row, &VariableAnalysis))
 					{
+						ProcessingVariableReflexParameters(Row, VariableAnalysis);
+						
 						char R[1024] = { 0 };
 						char L[1024] = { 0 };
 

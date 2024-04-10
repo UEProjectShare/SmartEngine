@@ -48,7 +48,7 @@ public:
 	XMFLOAT3& GetUPVector() const;
 
 	//≤‚ ‘
-	CVARIABLE(CodeType = Resources)
+	CVARIABLE(CodeType = Resources, Category="VVVV", aaaa = "asdasdas", www = dasdasd, xxxxx, wwww, ddd)
 	string NameXXXX;
 
 	CVARIABLE(CodeType = Resources)
@@ -57,11 +57,14 @@ public:
 	CVARIABLE(CodeType = Resources)
 	fvector_3d posxcxxx;
 
-	CVARIABLE(CodeType = Resources)
+	CVARIABLE(CodeType = Resources, Step = 4, Draggable)
 	int helloInt;
 
-	CVARIABLE(CodeType = Resources)
+	CVARIABLE(CodeType = Resources, MaxCrop="100", MinCrop=0)
 	float PlayerState123;
+
+	CVARIABLE(CodeType = Resources, AllowablePercentage)
+	float PlayerState1233;
 
 	CVARIABLE(CodeType = Resources)
 	vector<int> TTTT;

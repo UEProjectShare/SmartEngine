@@ -1,5 +1,6 @@
 #pragma once
 #include "../Engine/EngineMacro.h"
+#include "CoreMacro.h"
 
 #if EDITOR_ENGINE
 class GActorObject;

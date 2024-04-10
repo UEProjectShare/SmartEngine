@@ -1,8 +1,8 @@
 #include "MapDetailsMapping.h"
 
-void FMapDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FMapDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
-
+	return false;
 }
 
 shared_ptr<FPropertyDetailsMapping> FMapDetailsMapping::MakeDetailsMapping()

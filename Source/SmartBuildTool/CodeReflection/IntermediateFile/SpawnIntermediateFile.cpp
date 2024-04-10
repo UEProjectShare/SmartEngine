@@ -302,7 +302,8 @@ namespace IntermediateFile
 		//	ClassAnalysis.CodeCPPName.c_str()));
 
 		AnalysisRaw.push_back("#include \"CodeReflection/FunctionManage.h\"");
-
+		AnalysisRaw.push_back("#include \"CoreMacro.h\"");
+		
 		AnalysisRaw.push_back("");
 		AnalysisRaw.push_back("#ifdef _MSC_VER");
 		AnalysisRaw.push_back("#pragma warning (push)");
@@ -423,49 +424,108 @@ namespace IntermediateFile
 						"\tRename(\"%s\");",
 						ClassAnalysis.CodeCPPName.c_str()));
 
-				AnalysisRaw.push_back("");
-				for (auto& Tmp : ClassAnalysis.Variable)
+				if (ClassAnalysis.Variable.size() > 0)
 				{
-					if (Tmp.Type == "map")
+					AnalysisRaw.push_back("");
+
+					//添加变量
+					//AddProperty
+					for (auto& Tmp : ClassAnalysis.Variable)
 					{
-						if (Tmp.InternalType.size() >= 2)
+						if (Tmp.Type == "map")
 						{
-							AnalysisRaw.push_back(
-								simple_cpp_string_algorithm::printf(
-									"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(std::%s<%s,%s>),&%s);",
-									Tmp.Name.c_str(),
-									Tmp.Type.c_str(),
-									Tmp.Type.c_str(),
-									Tmp.InternalType[0].Type.c_str(),
-									Tmp.InternalType[1].Type.c_str(),
-									Tmp.Name.c_str()));
+							if (Tmp.InternalType.size() >= 2)
+							{
+								AnalysisRaw.push_back(
+									simple_cpp_string_algorithm::printf(
+										"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(std::%s<%s,%s>),&%s);",
+										Tmp.Name.c_str(),
+										Tmp.Type.c_str(),
+										Tmp.Type.c_str(),
+										Tmp.InternalType[0].Type.c_str(),
+										Tmp.InternalType[1].Type.c_str(),
+										Tmp.Name.c_str()));
+							}
 						}
-					}
-					else if (Tmp.Type == "vector")
-					{
-						if (Tmp.InternalType.size() >= 1)
+						else if (Tmp.Type == "vector")
+						{
+							if (Tmp.InternalType.size() >= 1)
+							{
+								AnalysisRaw.push_back(
+									simple_cpp_string_algorithm::printf(
+										"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
+										Tmp.Name.c_str(),
+										Tmp.Type.c_str(),
+										Tmp.InternalType[0].Type.c_str(),
+										Tmp.Name.c_str()));
+							}
+						}
+						else
 						{
 							AnalysisRaw.push_back(
 								simple_cpp_string_algorithm::printf(
 									"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
 									Tmp.Name.c_str(),
 									Tmp.Type.c_str(),
-									Tmp.InternalType[0].Type.c_str(),
+									Tmp.Type.c_str(),
 									Tmp.Name.c_str()));
 						}
 					}
-					else
+
+					AnalysisRaw.push_back("");
+
+					//处理元数据
+					//NativeClass.AddMetas
+					AnalysisRaw.push_back("#if EDITOR_ENGINE");
+					for (auto& Tmp : ClassAnalysis.Variable)
 					{
-						AnalysisRaw.push_back(
-							simple_cpp_string_algorithm::printf(
-								"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
-								Tmp.Name.c_str(),
-								Tmp.Type.c_str(),
-								Tmp.Type.c_str(),
-								Tmp.Name.c_str()));
+						auto It = Tmp.Metas.find("Category");
+						if (It != Tmp.Metas.end())
+						{
+							for (auto& SubTmp : Tmp.Metas)
+							{
+								AnalysisRaw.push_back(
+									simple_cpp_string_algorithm::printf(
+										"\tNativeClass.AddMetas(\"%s\",\"%s\",\"%s\");",
+										Tmp.Name.c_str(),
+										SubTmp.first.c_str(),
+										SubTmp.second.c_str()));
+							}
+						}
+						else
+						{
+							AnalysisRaw.push_back(
+								simple_cpp_string_algorithm::printf(
+									"\tNativeClass.AddMetas(\"%s\",\"Category\",\"Default\");",
+									Tmp.Name.c_str()));
+						}
+					}
+
+					AnalysisRaw.push_back("");
+
+					//处理字段
+					for (auto& Tmp : ClassAnalysis.Variable)
+					{
+						for (auto& SubTmp : Tmp.Fields)
+						{
+							AnalysisRaw.push_back(
+								simple_cpp_string_algorithm::printf(
+									"\tNativeClass.AddFields(\"%s\",\"%s\");",
+									Tmp.Name.c_str(),SubTmp.c_str()));
+						}
 					}				
+					AnalysisRaw.push_back("#endif // EDITOR_ENGINE");
+
+					AnalysisRaw.push_back("");
 				}
 			}
+
+			AnalysisRaw.push_back("#if EDITOR_ENGINE");
+			AnalysisRaw.push_back(
+				simple_cpp_string_algorithm::printf(
+					"\tNativeClass.AddClassType(\"%s\");",
+					ClassAnalysis.ClassName.c_str()));
+			AnalysisRaw.push_back("#endif // EDITOR_ENGINE");
 
 			AnalysisRaw.push_back("}");
 

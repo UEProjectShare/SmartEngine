@@ -31,6 +31,8 @@
 #pragma warning(disable:4717)// 在所有控制路径上递归，函数将导致运行时堆栈溢出
 #pragma warning(disable:4099)// 首先使用“struct”看到的类型名称现在使用“class”看到
 #pragma warning(disable:4018)// ：“<”：有符号/无符号不匹配
+#pragma warning(disable:4477)
+#pragma warning(disable:4244)//'argument': conversion from 'float' to 'int', possible loss of data
 #endif // DEBUG
 
 //core minimal

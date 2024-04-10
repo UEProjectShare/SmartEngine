@@ -8,6 +8,7 @@
 #include "../Component/Mesh/Core/MeshComponentType.h"
 #include "../Math/EngineMath.h"
 #include "../Core/Construction/MacroConstruction.h"
+#include "CoreMacro.h"
 
 #if EDITOR_ENGINE
 #include "../../Common/OperationHandleSelectManage.h"

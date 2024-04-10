@@ -1,8 +1,9 @@
 #include "FloatDetailsMapping.h"
+#include "../Core/ConstructDetailsWidget.h"
 
-void FFloatDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FFloatDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
-	ImGui::DragFloat(InProperty->GetName().c_str(), InProperty->GetData<float>());
+	return ConstructDetailsWidget::ConstructFloatWidget<float>(InProperty);
 }
 
 shared_ptr<FPropertyDetailsMapping> FFloatDetailsMapping::MakeDetailsMapping()

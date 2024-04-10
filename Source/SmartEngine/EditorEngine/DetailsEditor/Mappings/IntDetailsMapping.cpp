@@ -1,8 +1,9 @@
 #include "IntDetailsMapping.h"
+#include "../Core/ConstructDetailsWidget.h"
 
-void FIntDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FIntDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
-	ImGui::InputInt(InProperty->GetName().c_str(), InProperty->GetData<int>());
+	return ConstructDetailsWidget::ConstructIntWidget<int>(InProperty);
 }
 
 shared_ptr<FPropertyDetailsMapping> FIntDetailsMapping::MakeDetailsMapping()

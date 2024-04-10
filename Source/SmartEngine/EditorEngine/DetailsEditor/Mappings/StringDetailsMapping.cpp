@@ -1,12 +1,12 @@
 #include "StringDetailsMapping.h"
 
-void FStringDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FStringDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
 	char Buff[1024] = { 0 };
 	string* BuffChar = InProperty->GetData<string>();
 	strcpy(Buff, BuffChar->c_str());
 
-	ImGui::InputText(
+	return ImGui::InputText(
 		InProperty->GetName().c_str(),
 		Buff, 1024, ImGuiInputTextFlags_CallbackEdit,
 		FStringDetailsMapping::StringCallback,

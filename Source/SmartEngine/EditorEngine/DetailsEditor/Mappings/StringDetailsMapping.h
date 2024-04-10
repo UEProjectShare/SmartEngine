@@ -4,7 +4,7 @@
 class FStringDetailsMapping : public FPropertyDetailsMapping
 {
 public:
-	void UpdateDetailsWidget(CPropertyObject* InProperty) override;
+	bool UpdateDetailsWidget(CPropertyObject* InProperty) override;
 
 	static int StringCallback(ImGuiInputTextCallbackData* InData);
 	

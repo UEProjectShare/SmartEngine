@@ -1,8 +1,8 @@
 #include "BoolDetailsMapping.h"
 
-void FBoolDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FBoolDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
-	ImGui::Checkbox(InProperty->GetName().c_str(), InProperty->GetData<bool>());
+	return ImGui::Checkbox(InProperty->GetName().c_str(), InProperty->GetData<bool>());
 }
 
 shared_ptr<FPropertyDetailsMapping> FBoolDetailsMapping::MakeDetailsMapping()

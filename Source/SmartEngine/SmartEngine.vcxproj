@@ -159,6 +159,7 @@
     <ClCompile Include="Common\OperationHandleSelectManage.cpp" />
     <ClCompile Include="EditorEngine\Core\EditorBase.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.cpp" />
+    <ClCompile Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\DetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\PropertyDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\RegisterDetailsMapping.cpp" />
@@ -169,8 +170,10 @@
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\FloatDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\IntDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\MapDetailsMapping.cpp" />
+    <ClCompile Include="EditorEngine\DetailsEditor\Mappings\RotatorDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\StringDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\Vector3DDetailsMapping.cpp" />
+    <ClCompile Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\EditorEngine.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogEditor.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogObject\LogSystem.cpp" />
@@ -332,6 +335,8 @@
     <ClInclude Include="Common\OperationHandleSelectManage.h" />
     <ClInclude Include="EditorEngine\Core\EditorBase.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.h" />
+    <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsMacro.h" />
+    <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\DetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\PropertyDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\RegisterDetailsMapping.h" />
@@ -342,8 +347,10 @@
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\FloatDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\IntDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\MapDetailsMapping.h" />
+    <ClInclude Include="EditorEngine\DetailsEditor\Mappings\RotatorDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\StringDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\Vector3DDetailsMapping.h" />
+    <ClInclude Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.h" />
     <ClInclude Include="EditorEngine\EditorEngine.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogEditor.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogObject\LogSystem.h" />

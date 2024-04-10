@@ -9,6 +9,8 @@
 #include "Mappings/ActorObjectDetailsMapping.h"
 #include "Core/RegisterDetailsMapping.h"
 #include "../../Engine/Actor/Core/ActorObject.h"
+#include "Mappings/RotatorDetailsMapping.h"
+#include "Mappings/XMFLOAT3DetailsMapping.h"
 
 extern GActorObject* SelectedObject;
 
@@ -27,6 +29,8 @@ void FDetailsEditor::BuildEditor()
 	FRegisterDetailsMapping::RegisterPropertyDetails("map", FMapDetailsMapping::MakeDetailsMapping());
 	FRegisterDetailsMapping::RegisterPropertyDetails("vector", FArrayDetailsMapping::MakeDetailsMapping());
 	FRegisterDetailsMapping::RegisterPropertyDetails("fvector_3d", FVector3DDetailsMapping::MakeDetailsMapping());
+	FRegisterDetailsMapping::RegisterPropertyDetails("XMFLOAT3", FXMFLOAT3DetailsMapping::MakeDetailsMapping());
+	FRegisterDetailsMapping::RegisterPropertyDetails("frotator", FRotatorDetailsMapping::MakeDetailsMapping());
 
 	//类的映射
 	FRegisterDetailsMapping::RegisterClassDetails("GActorObject", FActorObjectDetailsMapping::MakeDetailsMapping());
@@ -42,17 +46,18 @@ void FDetailsEditor::DrawEditor(float DeltaTime)
 	{
 		if (SelectedObject == LastSelectedObject)
 		{
-			ImGui::Separator();
-			CPropertyObject* InProperty = SelectedObject->GetNativeClass().Property;
-			while (InProperty)
+			string ComponentAreaName = SelectedObject->GetName().append(":Component Area");
+			if (ImGui::CollapsingHeader(ComponentAreaName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				auto iterator = FRegisterDetailsMapping::PropertyDetailsMappings.find(InProperty->GetType());
-				if (iterator != FRegisterDetailsMapping::PropertyDetailsMappings.end())
-				{
-					iterator->second->UpdateDetailsWidget(InProperty);
-				}
+				//映射对象
+				FRegisterDetailsMapping::UpdateClassWidget(SelectedObject);
+			}
 
-				InProperty = dynamic_cast<CPropertyObject*>(InProperty->Next);
+			string PropertyAreaName = SelectedObject->GetName().append(":Property Area");
+			if (ImGui::CollapsingHeader(PropertyAreaName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				//映射变量
+				FRegisterDetailsMapping::UpdatePropertyWidget(SelectedObject->GetNativeClass().Property);
 			}
 			ImGui::Separator();
 		}

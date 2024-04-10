@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/PropertyDetailsMapping.h"
 
-class FArrayDetailsMapping : public FPropertyDetailsMapping
+class FXMFLOAT3DetailsMapping : public FPropertyDetailsMapping
 {
 public:
 	bool UpdateDetailsWidget(CPropertyObject* InProperty) override;

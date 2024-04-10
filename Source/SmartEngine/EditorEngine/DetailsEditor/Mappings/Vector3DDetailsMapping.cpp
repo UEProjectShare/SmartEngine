@@ -1,8 +1,9 @@
 #include "Vector3DDetailsMapping.h"
+#include "../Core/ConstructDetailsWidget.h"
 
-void FVector3DDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FVector3DDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
-	ImGui::InputFloat3(InProperty->GetName().c_str(), reinterpret_cast<float*>(InProperty->GetData<fvector_3d>()));
+	return ConstructDetailsWidget::ConstructFloat3Widget<fvector_3d>(InProperty);
 }
 
 shared_ptr<FPropertyDetailsMapping> FVector3DDetailsMapping::MakeDetailsMapping()

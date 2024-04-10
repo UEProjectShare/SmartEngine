@@ -38,6 +38,10 @@ public:
 	XMFLOAT3& GetRightVector() { return RightVector; }
 	
 	XMFLOAT3& GetUPVector() { return UPVector; }
+
+#if EDITOR_ENGINE
+	bool UpdateEditorPropertyDetails(CPropertyObject* InProperty) override;
+#endif // EDITOR_ENGINE
 	
 	//½ÃÕýUp right look(fd) ·µ»Ø pos
 	void CorrectionVector(); 
@@ -46,8 +50,13 @@ public:
 	
 	void GetCorrectionPosition(fvector_3d& InPos3) const;
 private:
+	CVARIABLE(CodeType = Resources, Category = Transformation, Draggable)
 	XMFLOAT3 Position;
-	
+
+	CVARIABLE(CodeType = Resources, Category = Transformation, Draggable)
+	frotator Rotation;
+
+	CVARIABLE(CodeType = Resources, Category = Transformation, Draggable)
 	XMFLOAT3 Scale;
 
 	XMFLOAT3 ForwardVector;

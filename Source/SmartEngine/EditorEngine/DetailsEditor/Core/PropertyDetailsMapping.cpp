@@ -1,5 +1,6 @@
 #include "PropertyDetailsMapping.h"
 
-void FPropertyDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FPropertyDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
+    return false;
 }

@@ -1,8 +1,8 @@
 #include "ArrayDetailsMapping.h"
 
-void FArrayDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
+bool FArrayDetailsMapping::UpdateDetailsWidget(CPropertyObject* InProperty)
 {
-	
+	return false;
 }
 
 shared_ptr<FPropertyDetailsMapping> FArrayDetailsMapping::MakeDetailsMapping()

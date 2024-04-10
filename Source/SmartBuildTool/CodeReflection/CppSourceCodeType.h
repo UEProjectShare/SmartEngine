@@ -15,13 +15,13 @@ struct FParamElement
 	vector<FParamElement> InternalType;//类似模板 vector<float> or vector123<float,int,float>...
 
 	//分类
-	string Category;
+	std::map<string, string> Metas;
+	std::vector<string> Fields;
 
 	FParamElement()
-		: bPointer(false)
+		: bConst(false)
+		, bPointer(false)
 		, bReference(false)
-		, bConst(false)
-		, Category("Default")
 	{}
 };
 

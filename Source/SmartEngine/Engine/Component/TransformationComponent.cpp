@@ -1,5 +1,11 @@
 #include "TransformationComponent.h"
 #include "../Math/EngineMath.h"
+#include "CoreObject/PropertyObject.h"
+#include "../Actor/Core/ActorObject.h"
+
+#if EDITOR_ENGINE
+#include "../../Common/OperationHandleSelectManage.h"
+#endif
 
 CTransformationComponent::CTransformationComponent()
 	: Position(0.f,0.f,0.f)
@@ -14,6 +20,15 @@ CTransformationComponent::CTransformationComponent()
 void CTransformationComponent::SetPosition(const XMFLOAT3& InNewPosition)
 {
 	Position = InNewPosition;
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetPosition(Position);
+		}
+	});
 }
 
 void CTransformationComponent::SetRotation(const fvector_3d& InNewRotation)
@@ -33,7 +48,45 @@ void CTransformationComponent::SetRotation(const fvector_3d& InNewRotation)
 	XMStoreFloat3(&RightVector, XMVector3TransformNormal(XMLoadFloat3(&RightVector), RotationRollPitchYawMatrix));
 	XMStoreFloat3(&UPVector, XMVector3TransformNormal(XMLoadFloat3(&UPVector), RotationRollPitchYawMatrix));
 	XMStoreFloat3(&ForwardVector, XMVector3TransformNormal(XMLoadFloat3(&ForwardVector), RotationRollPitchYawMatrix));
+	
+	Rotation = GetRotation();
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetRotation(InNewRotation);
+		}
+	});
 }
+
+#if EDITOR_ENGINE
+bool CTransformationComponent::UpdateEditorPropertyDetails(CPropertyObject* InProperty)
+{
+	if (InProperty->GetName() == "Position")
+	{
+		const XMFLOAT3* PositionPtr = InProperty->GetData<XMFLOAT3>();
+		SetPosition(*PositionPtr);
+
+		//操作手柄位置设定
+		if (GActorObject* InObject = FOperationHandleSelectManage::Get()->GetSelectedOperationHandle())
+		{
+			InObject->SetPosition(*PositionPtr);
+		}
+	}
+	else if (InProperty->GetName() == "Rotation")
+	{
+		SetRotation(*InProperty->GetData<frotator>());
+	}
+	else if (InProperty->GetName() == "Scale")
+	{
+		SetScale(*InProperty->GetData<fvector_3d>());
+	}
+
+	return true;
+}
+#endif
 
 void CTransformationComponent::SetRotation(const frotator& InNewRotation)
 {
@@ -53,6 +106,17 @@ void CTransformationComponent::SetRotation(const frotator& InNewRotation)
 	XMStoreFloat3(&RightVector, XMVector3TransformNormal(Right, RotationRollPitchYawMatrix));
 	XMStoreFloat3(&UPVector, XMVector3TransformNormal(Up, RotationRollPitchYawMatrix));
 	XMStoreFloat3(&ForwardVector, XMVector3TransformNormal(Forward, RotationRollPitchYawMatrix));
+
+	Rotation = InNewRotation;
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetRotation(InNewRotation);
+		}
+	});
 }
 
 void CTransformationComponent::SetRotationQuat(const fquat& InNewQuatRotation)
@@ -75,6 +139,17 @@ void CTransformationComponent::SetRotationQuat(const fquat& InNewQuatRotation)
 	RightVector = EngineMath::ToFloat3(Right);
 	UPVector = EngineMath::ToFloat3(Up);
 	ForwardVector = EngineMath::ToFloat3(Forward);
+
+	Rotation = GetRotation();
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetRotationQuat(InNewQuatRotation);
+		}
+	});
 }
 
 void CTransformationComponent::SetScale(const fvector_3d& InNewScale)
@@ -82,21 +157,57 @@ void CTransformationComponent::SetScale(const fvector_3d& InNewScale)
 	Scale.x = InNewScale.x;
 	Scale.y = InNewScale.y;
 	Scale.z = InNewScale.z;
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetScale(InNewScale);
+		}
+	});
 }
 
 void CTransformationComponent::SetForwardVector(const XMFLOAT3& InForwardVector)
 {
 	ForwardVector = InForwardVector;
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetRightVector(InForwardVector);
+		}
+	});
 }
 
 void CTransformationComponent::SetRightVector(const XMFLOAT3& InRightVector)
 {
 	RightVector = InRightVector;
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetRightVector(InRightVector);
+		}
+	});
 }
 
 void CTransformationComponent::SetUPVector(const XMFLOAT3& InUPVector)
 {
 	UPVector = InUPVector;
+
+	CallChildren<CTransformationComponent>(
+	[&](CTransformationComponent* InComponent)
+	{
+		if (InComponent)
+		{
+			InComponent->SetRightVector(InUPVector);
+		}
+	});
 }
 
 frotator CTransformationComponent::GetRotation() const

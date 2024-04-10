@@ -169,11 +169,13 @@
     <ClInclude Include="CodeReflection\Frame.h" />
     <ClInclude Include="CodeReflection\FunctionManage.h" />
     <ClInclude Include="CodeReflection\NativeClass.h" />
+    <ClInclude Include="CodeReflection\ReflectionTag.h" />
     <ClInclude Include="CodeReflection\ScriptCommand.h" />
     <ClInclude Include="CodeReflection\ScriptMacro.h" />
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Construction\ConstructionComponents.h" />
     <ClInclude Include="Construction\ObjectConstruction.h" />
+    <ClInclude Include="CoreMacro.h" />
     <ClInclude Include="CoreObject\ClassObject.h" />
     <ClInclude Include="CoreObject\CoreMinimalObject.h" />
     <ClInclude Include="CoreObject\EnumObject.h" />
