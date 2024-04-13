@@ -8,11 +8,14 @@ CTorusMeshComponent::CTorusMeshComponent()
 
 void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadius, float InSectionRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-	const float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
-	const float ThetaValue = XM_2PI / static_cast<float>(InHeightSubdivision);
+	MeshData.SectionDescribe.push_back(FMeshSection());
+	FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
+
+	float BetaValue = XM_2PI / (float)InAxialSubdivision;
+	float ThetaValue = XM_2PI / (float)InHeightSubdivision;
 	for (size_t i = 0; i <= InAxialSubdivision; ++i)
 	{
-		const float BetaRadian = i* BetaValue;
+		float BetaRadian = i* BetaValue;
 
 		//InRadius
 		fvector_3d Center(
@@ -22,11 +25,11 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 
 		for (size_t j = 0; j <= InHeightSubdivision; ++j)
 		{
-			const float ThetaRadian = j * ThetaValue;
+			float ThetaRadian = j * ThetaValue;
 
-			const float ThetaBetaValueCosCos = cosf(ThetaRadian) * cosf(BetaRadian);
-			const float ThetaBetaValueCosSin = cosf(ThetaRadian) * sinf(BetaRadian);
-			const float ThetaValueSin = sinf(ThetaRadian);
+			float ThetaBetaValueCosCos = cosf(ThetaRadian) * cosf(BetaRadian);
+			float ThetaBetaValueCosSin = cosf(ThetaRadian) * sinf(BetaRadian);
+			float ThetaValueSin = sinf(ThetaRadian);
 
 			//拿到点的位置
 			fvector_3d PointPosition(
@@ -34,11 +37,11 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 				Center.y + InSectionRadius * ThetaValueSin,
 				Center.z + InSectionRadius * ThetaBetaValueCosSin);
 
-			MeshData.VertexData.push_back(
+			MeshData.Data.VertexData.push_back(
 				FVertex(EngineMath::ToFloat3(PointPosition),
 				XMFLOAT4(Colors::White)));
 
-			FVertex &InVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+			FVertex &InVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 			//求法线
 			fvector_3d Normal = PointPosition - Center;
@@ -48,8 +51,8 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 			InVertex.Normal = EngineMath::ToFloat3(Normal);
 
 			//展UV
-			InVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InHeightSubdivision);
-			InVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InAxialSubdivision);
+			InVertex.TexCoord.x = (float)j / (float)InHeightSubdivision;
+			InVertex.TexCoord.y = (float)i / (float)InAxialSubdivision;
 
 			//InVertex.UTangent.x = tan(BetaRadian) * InRadius;
 			//InVertex.UTangent.y = tan(ThetaRadian) * InSectionRadius;
@@ -66,11 +69,14 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 				GetQuadrilateralDrawPointTypeA(j, i, InHeightSubdivision));//拿到四个点
 		}
 	}
+
+	Section.IndexSize = MeshData.Data.IndexData.size();
+	Section.VertexSize = MeshData.Data.VertexData.size();
 }
 
 void CTorusMeshComponent::BuildKey(size_t& OutHashKey, float InRadius, float InSectionRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-	const std::hash<float> FloatHash;
+	std::hash<float> FloatHash;
 	std::hash<int> IntHash;
 
 	OutHashKey = 9;

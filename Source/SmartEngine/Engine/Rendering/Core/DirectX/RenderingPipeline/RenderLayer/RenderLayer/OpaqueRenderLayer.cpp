@@ -15,6 +15,11 @@ void FOpaqueRenderLayer::Draw(float DeltaTime)
 	Super::Draw(DeltaTime);
 }
 
+void FOpaqueRenderLayer::DrawObject(float DeltaTime, std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
+{
+	Super::DrawObject(DeltaTime, InWeakRenderingData, RC);
+}
+
 void FOpaqueRenderLayer::BuildShader()
 {
 	//¹¹½¨Shader

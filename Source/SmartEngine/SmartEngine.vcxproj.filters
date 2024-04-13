@@ -537,6 +537,33 @@
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Core\AssetEditorCommon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Core\AssetFileDirectory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\Element\BrowseAssetIcon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\AssetEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\FileEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\BrowseEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\DetailsEditor\Mappings\ContainerDetailsMapping.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Mesh\SkinnedMeshComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h">
@@ -1089,6 +1116,33 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Core\AssetEditorCommon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Core\AssetFileDirectory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\Element\BrowseAssetIcon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\AssetEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\FileEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\BrowseEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\DetailsEditor\Mappings\ContainerDetailsMapping.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Mesh\SkinnedMeshComponent.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -54,6 +54,9 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 {
 	if (InBuffSize > 0)
 	{
+		MeshData.SectionDescribe.push_back(FMeshSection());
+		FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
+
 		stringstream BuffStream(InBuff);
 		char TmpLine[256] = { 0 };
 		string MidTmpTag;
@@ -127,7 +130,7 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 						char* VPosIndex = string_mid(SaveLineString, TmpBuff, 0, StringPosA);
 
 						//放到索引容器里面
-						MeshData.IndexData.push_back(atoi(VPosIndex) - 1);
+						MeshData.Data.IndexData.push_back(atoi(VPosIndex) - 1);
 
 						//纹理Index
 						int StringPosB = find_string(SaveLineString, "/", StringPosA + 1);
@@ -142,13 +145,13 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 			}
 		}
 
-		MeshData.VertexData.resize(static_cast<int>(Position.size()));
+		MeshData.Data.VertexData.resize((int)Position.size());
 		for (size_t i = 0; i < Position.size(); i++)
 		{
-			MeshData.VertexData[i].Position = Position[i];
-			MeshData.VertexData[i].Normal = Normal[i];
-			MeshData.VertexData[i].TexCoord = TexCoord[i];
-			MeshData.VertexData[i].Color = XMFLOAT4(Colors::White);
+			MeshData.Data.VertexData[i].Position = Position[i];
+			MeshData.Data.VertexData[i].Normal = Normal[i];
+			MeshData.Data.VertexData[i].TexCoord = TexCoord[i];
+			MeshData.Data.VertexData[i].Color = XMFLOAT4(Colors::White);
 
 			//if (i > 1)
 			//{
@@ -167,10 +170,21 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 			//}
 		}
 
+		Section.IndexSize = MeshData.Data.IndexData.size();
+		Section.VertexSize = MeshData.Data.VertexData.size();
+
 		return true;
 	}
 
 	return false;
+}
+
+void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPath)
+{
+	std::hash<string> FloatHash;
+	
+	OutHashKey = 3;
+	OutHashKey += FloatHash(InPath);
 }
 
 bool CCustomMeshComponent::LoadFBXFromBuff(const string& InPath, FMeshRenderingData& MeshData)
@@ -181,44 +195,45 @@ bool CCustomMeshComponent::LoadFBXFromBuff(const string& InPath, FMeshRenderingD
 
 	for (auto &TmpModel: RenderData.ModelData)
 	{
+		MeshData.SectionDescribe.push_back(FMeshSection());
+		FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
+
 		for (auto & MeshTmp: TmpModel.MeshData)
 		{
 			for (auto &VertexTmp: MeshTmp.VertexData)
 			{
 				for (int i =0 ;i < 3;i++)
 				{
-					MeshData.VertexData.push_back(FVertex());
-					FVertex& InVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+					 MeshData.Data.VertexData.push_back(FVertex());
+					 FVertex& InVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
-					InVertex.Position.x = VertexTmp.Vertexs[i].Position.X;
-					InVertex.Position.y = VertexTmp.Vertexs[i].Position.Y;
-					InVertex.Position.z = VertexTmp.Vertexs[i].Position.Z;
+					 InVertex.Position.x = VertexTmp.Vertexs[i].Position.X;
+					 InVertex.Position.y = VertexTmp.Vertexs[i].Position.Y;
+					 InVertex.Position.z = VertexTmp.Vertexs[i].Position.Z;
 
-					InVertex.Normal.x = VertexTmp.Vertexs[i].Normal.X;
-					InVertex.Normal.y = VertexTmp.Vertexs[i].Normal.Y;
-					InVertex.Normal.z = VertexTmp.Vertexs[i].Normal.Z;
+					 InVertex.Normal.x = VertexTmp.Vertexs[i].Normal.X;
+					 InVertex.Normal.y = VertexTmp.Vertexs[i].Normal.Y;
+					 InVertex.Normal.z = VertexTmp.Vertexs[i].Normal.Z;
 
-					InVertex.UTangent.x = VertexTmp.Vertexs[i].Tangent.X;
-					InVertex.UTangent.y = VertexTmp.Vertexs[i].Tangent.Y;
-					InVertex.UTangent.z = VertexTmp.Vertexs[i].Tangent.Z;
+					 InVertex.UTangent.x = VertexTmp.Vertexs[i].Tangent.X;
+					 InVertex.UTangent.y = VertexTmp.Vertexs[i].Tangent.Y;
+					 InVertex.UTangent.z = VertexTmp.Vertexs[i].Tangent.Z;
 
-					InVertex.TexCoord.x = VertexTmp.Vertexs[i].UV.X;
-					InVertex.TexCoord.y = VertexTmp.Vertexs[i].UV.Y;
+					 InVertex.TexCoord.x = VertexTmp.Vertexs[i].UV.X;
+					 InVertex.TexCoord.y = VertexTmp.Vertexs[i].UV.Y;
 				}				
 			}
 
 			//拷贝
-			MeshData.IndexData = MeshTmp.IndexData;
+			MeshData.Data.IndexData.insert(
+				MeshData.Data.IndexData.end(),
+				MeshTmp.IndexData.begin(),
+				MeshTmp.IndexData.end());
+
+			Section.IndexSize = MeshTmp.IndexData.size();
+			Section.VertexSize = MeshTmp.VertexData.size();
 		}
 	}
 #endif
 	return true;
-}
-
-void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPath)
-{
-	const std::hash<string> FloatHash;
-	
-	OutHashKey = 3;
-	OutHashKey += FloatHash(InPath);
 }

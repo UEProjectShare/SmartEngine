@@ -117,9 +117,9 @@ void FRenderLayer::DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InW
 		{
 			const UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
 
-			const D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometries[InRenderingData->GeometryKey].GetVertexBufferView();
-			const D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometries[InRenderingData->GeometryKey].GetIndexBufferView();
-
+			D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometries[InRenderingData->GeometryKey].GetVertexBufferView(InRenderingData->GeometryKey);
+			D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometries[InRenderingData->GeometryKey].GetIndexBufferView(InRenderingData->GeometryKey);
+			
 			const D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
 			//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
 
@@ -139,19 +139,22 @@ void FRenderLayer::DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InW
 			//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
 			//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
 
-			//每个对象相对首地址的偏移
-			const D3D12_GPU_VIRTUAL_ADDRESS VAddress =
-				FirstVirtualMeshAddress + InRenderingData->MeshObjectIndex * MeshOffset;
+			for (auto& Tmp : InRenderingData->Sections)
+			{
+				//每个对象相对首地址的偏移
+				D3D12_GPU_VIRTUAL_ADDRESS VAddress =
+					FirstVirtualMeshAddress + Tmp.MeshObjectIndex * MeshOffset;
 
-			GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(0, VAddress);
+				GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(0, VAddress);
 
-			//真正的绘制
-			GetGraphicsCommandList()->DrawIndexedInstanced(
-				InRenderingData->IndexSize,//顶点数量
-				1,//绘制实例数量
-				InRenderingData->IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
-				InRenderingData->VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
-				0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
+				//真正的绘制
+				GetGraphicsCommandList()->DrawIndexedInstanced(
+					Tmp.IndexSize,//顶点数量
+					1,//绘制实例数量
+					Tmp.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
+					Tmp.VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
+					0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
+			}
 		}
 	}
 }
@@ -228,7 +231,11 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 					ObjectTransformation.MaterialIndex = InMater->GetMaterialIndex();
 				}
 
-				GeometryMap->MeshConstantBufferViews.Update(InRenderingData->MeshObjectIndex, &ObjectTransformation);
+				//更新ObjectIndex
+				for (auto &Tmp : InRenderingData->Sections)
+				{
+					GeometryMap->MeshConstantBufferViews.Update(Tmp.MeshObjectIndex, &ObjectTransformation);
+				}
 			}
 		}
 	}

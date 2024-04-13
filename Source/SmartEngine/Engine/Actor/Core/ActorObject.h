@@ -70,7 +70,19 @@ public:
 	vector<int> TTTT;
 
 	CVARIABLE(CodeType = Resources)
+	vector<float> TTTTXXX;
+	
+	CVARIABLE(CodeType = Resources)
+	vector<double> TTTTXXX111;
+
+	CVARIABLE(CodeType = Resources)
 	map<int,string> TTTT1234567;
+
+	CVARIABLE(CodeType = Resources)
+	map<string,string> TTTT12345671;
+
+	CVARIABLE(CodeType = Resources)
+	map<char,long> TTTT12345671long;
 
 	CDIAPER(CodeType = Event)
 	static void Hello123(int c, float b);

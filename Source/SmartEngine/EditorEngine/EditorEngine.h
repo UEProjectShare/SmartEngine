@@ -50,4 +50,6 @@ protected:
 	class FOutLineEditor* OutLineEditor;
 
 	class FDetailsEditor* DetailsEditor;
+
+	class FBrowseEditor* BrowseEditor;
 };

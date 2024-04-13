@@ -1,10 +1,18 @@
 #pragma once
 #include "../../TransformationComponent.h"
 #include "MeshComponentType.h"
+#include "../../../Mesh/Core/MeshType.h"
 #include "MeshComponent.CodeReflection.h"
 
+enum ERenderingMeshType
+{
+	MESH_TYPE,
+	SKINNED_MESH_TYPE,
+	MAX_TYPE,
+};
+
 class CMaterial;
-struct FMeshRenderingData;
+
 class CMeshComponent : public CTransformationComponent
 {
 	CODEREFLECTION()
@@ -19,6 +27,8 @@ public:
 	virtual void BuildMesh(const FMeshRenderingData* InRenderingData);
 	
 	void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
+
+	virtual ERenderingMeshType GetMeshType() const { return ERenderingMeshType::MESH_TYPE; }
 
 	void GetBoundingBox(BoundingBox& OutBoundingBox) const;
 	

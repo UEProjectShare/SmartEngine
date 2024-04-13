@@ -23,9 +23,11 @@ public:
 	
 	virtual ~CCoreMinimalObject();
 
-	virtual void BeginInit() {};
+	virtual void Destroy();
+
+	virtual void BeginInit() {}
 	
-	virtual void Tick(float DeltaTime) {};
+	virtual void Tick(float DeltaTime) {}
 
 	bool IsTick()const { return bTick; }
 
@@ -41,6 +43,9 @@ public:
 #if EDITOR_ENGINE
 	virtual bool UpdateEditorPropertyDetails(CPropertyObject* InProperty) { return false; }
 #endif // EDITOR_ENGINE
+
+	//给反射使用 
+	virtual bool UpdateEditorContainerPropertyDetails(CPropertyObject* InProperty) { return false; }
 	
 	//字节码表函数对应的内容
 	FUNCTION_DEFINITION(Script_Undefined);
@@ -72,6 +77,8 @@ protected:
 	CCoreMinimalObject* Outer;
 	
 	std::string Name;
+
+	unsigned char Flag;
 	
 	FNativeClass NativeClass;
 };

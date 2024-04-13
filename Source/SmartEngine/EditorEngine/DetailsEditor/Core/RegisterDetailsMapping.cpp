@@ -117,3 +117,45 @@ bool FRegisterDetailsMapping::UpdatePropertyWidget(CPropertyObject* InProperty)
 	
 	return false;
 }
+
+bool FRegisterDetailsMapping::UpdatePropertyWidgetNoCategory(CPropertyObject* InProperty)
+{
+	//收集我们的类别
+	while (InProperty)
+	{
+		InProperty = UpdatePropertyWidgetElement(InProperty);
+	}
+
+	return true;
+}
+
+CPropertyObject* FRegisterDetailsMapping::UpdatePropertyWidgetElement(CPropertyObject* InProperty)
+{
+	if (const auto InDetailsProperty = FindProperty(InProperty->GetType().c_str()))
+	{
+		if (InDetailsProperty->UpdateDetailsWidget(InProperty))
+		{
+			if (CCoreMinimalObject* InObject = dynamic_cast<CCoreMinimalObject*>(InProperty->GetOuter()))
+			{
+				InObject->UpdateEditorPropertyDetails(InProperty);
+			}
+		}
+	}
+
+	return dynamic_cast<CPropertyObject*>(InProperty->Next);
+}
+
+bool FRegisterDetailsMapping::UpdatePropertyWidgetKeyValue(CPropertyObject* InProperty)
+{
+	//收集我们的类别
+	while (InProperty)
+	{
+		InProperty = UpdatePropertyWidgetElement(InProperty);//Key
+
+		ImGui::SameLine();
+
+		InProperty = UpdatePropertyWidgetElement(InProperty);//Value
+	}
+
+	return true;
+}

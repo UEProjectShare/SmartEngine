@@ -26,6 +26,12 @@ CCoreMinimalObject::~CCoreMinimalObject()
 	}
 }
 
+void CCoreMinimalObject::Destroy()
+{
+	//Flag = 准备删除
+}
+
+
 void CCoreMinimalObject::CallFunction(FFrame& Stack, void const* Data, const CFunctionObject* Function)
 {
 	//收集函数的参数

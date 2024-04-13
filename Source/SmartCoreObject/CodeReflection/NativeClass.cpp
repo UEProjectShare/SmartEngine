@@ -1,24 +1,155 @@
 #include "NativeClass.h"
 #include "../CoreObject/FunctionObject.h"
 #include "../CoreObject/PropertyObject.h"
+#include "../CoreObject/ArrayPropertyObject.h"
+#include "../CoreObject/MapPropertyObject.h"
 
 FNativeClass::FNativeClass()
 	: Outer(nullptr)
 {
 }
 
-void FNativeClass::AddProperty(
-	const std::string& PropertyName, 
+bool FNativeClass::RemoveTopProperty()
+{
+	if (Property)
+	{
+		CPropertyObject* StartPtr = Property;
+		if (!StartPtr->Next)
+		{
+			StartPtr->Destroy();
+			Property = nullptr;
+		}
+		else
+		{
+			while (StartPtr->Next)
+			{
+				if (!StartPtr->Next->Next)
+				{
+					//交给GC处理
+					StartPtr->Next->Destroy();
+					StartPtr->Next = nullptr;
+				}
+				else
+				{
+					StartPtr = dynamic_cast<CPropertyObject*>(StartPtr->Next);
+				}
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool FNativeClass::RemoveAllProperty()
+{
+	if (Property)
+	{
+		CPropertyObject* StartPtr = Property;
+		while (StartPtr)
+		{
+			StartPtr->Destroy();
+
+			StartPtr = dynamic_cast<CPropertyObject*>(StartPtr->Next);
+		}
+
+		Property = nullptr;
+	}
+
+	return false;
+}
+
+int FNativeClass::GetPropertyNumber() const
+{
+	int Num = 0;
+
+	const CPropertyObject* StartPtr = Property;
+	while (StartPtr)
+	{
+		if (!StartPtr->Next)
+		{
+			StartPtr = nullptr;
+		}
+		else
+		{
+			StartPtr = dynamic_cast<CPropertyObject*>(StartPtr->Next);
+		}
+
+		Num++;
+	}
+
+	return Num;
+}
+
+CPropertyObject* FNativeClass::AddArrayProperty(
+	const std::string& PropertyName,
 	const std::string& InType, 
+	const std::string& InValueType, 
+	int InValueElementSize, 
 	int InCount,
+	int InElementSize,
+	void* InData)
+{
+	if (CArrayPropertyObject* ArrayProperty = AddProperty<CArrayPropertyObject>(
+		PropertyName,
+		InType,
+		InElementSize, 
+		InData))
+	{
+		ArrayProperty->SetValueType(InValueType);
+		ArrayProperty->SetValueSize(InValueElementSize);
+		ArrayProperty->SetCountValue(InCount);
+
+		return ArrayProperty;
+	}
+
+	return nullptr;
+}
+
+CPropertyObject* FNativeClass::AddMapProperty(
+	const std::string& PropertyName,
+	const std::string& InType, 
+	const std::string& InKeyType,
+	int InKeyElementSize, 
+	const std::string& InValueType,
+	int InValueElementSize, 
+	int InCount, 
+	int InElementSize,
+	void* InData)
+{
+	if (CMapPropertyObject* MapProperty = AddProperty<CMapPropertyObject>(
+		PropertyName,
+		InType, 
+		InElementSize,
+		InData))
+	{
+		MapProperty->SetValueType(InValueType);
+		MapProperty->SetValueSize(InValueElementSize);
+
+		MapProperty->SetKeyType(InKeyType);
+		MapProperty->SetKeySize(InKeyElementSize);
+
+		MapProperty->SetCountValue(InCount);
+
+		return MapProperty;
+	}
+
+	return nullptr;
+}
+
+template<class T>
+inline T* FNativeClass::AddProperty(
+	const std::string& PropertyName,
+	const std::string& InType, 
 	int InElementSize,
 	void* InData)
 {
 	FCreateObjectParam Param;
 	Param.Outer = Outer;
-	CPropertyObject* Ptr = CreateObject<CPropertyObject>(Param, new CPropertyObject());
-	
-	Ptr->SetCountValue(InCount);
+	T* Ptr = CreateObject<T>(Param, new T());
+
+	//Ptr->SetCountValue(InCount);
 	Ptr->SetElementSize(InElementSize);
 	Ptr->SetTypeValue(InType);
 	Ptr->InitializeValue(InData);
@@ -46,6 +177,17 @@ void FNativeClass::AddProperty(
 			}
 		}
 	}
+
+	return Ptr;
+}
+
+CPropertyObject* FNativeClass::AddProperty(
+	const std::string& PropertyName, 
+	const std::string& InType, 
+	int InElementSize,
+	void* InData)
+{
+	return AddProperty<CPropertyObject>(PropertyName, InType, InElementSize, InData);
 }
 
 void FNativeClass::AddClassType(const std::string& InType)

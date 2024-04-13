@@ -22,7 +22,10 @@ vector<std::shared_ptr<FRenderingData>> FGeometry::RenderingDatas;
 
 FGeometryMap::FGeometryMap()
 {
-	Geometries.insert(pair<int, FGeometry>(0, FGeometry()));
+	for (int i = 0; i < ERenderingMeshType::MAX_TYPE; i++)
+	{
+		Geometries.insert(pair<int, FGeometry>(i, FGeometry()));
+	}
 
 	RenderingTexture2DResources = std::make_shared<FRenderingTextureResourcesUpdate>();
 	RenderingTexture2DResources->SetViewDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
@@ -384,18 +387,14 @@ void FGeometryMap::BuildDynamicReflectionMesh()
 
 void FGeometryMap::BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FMeshRenderingData& MeshData)
 {
-	for (auto& Tmp : Geometries)
-	{
-		Tmp.second.BuildMesh(InMeshHash, InMesh, MeshData, Tmp.first);
-	}
+	int MeshIndex = (int)InMesh->GetMeshType();
+	Geometries[MeshIndex].BuildMesh(InMeshHash, InMesh, MeshData, MeshIndex);
 }
 
 void FGeometryMap::DuplicateMesh(CMeshComponent* InMesh, std::shared_ptr<FRenderingData>& MeshData)
 {
-	for (auto& Tmp : Geometries)
-	{
-		Tmp.second.DuplicateMesh(InMesh, MeshData, Tmp.first);
-	}
+	int MeshIndex = (int)InMesh->GetMeshType();
+	Geometries[MeshIndex].DuplicateMesh(InMesh, MeshData, MeshIndex);
 }
 
 bool FGeometryMap::FindMeshRenderingDataByHash(const size_t& InHash, std::shared_ptr<FRenderingData>& MeshData, int InRenderLayerIndex)
@@ -459,7 +458,7 @@ void FGeometryMap::Build()
 	//构建模型
 	for (auto& Tmp : Geometries)
 	{
-		Tmp.second.Build();
+		Tmp.second.Build(Tmp.first);
 	}
 }
 
@@ -734,119 +733,210 @@ bool FGeometry::IsRenderingDataExistence(const CMeshComponent* InKey)
 	return false;
 }
 
+template<class T>
+void FGeometry::DuplicateMesh_Interior(
+	CMeshComponent* InMesh,
+	std::shared_ptr<FRenderingData>& MeshData,
+	FMeshData<T>& InMyRenderingData, 
+	int InKey)
+{
+	if (std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
+	{
+		RenderingDatas.push_back(std::make_shared<FRenderingData>());
+		std::shared_ptr<FRenderingData> InRenderingData = RenderingDatas[RenderingDatas.size() - 1];
+
+		InRenderLayer->RenderDatas.push_back(InRenderingData);
+
+		//基础注册
+		InRenderingData->VertexTotalxSize = MeshData->VertexTotalxSize;
+		InRenderingData->IndexTotalSize = MeshData->IndexTotalSize;
+		InRenderingData->Mesh = InMesh;
+		InRenderingData->GeometryKey = InKey;
+		InRenderingData->MeshHash = MeshData->MeshHash;
+		InRenderingData->VertexOffsetPosition = MeshData->VertexOffsetPosition;
+		InRenderingData->MeshRenderingData = &InMyRenderingData;
+		InRenderingData->Bounds = MeshData->Bounds;
+		InRenderingData->VertexTypeSize = MeshData->VertexTypeSize;
+
+		DuplicateMeshRenderingSection(MeshData, InRenderingData);
+	}
+}
+
+template<class T>
+void FGeometry::BuildMesh_Interior(
+	const size_t InMeshHash,
+	CMeshComponent* InMesh,
+	const FRenderContent<T>& MeshData,
+	int InKey,
+	FMeshData<T>& InMeshRenderingData, 
+	std::function<void(std::shared_ptr<FRenderingData>)> InFun)
+{
+	//找到对应层级
+	if (std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
+	{
+		UniqueRenderingDatas.insert(std::make_pair(InMeshHash, std::make_shared<FRenderingData>()));
+		RenderingDatas.push_back(std::make_shared<FRenderingData>());
+		std::shared_ptr<FRenderingData> InRenderingData = RenderingDatas[RenderingDatas.size() - 1];
+
+		InRenderLayer->RenderDatas.push_back(InRenderingData);
+
+		//计算AABB
+		BuildBoundingBox(MeshData, InRenderingData->Bounds);
+		
+		//基础渲染数据注册
+		InRenderingData->Mesh = InMesh;
+		InRenderingData->MeshHash = InMeshHash;
+		InRenderingData->GeometryKey = InKey;
+		InRenderingData->MeshRenderingData = &InMeshRenderingData;
+		InRenderingData->VertexOffsetPosition = InMeshRenderingData.VertexData.size();
+		InRenderingData->VertexTypeSize = sizeof(T);//顶点的类型大小
+
+		//构建Section
+		BuildRenderingSection(MeshData, InRenderingData, InMeshRenderingData);
+
+		//唯一数据的注册
+		UniqueRenderingDatas[InMeshHash]->Mesh = InRenderingData->Mesh;
+		UniqueRenderingDatas[InMeshHash]->MeshHash = InRenderingData->MeshHash;
+		UniqueRenderingDatas[InMeshHash]->GeometryKey = InRenderingData->GeometryKey;
+		UniqueRenderingDatas[InMeshHash]->Bounds = InRenderingData->Bounds;
+		UniqueRenderingDatas[InMeshHash]->VertexOffsetPosition = InRenderingData->VertexOffsetPosition;
+		UniqueRenderingDatas[InMeshHash]->VertexTypeSize = InRenderingData->VertexTypeSize;
+		
+		BuildUniqueRenderingSection(InRenderingData, UniqueRenderingDatas[InMeshHash]);
+
+		//执行扩展的内容
+		InFun(InRenderingData);
+	}
+}
+
+template<class T>
+void FGeometry::BuildBoundingBox(
+	const FRenderContent<T>& MeshData,
+	BoundingBox& OutBounds)
+{
+	//求AABB
+	{
+		fvector_3d MaxPoint = fvector_3d(-FLT_MAX);
+		fvector_3d MinPoint = fvector_3d(+FLT_MAX);
+		for (auto& Tmp : MeshData.Data.VertexData)
+		{
+			MinPoint.x = math_libray::Min(Tmp.Position.x, MinPoint.x);
+			MinPoint.y = math_libray::Min(Tmp.Position.y, MinPoint.y);
+			MinPoint.z = math_libray::Min(Tmp.Position.z, MinPoint.z);
+
+			MaxPoint.x = math_libray::Max(Tmp.Position.x, MaxPoint.x);
+			MaxPoint.y = math_libray::Max(Tmp.Position.y, MaxPoint.y);
+			MaxPoint.z = math_libray::Max(Tmp.Position.z, MaxPoint.z);
+		}
+
+		XMFLOAT3 XMFMaxPoint = EngineMath::ToFloat3(MaxPoint);
+		XMFLOAT3 XMFMinPoint = EngineMath::ToFloat3(MinPoint);
+
+		XMVECTOR XMFMaxPointTOR = XMLoadFloat3(&XMFMaxPoint);
+		XMVECTOR XMFMinPointTOR = XMLoadFloat3(&XMFMinPoint);
+
+		XMStoreFloat3(&OutBounds.Center, (XMFMaxPointTOR + XMFMinPointTOR) * 0.5f);
+		XMStoreFloat3(&OutBounds.Extents, (XMFMaxPointTOR - XMFMinPointTOR) * 0.5f);
+	}
+}
+
+template<class T>
+void FGeometry::BuildRenderingSection(
+	const FRenderContent<T>& MeshData,
+	std::shared_ptr<FRenderingData> InRenderingData,
+	FMeshData<T>& InMeshRenderingData)
+{
+	if (InRenderingData)
+	{
+		UINT VertexOffsetPosition = InMeshRenderingData.VertexData.size();
+		UINT IndexOffsetPosition = InMeshRenderingData.IndexData.size();
+		for (auto& Tmp : MeshData.SectionDescribe)
+		{
+			InRenderingData->Sections.push_back(FRenderingDataSection());
+			FRenderingDataSection& InSection = InRenderingData->Sections[
+				InRenderingData->Sections.size() - 1];
+
+			InSection.MeshObjectIndex = MeshObjectCount++;
+
+			//每个Section的大小
+			InSection.IndexSize = Tmp.IndexSize;
+			InSection.VertexSize = Tmp.VertexSize;
+
+			//记录index偏移位置
+			InSection.IndexOffsetPosition = IndexOffsetPosition;
+			IndexOffsetPosition += Tmp.IndexSize;
+
+			//记录Vertex
+			InSection.VertexOffsetPosition = VertexOffsetPosition;
+			VertexOffsetPosition += Tmp.VertexSize;
+
+			//收集总数
+			InRenderingData->IndexTotalSize += Tmp.IndexSize;
+			InRenderingData->VertexTotalxSize += Tmp.VertexSize;
+		}
+
+		//高效的插入
+		//索引的合并
+		InMeshRenderingData.IndexData.insert(
+			InMeshRenderingData.IndexData.end(),
+			MeshData.Data.IndexData.begin(),
+			MeshData.Data.IndexData.end());
+
+		//顶点的合并
+		InMeshRenderingData.VertexData.insert(
+			InMeshRenderingData.VertexData.end(),
+			MeshData.Data.VertexData.begin(),
+			MeshData.Data.VertexData.end());
+	}
+}
+
 void FGeometry::BuildMesh(
 	const size_t InMeshHash,
 	CMeshComponent* InMesh,
 	const FMeshRenderingData& MeshData,
 	int InKey)
 {
-	//找到对应层级
-	if (const std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
+	BuildMesh_Interior(
+	InMeshHash, 
+	InMesh,
+	MeshData,
+	InKey,
+	MeshRenderingData,
+	[&](std::shared_ptr<FRenderingData> InRenderingData)
 	{
-		UniqueRenderingDatas.insert(std::make_pair(InMeshHash, std::make_shared<FRenderingData>()));
-		RenderingDatas.push_back(std::make_shared<FRenderingData>());
-		const std::shared_ptr<FRenderingData> InRenderingData = RenderingDatas[RenderingDatas.size() - 1];
 
-		InRenderLayer->RenderDatas.push_back(InRenderingData);
-
-		//求AABB
-		{
-			fvector_3d MaxPoint = fvector_3d(-FLT_MAX);
-			fvector_3d MinPoint = fvector_3d(+FLT_MAX);
-			for (auto& Tmp : MeshData.VertexData)
-			{
-				MinPoint.x = math_libray::Min(Tmp.Position.x, MinPoint.x);
-				MinPoint.y = math_libray::Min(Tmp.Position.y, MinPoint.y);
-				MinPoint.z = math_libray::Min(Tmp.Position.z, MinPoint.z);
-
-				MaxPoint.x = math_libray::Max(Tmp.Position.x, MaxPoint.x);
-				MaxPoint.y = math_libray::Max(Tmp.Position.y, MaxPoint.y);
-				MaxPoint.z = math_libray::Max(Tmp.Position.z, MaxPoint.z);
-			}
-
-			const XMFLOAT3 XMFMaxPoint = EngineMath::ToFloat3(MaxPoint);
-			const XMFLOAT3 XMFMinPoint = EngineMath::ToFloat3(MinPoint);
-
-			const XMVECTOR XMFMaxPointTOR = XMLoadFloat3(&XMFMaxPoint);
-			const XMVECTOR XMFMinPointTOR = XMLoadFloat3(&XMFMinPoint);
-
-			XMStoreFloat3(&InRenderingData->Bounds.Center, (XMFMaxPointTOR + XMFMinPointTOR) * 0.5f);
-			XMStoreFloat3(&InRenderingData->Bounds.Extents, (XMFMaxPointTOR - XMFMinPointTOR) * 0.5f);
-		}
-
-		//基础渲染数据注册
-		InRenderingData->MeshObjectIndex = MeshObjectCount++;
-		InRenderingData->Mesh = InMesh;
-		InRenderingData->MeshHash = InMeshHash;
-		InRenderingData->GeometryKey = InKey;
-
-		InRenderingData->IndexSize = MeshData.IndexData.size();
-		InRenderingData->VertexSize = MeshData.VertexData.size();
-
-		InRenderingData->IndexOffsetPosition = MeshRenderingData.IndexData.size();
-		InRenderingData->VertexOffsetPosition = MeshRenderingData.VertexData.size();
-
-		//指向三角形和index
-		InRenderingData->MeshRenderingData = &MeshRenderingData;
-
-		//唯一数据的注册
-		UniqueRenderingDatas[InMeshHash]->MeshObjectIndex = InRenderingData->MeshObjectIndex;
-		UniqueRenderingDatas[InMeshHash]->Mesh = InRenderingData->Mesh;
-		UniqueRenderingDatas[InMeshHash]->MeshHash = InRenderingData->MeshHash;
-		UniqueRenderingDatas[InMeshHash]->GeometryKey = InRenderingData->GeometryKey;
-
-		UniqueRenderingDatas[InMeshHash]->IndexSize = InRenderingData->IndexSize;
-		UniqueRenderingDatas[InMeshHash]->VertexSize = InRenderingData->VertexSize;
-
-		UniqueRenderingDatas[InMeshHash]->IndexOffsetPosition = InRenderingData->IndexOffsetPosition;
-		UniqueRenderingDatas[InMeshHash]->VertexOffsetPosition = InRenderingData->VertexOffsetPosition;
-
-		UniqueRenderingDatas[InMeshHash]->MeshRenderingData = &MeshRenderingData;
-
-		UniqueRenderingDatas[InMeshHash]->Bounds = InRenderingData->Bounds;
-		
-		//高效的插入
-		//索引的合并
-		MeshRenderingData.IndexData.insert(
-			MeshRenderingData.IndexData.end(),
-			MeshData.IndexData.begin(),
-			MeshData.IndexData.end());
-
-		//顶点的合并
-		MeshRenderingData.VertexData.insert(
-			MeshRenderingData.VertexData.end(),
-			MeshData.VertexData.begin(),
-			MeshData.VertexData.end());
-	}
+	});
 }
 
-void FGeometry::DuplicateMesh(CMeshComponent* InMesh, const std::shared_ptr<FRenderingData>& MeshData, int InKey)
+void FGeometry::BuildMesh(
+	const size_t InMeshHash,
+	CMeshComponent* InMesh, 
+	const FSkinnedMeshRenderingData& SkinnedMeshData,
+	int InKey)
 {
-	if (const std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
+	BuildMesh_Interior(
+	InMeshHash,
+	InMesh,
+	SkinnedMeshData,
+	InKey,
+	SkinnedMeshRenderingData,
+	[&](std::shared_ptr<FRenderingData> InRenderingData)
 	{
-		RenderingDatas.push_back(std::make_shared<FRenderingData>());
-		const std::shared_ptr<FRenderingData> InRenderingData = RenderingDatas[RenderingDatas.size() - 1];
 
-		InRenderLayer->RenderDatas.push_back(InRenderingData);
+	});
+}
 
-		//基础注册
-		InRenderingData->Mesh = InMesh;
-		InRenderingData->MeshObjectIndex = MeshObjectCount++;
-		InRenderingData->GeometryKey = InKey;
-
-		InRenderingData->MeshHash = MeshData->MeshHash;
-
-		InRenderingData->IndexSize = MeshData->IndexSize;
-		InRenderingData->VertexSize = MeshData->VertexSize;
-
-		InRenderingData->IndexOffsetPosition = MeshData->IndexOffsetPosition;
-		InRenderingData->VertexOffsetPosition = MeshData->VertexOffsetPosition;
-
-		//指向三角形和index
-		InRenderingData->MeshRenderingData = &MeshRenderingData;
-		
-		//AABB
-		InRenderingData->Bounds = MeshData->Bounds;
+void FGeometry::DuplicateMesh(CMeshComponent* InMesh, std::shared_ptr<FRenderingData>& MeshData, int InKey)
+{
+	ERenderingMeshType MeshType = InMesh->GetMeshType();
+	switch (MeshType)
+	{
+	case MESH_TYPE:
+		DuplicateMesh_Interior(InMesh, MeshData, MeshRenderingData, InKey);
+		break;
+	case SKINNED_MESH_TYPE:
+		DuplicateMesh_Interior(InMesh, MeshData, SkinnedMeshRenderingData, InKey);
+		break;
 	}
 }
 
@@ -879,56 +969,131 @@ UINT FGeometry::GetDrawObjectNumber() const
 	return Count;
 }
 
-void FGeometry::Build()
+void FGeometry::Build(int InType)
 {
-	const UINT VertexSizeInBytes = MeshRenderingData.GetVertexSizeInBytes();
-	const UINT IndexSizeInBytes = MeshRenderingData.GetIndexSizeInBytes();
+	UINT VertexSizeInBytes = 0;
+	UINT IndexSizeInBytes = 0;
 
-	ANALYSIS_HRESULT(D3DCreateBlob(
+	void* VertexDataPtr = nullptr;
+	void* IndexDataPtr = nullptr;
+
+	if (GetRenderingDataInfo(
+		(ERenderingMeshType)InType,
 		VertexSizeInBytes,
-		&CPUVertexBufferPtr));
-
-	memcpy(CPUVertexBufferPtr->GetBufferPointer(),
-		MeshRenderingData.VertexData.data(), VertexSizeInBytes);
-
-	ANALYSIS_HRESULT(D3DCreateBlob(
 		IndexSizeInBytes,
-		&CPUIndexBufferPtr));
+		VertexDataPtr,
+		IndexDataPtr))
+	{
+		ANALYSIS_HRESULT(D3DCreateBlob(
+			VertexSizeInBytes,
+			&CPUVertexBufferPtr));
 
-	memcpy(CPUIndexBufferPtr->GetBufferPointer(),
-		MeshRenderingData.IndexData.data(), IndexSizeInBytes);
+		memcpy(CPUVertexBufferPtr->GetBufferPointer(),
+			VertexDataPtr, VertexSizeInBytes);
 
-	ConstructBuffer::FConstructBuffer ConstructBuffer;
-	GPUVertexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(
-		VertexBufferTmpPtr,
-		MeshRenderingData.VertexData.data(), VertexSizeInBytes);
+		ANALYSIS_HRESULT(D3DCreateBlob(
+			IndexSizeInBytes,
+			&CPUIndexBufferPtr));
 
-	GPUIndexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(
-		IndexBufferTmpPtr,
-		MeshRenderingData.IndexData.data(), IndexSizeInBytes);
+		memcpy(CPUIndexBufferPtr->GetBufferPointer(),
+			IndexDataPtr, IndexSizeInBytes);
+
+		ConstructBuffer::FConstructBuffer ConstructBuffer;
+		GPUVertexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(
+			VertexBufferTmpPtr,
+			VertexDataPtr, VertexSizeInBytes);
+
+		GPUIndexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(
+			IndexBufferTmpPtr,
+			IndexDataPtr, IndexSizeInBytes);
+	}
 }
 
-D3D12_VERTEX_BUFFER_VIEW FGeometry::GetVertexBufferView() const
+bool FGeometry::GetRenderingDataInfo(
+	ERenderingMeshType InMeshType,
+	UINT& VertexSizeInBytes, 
+	UINT& IndexSizeInBytes, 
+	void*& VertexDataPtr,
+	void*& IndexDataPtr)
+{
+	VertexSizeInBytes = 0;
+	IndexSizeInBytes = 0;
+
+	switch (InMeshType)
+	{
+		case MESH_TYPE:
+		{
+			VertexSizeInBytes = MeshRenderingData.GetVertexSizeInBytes();
+			IndexSizeInBytes = MeshRenderingData.GetIndexSizeInBytes();
+
+			VertexDataPtr = MeshRenderingData.VertexData.data();
+			IndexDataPtr = MeshRenderingData.IndexData.data();
+
+			break;
+		}
+		case SKINNED_MESH_TYPE:
+		{
+			VertexSizeInBytes = SkinnedMeshRenderingData.GetVertexSizeInBytes();
+			IndexSizeInBytes = SkinnedMeshRenderingData.GetIndexSizeInBytes();
+
+			VertexDataPtr = SkinnedMeshRenderingData.VertexData.data();
+			IndexDataPtr = SkinnedMeshRenderingData.IndexData.data();
+
+			break;
+		}
+	}
+
+	return VertexSizeInBytes != 0 && IndexSizeInBytes != 0;
+}
+
+D3D12_VERTEX_BUFFER_VIEW FGeometry::GetVertexBufferView(int InType)
 {
 	D3D12_VERTEX_BUFFER_VIEW VBV;
 	VBV.BufferLocation = GPUVertexBufferPtr->GetGPUVirtualAddress();
-	VBV.SizeInBytes = MeshRenderingData.GetVertexSizeInBytes();
-	VBV.StrideInBytes = sizeof(FVertex);
+
+	switch ((ERenderingMeshType)InType)
+	{
+		case MESH_TYPE:
+		{
+			VBV.SizeInBytes = MeshRenderingData.GetVertexSizeInBytes();
+			VBV.StrideInBytes = sizeof(FVertex);
+			break;
+		}
+		case SKINNED_MESH_TYPE:
+		{
+			VBV.SizeInBytes = SkinnedMeshRenderingData.GetVertexSizeInBytes();
+			VBV.StrideInBytes = sizeof(FSkinnedVertex);
+			break;
+		}
+	}
 
 	return VBV;
 }
 
-D3D12_INDEX_BUFFER_VIEW FGeometry::GetIndexBufferView() const
+D3D12_INDEX_BUFFER_VIEW FGeometry::GetIndexBufferView(int InType)
 {
 	D3D12_INDEX_BUFFER_VIEW IBV;
 	IBV.BufferLocation = GPUIndexBufferPtr->GetGPUVirtualAddress();
-	IBV.SizeInBytes = MeshRenderingData.GetIndexSizeInBytes();
 	IBV.Format = DXGI_FORMAT_R16_UINT;
+
+	switch ((ERenderingMeshType)InType)
+	{
+		case MESH_TYPE:
+		{
+			IBV.SizeInBytes = MeshRenderingData.GetIndexSizeInBytes();
+			break;
+		}
+		case SKINNED_MESH_TYPE:
+		{
+			IBV.SizeInBytes = SkinnedMeshRenderingData.GetIndexSizeInBytes();
+			break;
+		}
+	}
 
 	return IBV;
 }
 
-void FGeometry::FindRenderingDatas(const std::function<EFindValueType(std::shared_ptr<FRenderingData>&)>& InFun)
+void FGeometry::FindRenderingDatas(std::function<EFindValueType(std::shared_ptr<FRenderingData>&)> InFun)
 {
 	for (auto& Tmp : RenderingDatas)
 	{
@@ -936,5 +1101,45 @@ void FGeometry::FindRenderingDatas(const std::function<EFindValueType(std::share
 		{
 			break;
 		}
+	}
+}
+
+void FGeometry::DuplicateMeshRenderingSection(
+	const std::shared_ptr<FRenderingData>& MeshData,
+	std::shared_ptr<FRenderingData>& InMeshRenderingData)
+{
+	for (auto& Tmp : MeshData->Sections)
+	{
+		InMeshRenderingData->Sections.push_back(FRenderingDataSection());
+		FRenderingDataSection& MeshRendering = InMeshRenderingData->Sections[
+			InMeshRenderingData->Sections.size() - 1];
+
+		MeshRendering.MeshObjectIndex = MeshObjectCount++;
+
+		MeshRendering.IndexSize = Tmp.IndexSize;
+		MeshRendering.VertexSize = Tmp.VertexSize;
+
+		MeshRendering.IndexOffsetPosition = Tmp.IndexOffsetPosition;
+		MeshRendering.VertexOffsetPosition = Tmp.VertexOffsetPosition;
+	}
+}
+
+void FGeometry::BuildUniqueRenderingSection(
+	const std::shared_ptr<FRenderingData>& MeshData,
+	std::shared_ptr<FRenderingData>& InMeshRenderingData)
+{
+	for (auto& Tmp : MeshData->Sections)
+	{
+		InMeshRenderingData->Sections.push_back(FRenderingDataSection());
+		FRenderingDataSection& InUniqueSection = InMeshRenderingData->Sections[
+			InMeshRenderingData->Sections.size() - 1];
+
+		InUniqueSection.MeshObjectIndex = Tmp.MeshObjectIndex;
+
+		InUniqueSection.IndexSize = Tmp.IndexSize;
+		InUniqueSection.VertexSize = Tmp.VertexSize;
+
+		InUniqueSection.IndexOffsetPosition = Tmp.IndexOffsetPosition;
+		InUniqueSection.VertexOffsetPosition = Tmp.VertexOffsetPosition;
 	}
 }

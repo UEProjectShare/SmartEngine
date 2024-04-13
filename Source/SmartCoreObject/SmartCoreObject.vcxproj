@@ -153,12 +153,15 @@
     <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Construction\ConstructionComponents.cpp" />
     <ClCompile Include="Construction\ObjectConstruction.cpp" />
+    <ClCompile Include="CoreObject\ArrayPropertyObject.cpp" />
     <ClCompile Include="CoreObject\ClassObject.cpp" />
+    <ClCompile Include="CoreObject\ContainerPropertyObject.cpp" />
     <ClCompile Include="CoreObject\CoreMinimalObject.cpp" />
     <ClCompile Include="CoreObject\EnumObject.cpp" />
     <ClCompile Include="CoreObject\FieldObject.cpp" />
     <ClCompile Include="CoreObject\FunctionObject.cpp" />
     <ClCompile Include="CoreObject\GuidInterface.cpp" />
+    <ClCompile Include="CoreObject\MapPropertyObject.cpp" />
     <ClCompile Include="CoreObject\PropertyObject.cpp" />
     <ClCompile Include="CoreObject\StructObject.cpp" />
   </ItemGroup>
@@ -176,12 +179,15 @@
     <ClInclude Include="Construction\ConstructionComponents.h" />
     <ClInclude Include="Construction\ObjectConstruction.h" />
     <ClInclude Include="CoreMacro.h" />
+    <ClInclude Include="CoreObject\ArrayPropertyObject.h" />
     <ClInclude Include="CoreObject\ClassObject.h" />
+    <ClInclude Include="CoreObject\ContainerPropertyObject.h" />
     <ClInclude Include="CoreObject\CoreMinimalObject.h" />
     <ClInclude Include="CoreObject\EnumObject.h" />
     <ClInclude Include="CoreObject\FieldObject.h" />
     <ClInclude Include="CoreObject\FunctionObject.h" />
     <ClInclude Include="CoreObject\GuidInterface.h" />
+    <ClInclude Include="CoreObject\MapPropertyObject.h" />
     <ClInclude Include="CoreObject\PropertyObject.h" />
     <ClInclude Include="CoreObject\StructObject.h" />
     <ClInclude Include="CoreObjectMinimal.h" />

@@ -4,6 +4,27 @@
 #include "../Component/Mesh/Core/MeshComponent.h"
 #include "../Actor/Core/ActorObject.h"
 
+template<class T>
+void GetVertexIndexData(
+	fvector_3id& OutIndices,
+	XMVECTOR& OutVertex0,
+	XMVECTOR& OutVertex1,
+	XMVECTOR& OutVertex2,
+	UINT i,
+	const FRenderingDataSection& RenderingDataSection,
+	const FMeshData<T>& InMeshData)
+{
+	int IndexOffsetPosition = RenderingDataSection.IndexOffsetPosition + i * 3;
+
+	OutIndices.x = InMeshData.IndexData[IndexOffsetPosition + 0];
+	OutIndices.y = InMeshData.IndexData[IndexOffsetPosition + 1];
+	OutIndices.z = InMeshData.IndexData[IndexOffsetPosition + 2];
+
+	OutVertex0 = XMLoadFloat3(&InMeshData.VertexData[OutIndices.x].Position);
+	OutVertex1 = XMLoadFloat3(&InMeshData.VertexData[OutIndices.y].Position);
+	OutVertex2 = XMLoadFloat3(&InMeshData.VertexData[OutIndices.z].Position);
+}
+
 void GetRaycastDataByLocal(
 	const std::shared_ptr<FRenderingData>& InRenderingData,
 	const XMVECTOR& OriginPoint,
@@ -74,21 +95,40 @@ bool FCollisionSceneQuery::RaycastSingle(
 				{
 					if (BoundTime < FinalTime)
 					{
-						if (InRenderingData->MeshRenderingData)
+						for (auto& Tmp : InRenderingData->Sections)
 						{
-							const UINT TriangleNumber = InRenderingData->IndexSize / 3;
+							UINT TriangleNumber = Tmp.IndexSize / 3;
 
 							float TriangleTime = FLT_MAX;
 							for (UINT i = 0; i < TriangleNumber; i++)
 							{
 								fvector_3id Indices;
-								Indices.x = InRenderingData->MeshRenderingData->IndexData[InRenderingData->IndexOffsetPosition + i * 3 + 0];
-								Indices.y = InRenderingData->MeshRenderingData->IndexData[InRenderingData->IndexOffsetPosition + i * 3 + 1];
-								Indices.z = InRenderingData->MeshRenderingData->IndexData[InRenderingData->IndexOffsetPosition + i * 3 + 2];
+								XMVECTOR Vertex0;
+								XMVECTOR Vertex1;
+								XMVECTOR Vertex2;
 
-								const XMVECTOR Vertex0 = XMLoadFloat3(&InRenderingData->MeshRenderingData->VertexData[Indices.x].Position);
-								const XMVECTOR Vertex1 = XMLoadFloat3(&InRenderingData->MeshRenderingData->VertexData[Indices.y].Position);
-								const XMVECTOR Vertex2 = XMLoadFloat3(&InRenderingData->MeshRenderingData->VertexData[Indices.z].Position);
+								if (FMeshData<FVertex>* InVertexs = InRenderingData->GetMeshRenderingData())
+								{
+									if (InVertexs->IsVaild())
+									{
+										GetVertexIndexData(Indices, Vertex0, Vertex1, Vertex2, i, Tmp, *InVertexs);
+									}
+									else
+									{
+										break;
+									}
+								}
+								else if (FMeshData<FSkinnedVertex>* InSkinnedVertexs = InRenderingData->GetSkinnedMeshRenderingData())
+								{
+									if (InSkinnedVertexs->IsVaild())
+									{
+										GetVertexIndexData(Indices, Vertex0, Vertex1, Vertex2, i, Tmp, *InSkinnedVertexs);
+									}
+									else
+									{
+										break;
+									}
+								}
 
 								float TriangleTestsTime = 0.f;
 								if (TriangleTests::Intersects(LocalOriginPoint, LocalDirection, Vertex0, Vertex1, Vertex2, TriangleTestsTime))

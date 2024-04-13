@@ -1,9 +1,21 @@
 #pragma once
 #include "../../../../../Interface/DirectXDeviceInterface.h"
 #include "../../../RenderingResourcesUpdate.h"
+#include "../../../../../Mesh/Core/MeshType.h"
 
 class CMeshComponent;
-struct FMeshRenderingData;
+enum ERenderingMeshType;
+
+struct FRenderingDataSection : public FMeshSection
+{
+	FRenderingDataSection();
+
+	UINT VertexOffsetPosition;//局部偏移
+	
+	UINT IndexOffsetPosition;//Index偏移
+	
+	int MeshObjectIndex;//Index
+};
 
 //提供渲染内容的接口
 struct FRenderingData 
@@ -12,30 +24,34 @@ struct FRenderingData
 {
 public:
 	FRenderingData();
-
-	UINT IndexSize;//Index的数量
 	
-	UINT VertexSize;//Vertex的数量
-
-	UINT IndexOffsetPosition;
+	std::vector<FRenderingDataSection> Sections;
 	
-	UINT VertexOffsetPosition;
-
-	UINT VertexTypeSize;
+	UINT IndexTotalSize;
 	
-	UINT IndexTypeSize;
+	UINT VertexTotalxSize;
 
+	UINT VertexOffsetPosition;//顶点总偏移
+	
+	UINT VertexTypeSize;//顶点类型的大小
+	
+	UINT IndexTypeSize;//Index类型大小
+	
 	BoundingBox Bounds;//AABB
-	
+
 	size_t MeshHash;
 	
 	int GeometryKey;
 	
-	int MeshObjectIndex;
+	ERenderingMeshType GetMeshType() const;
 	
-	UINT GetVertexSizeInBytes() const { return VertexSize * VertexTypeSize; }
+	FVertexMeshData* GetMeshRenderingData();
 	
-	UINT GetIndexSizeInBytes() const { return IndexSize * IndexTypeSize; }
+	FSkinnedVertexMeshData* GetSkinnedMeshRenderingData();
+	
+	UINT GetVertexSizeInBytes()const { return VertexTotalxSize * VertexTypeSize; }
+	
+	UINT GetIndexSizeInBytes()const { return IndexTotalSize * IndexTypeSize; }
 	
 	DXGI_FORMAT IndexFormat;
 
@@ -45,5 +61,6 @@ public:
 
 	CMeshComponent* Mesh;//key
 
-	FMeshRenderingData* MeshRenderingData;
+	//有可能是蒙皮有可能是静态网格
+	void *MeshRenderingData;
 };

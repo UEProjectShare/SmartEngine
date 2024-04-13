@@ -18,6 +18,12 @@ public:
 	static bool UpdateClassWidget(CCoreMinimalObject* InObject);
 	
 	static bool UpdatePropertyWidget(CPropertyObject* InProperty);
+
+	static bool UpdatePropertyWidgetNoCategory(CPropertyObject* InProperty);
+	
+	static bool UpdatePropertyWidgetKeyValue(CPropertyObject* InProperty);
+	
+	static CPropertyObject* UpdatePropertyWidgetElement(CPropertyObject* InProperty);
 private:
 	static map<std::string, shared_ptr<FClassDetailsMapping>> ClassDetailsMappings;
 	

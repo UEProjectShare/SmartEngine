@@ -1,10 +1,14 @@
 #pragma once
-#include "../Core/PropertyDetailsMapping.h"
+#include "ContainerDetailsMapping.h"
 
-class FArrayDetailsMapping : public FPropertyDetailsMapping
+class FArrayDetailsMapping : public FContainerDetailsMapping
 {
+	typedef FContainerDetailsMapping Super;
+
 public:
 	bool UpdateDetailsWidget(CPropertyObject* InProperty) override;
+
+	void UpdateWidget(CPropertyObject* InProperty) override;
 	
 	static shared_ptr<FPropertyDetailsMapping> MakeDetailsMapping();
 };

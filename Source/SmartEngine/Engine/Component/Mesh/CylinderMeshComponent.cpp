@@ -8,47 +8,50 @@ CCylinderMeshComponent::CCylinderMeshComponent()
 
 void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-	//半径间隔
-	const float RadiusInterval = (InTopRadius - InBottomRadius) / InHeightSubdivision;
-	//高度间隔
-	const float HeightInterval = InHeight / InHeightSubdivision;
+	MeshData.SectionDescribe.push_back(FMeshSection());
+	FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
 
-	const float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
+	//半径间隔
+	float RadiusInterval = (InTopRadius - InBottomRadius) / InHeightSubdivision;
+	//高度间隔
+	float HeightInterval = InHeight / InHeightSubdivision;
+
+	float BetaValue = XM_2PI / (float)InAxialSubdivision;
 
 	for (uint32_t i = 0; i < InHeightSubdivision + 1; ++i)
 	{
-		const float Y = 0.5f * InHeight - HeightInterval * i;
-		const float Radius = InTopRadius + i * RadiusInterval;
+		float Y = 0.5f * InHeight - HeightInterval * i;
+		float Radius = InTopRadius + i * RadiusInterval;
 		for (size_t j = 0; j <= InAxialSubdivision; ++j)
 		{
-			const float BetaValueCos = cosf(j * BetaValue);
-			const float BetaValueSin = sinf(j * BetaValue);
-			MeshData.VertexData.push_back(FVertex(
+			float BetaValueCos = cosf(j * BetaValue);
+			float BetaValueSin = sinf(j * BetaValue);
+			MeshData.Data.VertexData.push_back(FVertex(
 				XMFLOAT3(
 					Radius * BetaValueCos,//x
 					Y,//y
 					Radius * BetaValueSin), //z
 				XMFLOAT4(Colors::White)));
 
-			FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+			FVertex &MyVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 			MyVertex.UTangent = XMFLOAT3(-BetaValueSin, 0.0f, BetaValueCos);
 
-			const float dr = InBottomRadius-InTopRadius;
+			float dr = InBottomRadius-InTopRadius;
 			XMFLOAT3 Bitangent(dr * BetaValueCos, -InHeight, dr * BetaValueSin);
 
-			const XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
-			const XMVECTOR B = XMLoadFloat3(&Bitangent);
-			const XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
+			XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
+			XMVECTOR B = XMLoadFloat3(&Bitangent);
+			XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
 			XMStoreFloat3(&MyVertex.Normal, N);
 
 			//展UV
-			MyVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InHeightSubdivision);
-			MyVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InAxialSubdivision);
+			MyVertex.TexCoord.x = (float)j / (float)InHeightSubdivision;
+			MyVertex.TexCoord.y = (float)i / (float)InAxialSubdivision;
 		}
 	}
 
-	const float VertexCircleNum = InAxialSubdivision;
+	float VertexCircleNum = InAxialSubdivision;
 
 	//绘制腰围
 	for (uint32_t i = 0; i < InHeightSubdivision + 1 ; ++i)
@@ -70,36 +73,36 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 
 			// 法线朝向自己
 			//三角形1
-			MeshData.IndexData.push_back((i + 1) * VertexCircleNum + j + 1);//C
-			MeshData.IndexData.push_back((i + 1) * VertexCircleNum + j);//B
-			MeshData.IndexData.push_back(i * VertexCircleNum + j);//A
+			MeshData.Data.IndexData.push_back((i + 1) * VertexCircleNum + j + 1);//C
+			MeshData.Data.IndexData.push_back((i + 1) * VertexCircleNum + j);//B
+			MeshData.Data.IndexData.push_back(i * VertexCircleNum + j);//A
 
 			//三角形2
-			MeshData.IndexData.push_back(i * VertexCircleNum + j + 1);//D
-			MeshData.IndexData.push_back((i + 1) * VertexCircleNum + j + 1);//C
-			MeshData.IndexData.push_back(i * VertexCircleNum + j);//A
+			MeshData.Data.IndexData.push_back(i * VertexCircleNum + j + 1);//D
+			MeshData.Data.IndexData.push_back((i + 1) * VertexCircleNum + j + 1);//C
+			MeshData.Data.IndexData.push_back(i * VertexCircleNum + j);//A
 		}
 	}
 
 	//构建顶部
 	if (1)
 	{
-		const uint32_t Index = MeshData.VertexData.size();
+		uint32_t Index = MeshData.Data.VertexData.size();
 
-		const float Y = 0.5f * InHeight;
+		float Y = 0.5f * InHeight;
 		for (uint32_t i = 0; i <= InAxialSubdivision; ++i)
 		{
-			const float RCos = cosf(i * BetaValue);
-			const float RSin = sinf(i * BetaValue);
+			float RCos = cosf(i * BetaValue);
+			float RSin = sinf(i * BetaValue);
 
-			MeshData.VertexData.push_back(FVertex(
+			MeshData.Data.VertexData.push_back(FVertex(
 				XMFLOAT3(
 					InTopRadius * RCos,//x
 					Y,//y
 					InTopRadius * RSin), //z
 				XMFLOAT4(Colors::White), XMFLOAT3(0.f, 1.f, 0.f)));
 
-			FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+			FVertex& MyVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 			//展UV
 			MyVertex.TexCoord.x = RCos;
@@ -107,37 +110,37 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 		}
 
 		//添加中点
-		MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White), XMFLOAT3(0.f,1.f,0.f)));
+		MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White),XMFLOAT3(0.f,1.f,0.f)));
 
 		//绘制index模型
-		const float CenterPoint = MeshData.VertexData.size() - 1;
+		float CenterPoint = MeshData.Data.VertexData.size() - 1;
 		for (uint32_t i = 0; i < InAxialSubdivision; ++i)
 		{
-			MeshData.IndexData.push_back(CenterPoint);
-			MeshData.IndexData.push_back(Index + i + 1);
-			MeshData.IndexData.push_back(Index + i);
+			MeshData.Data.IndexData.push_back(CenterPoint);
+			MeshData.Data.IndexData.push_back(Index + i + 1);
+			MeshData.Data.IndexData.push_back(Index + i);
 		}
 	}
 
 	//构建底部
 	if (1)
 	{
-		const uint32_t Index = MeshData.VertexData.size();
+		uint32_t Index = MeshData.Data.VertexData.size();
 
-		const float Y = -0.5f * InHeight;
+		float Y = -0.5f * InHeight;
 		for (uint32_t i = 0; i <= InAxialSubdivision; ++i)
 		{
-			const float RCos = cosf(i * BetaValue);
-			const float RSin = sinf(i * BetaValue);
+			float RCos = cosf(i * BetaValue);
+			float RSin = sinf(i * BetaValue);
 
-			MeshData.VertexData.push_back(FVertex(
+			MeshData.Data.VertexData.push_back(FVertex(
 				XMFLOAT3(
 					InBottomRadius * RCos,//x
 					Y,//y
 					InBottomRadius * RSin), //z
 				XMFLOAT4(Colors::White),XMFLOAT3(0.f, -1.f, 0.f)));
 
-			FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+			FVertex& MyVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 			//展UV
 			MyVertex.TexCoord.x = RCos;
@@ -145,22 +148,25 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 		}
 
 		//添加中点
-		MeshData.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White), XMFLOAT3(0.f, -1.f, 0.f)));
+		MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(0.f, Y, 0.f), XMFLOAT4(Colors::White), XMFLOAT3(0.f, -1.f, 0.f)));
 
 		//绘制index模型
-		const float CenterPoint = MeshData.VertexData.size() - 1;
+		float CenterPoint = MeshData.Data.VertexData.size() - 1;
 		for (uint32_t i = 0; i < InAxialSubdivision; ++i)
 		{
-			MeshData.IndexData.push_back(CenterPoint);
-			MeshData.IndexData.push_back(Index + i);
-			MeshData.IndexData.push_back(Index + i + 1);
+			MeshData.Data.IndexData.push_back(CenterPoint);
+			MeshData.Data.IndexData.push_back(Index + i);
+			MeshData.Data.IndexData.push_back(Index + i + 1);
 		}
 	}
+
+	Section.IndexSize = MeshData.Data.IndexData.size();
+	Section.VertexSize = MeshData.Data.VertexData.size();
 }
 
 void CCylinderMeshComponent::BuildKey(size_t& OutHashKey, float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-	const std::hash<float> FloatHash;
+	std::hash<float> FloatHash;
 	std::hash<int> IntHash;
 
 	OutHashKey = 4;

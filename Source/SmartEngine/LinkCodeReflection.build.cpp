@@ -26,6 +26,7 @@
 #include "C:/SmartEngine/Intermediate/CodeReflection/PipeMeshComponent.CodeReflection.cpp"
 #include "C:/SmartEngine/Intermediate/CodeReflection/PlaneMeshComponent.CodeReflection.cpp"
 #include "C:/SmartEngine/Intermediate/CodeReflection/PyramidMeshComponent.CodeReflection.cpp"
+#include "C:/SmartEngine/Intermediate/CodeReflection/SkinnedMeshComponent.CodeReflection.cpp"
 #include "C:/SmartEngine/Intermediate/CodeReflection/SphereMeshComponent.CodeReflection.cpp"
 #include "C:/SmartEngine/Intermediate/CodeReflection/TorusMeshComponent.CodeReflection.cpp"
 #include "C:/SmartEngine/Intermediate/CodeReflection/FogComponent.CodeReflection.cpp"

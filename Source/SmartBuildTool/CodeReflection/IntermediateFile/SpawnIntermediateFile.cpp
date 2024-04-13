@@ -223,6 +223,8 @@ namespace IntermediateFile
 					"typedef %s Super; \\",
 					InheritName->c_str()));
 		}
+		AnalysisRaw.push_back("public: \\");
+		AnalysisRaw.push_back("virtual bool UpdateEditorContainerPropertyDetails(class CPropertyObject* InProperty); \\");
 		AnalysisRaw.push_back("protected: \\");
 		AnalysisRaw.push_back("virtual void InitReflectionContent(); \\");
 		AnalysisRaw.push_back("private:");
@@ -303,6 +305,7 @@ namespace IntermediateFile
 
 		AnalysisRaw.push_back("#include \"CodeReflection/FunctionManage.h\"");
 		AnalysisRaw.push_back("#include \"CoreMacro.h\"");
+		AnalysisRaw.push_back("#include \"CoreObject/PropertyObject.h\"");
 		
 		AnalysisRaw.push_back("");
 		AnalysisRaw.push_back("#ifdef _MSC_VER");
@@ -407,6 +410,121 @@ namespace IntermediateFile
 
 			AnalysisRaw.push_back((""));
 
+			AnalysisRaw.push_back(
+				simple_cpp_string_algorithm::printf(
+					"bool %s::UpdateEditorContainerPropertyDetails(CPropertyObject* InProperty)",
+					ClassAnalysis.ClassName.c_str()));
+			AnalysisRaw.push_back(("{"));
+			{
+				AnalysisRaw.push_back("\tSuper::UpdateEditorContainerPropertyDetails(InProperty);");
+			
+				AnalysisRaw.push_back((""));
+				AnalysisRaw.push_back(("\tif (InProperty)"));
+				AnalysisRaw.push_back(("\t{"));
+				{
+					bool bSpawnArray = false;
+					for (auto& Tmp : ClassAnalysis.Variable)
+					{
+						if (Tmp.Type == "vector")
+						{
+							if (Tmp.InternalType.size() >= 1)
+							{
+								bSpawnArray = true;
+
+								AnalysisRaw.push_back(("\t\t//Let's start working with the vector container."));
+
+								AnalysisRaw.push_back(
+									simple_cpp_string_algorithm::printf(
+										"\t\tif (InProperty->GetName() == \"%s\")",
+										Tmp.Name.c_str()));
+
+								AnalysisRaw.push_back(("\t\t{"));
+								{
+									//	TTTT.clear();
+									AnalysisRaw.push_back(
+										simple_cpp_string_algorithm::printf(
+											"\t\t\t%s.clear();",
+											Tmp.Name.c_str()));
+
+									AnalysisRaw.push_back((""));
+									AnalysisRaw.push_back(("\t\t\tCPropertyObject *ValueObject = InProperty->GetNativeClass().Property;"));
+									AnalysisRaw.push_back(("\t\t\twhile (ValueObject)"));
+									AnalysisRaw.push_back(("\t\t\t{"));
+									{
+										AnalysisRaw.push_back(
+											simple_cpp_string_algorithm::printf(
+												"\t\t\t\t%s.push_back(*ValueObject->GetData<%s>());",
+												Tmp.Name.c_str(),
+												Tmp.InternalType[0].Type.c_str()));
+
+										AnalysisRaw.push_back(("\t\t\t\tValueObject = dynamic_cast<CPropertyObject*>(ValueObject->Next);"));
+									}
+									AnalysisRaw.push_back(("\t\t\t}"));
+								}
+								AnalysisRaw.push_back(("\t\t}"));
+								AnalysisRaw.push_back(("\t\telse"));
+							}
+						}
+						else if (Tmp.Type == "map")
+						{
+							if (Tmp.InternalType.size() >= 2)
+							{
+								AnalysisRaw.push_back(("\t\t//Let's start working with the map container."));
+							
+								AnalysisRaw.push_back(
+									simple_cpp_string_algorithm::printf(
+										"\t\tif (InProperty->GetName() == \"%s\")",
+										Tmp.Name.c_str()));
+								AnalysisRaw.push_back(("\t\t{"));
+								{
+									AnalysisRaw.push_back(
+										simple_cpp_string_algorithm::printf(
+											"\t\t\t%s.clear();",
+											Tmp.Name.c_str()));
+
+									AnalysisRaw.push_back((""));
+
+									AnalysisRaw.push_back(("\t\t\tCPropertyObject* KeyObject = InProperty->GetNativeClass().Property;"));
+									AnalysisRaw.push_back(("\t\t\twhile (KeyObject)"));
+									AnalysisRaw.push_back(("\t\t\t{"));
+									{
+										AnalysisRaw.push_back(("\t\t\t\tCPropertyObject *ValueObject = dynamic_cast<CPropertyObject*>(KeyObject->Next);"));
+									
+										AnalysisRaw.push_back(
+											simple_cpp_string_algorithm::printf(
+												"\t\t\t\t%s.insert({*KeyObject->GetData<%s>(),*ValueObject->GetData<%s>()});",
+												Tmp.Name.c_str(),
+												Tmp.InternalType[0].Type.c_str(),
+												Tmp.InternalType[1].Type.c_str()));
+									
+										AnalysisRaw.push_back((""));
+
+										AnalysisRaw.push_back(("\t\t\t\tKeyObject = dynamic_cast<CPropertyObject*>(ValueObject->Next);"));
+									}
+									AnalysisRaw.push_back(("\t\t\t}"));
+								}
+								AnalysisRaw.push_back(("\t\t}"));
+								AnalysisRaw.push_back(("\t\telse"));
+							}
+						}
+					}
+
+					if (bSpawnArray)
+					{
+						AnalysisRaw.pop_back();
+					}
+
+					AnalysisRaw.push_back((""));
+					AnalysisRaw.push_back(("\t\treturn true;"));
+				}
+
+				AnalysisRaw.push_back(("\t}"));
+				AnalysisRaw.push_back((""));
+				AnalysisRaw.push_back(("\treturn false;"));
+			}
+			AnalysisRaw.push_back(("}"));
+			AnalysisRaw.push_back((""));
+
 			//void GActorObject::InitReflectionContent()
 			AnalysisRaw.push_back(
 				simple_cpp_string_algorithm::printf(
@@ -438,13 +556,18 @@ namespace IntermediateFile
 							{
 								AnalysisRaw.push_back(
 									simple_cpp_string_algorithm::printf(
-										"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(std::%s<%s,%s>),&%s);",
-										Tmp.Name.c_str(),
-										Tmp.Type.c_str(),
-										Tmp.Type.c_str(),
-										Tmp.InternalType[0].Type.c_str(),
-										Tmp.InternalType[1].Type.c_str(),
-										Tmp.Name.c_str()));
+										"\tNativeClass.AddMapProperty(\
+											\"%s\",\"%s\",\"%s\",sizeof(%s),\"%s\",sizeof(%s)\
+											,0,sizeof(std::%s<%s,%s>),NULL);",
+											Tmp.Name.c_str(),
+											Tmp.Type.c_str(),
+											Tmp.InternalType[0].Type.c_str(),
+											Tmp.InternalType[0].Type.c_str(),
+											Tmp.InternalType[1].Type.c_str(),
+											Tmp.InternalType[1].Type.c_str(),
+											Tmp.Type.c_str(),
+											Tmp.InternalType[0].Type.c_str(),
+											Tmp.InternalType[1].Type.c_str()));
 							}
 						}
 						else if (Tmp.Type == "vector")
@@ -452,19 +575,20 @@ namespace IntermediateFile
 							if (Tmp.InternalType.size() >= 1)
 							{
 								AnalysisRaw.push_back(
-									simple_cpp_string_algorithm::printf(
-										"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
-										Tmp.Name.c_str(),
-										Tmp.Type.c_str(),
-										Tmp.InternalType[0].Type.c_str(),
-										Tmp.Name.c_str()));
+								simple_cpp_string_algorithm::printf(
+									"\tNativeClass.AddArrayProperty(\"%s\",\"%s\",\"%s\",sizeof(%s),0,sizeof(std::vector<%s>),NULL);",
+									Tmp.Name.c_str(),
+									Tmp.Type.c_str(),
+									Tmp.InternalType[0].Type.c_str(),
+									Tmp.InternalType[0].Type.c_str(),
+									Tmp.InternalType[0].Type.c_str()));
 							}
 						}
 						else
 						{
 							AnalysisRaw.push_back(
 								simple_cpp_string_algorithm::printf(
-									"\tNativeClass.AddProperty(\"%s\",\"%s\",1,sizeof(%s),&%s);",
+									"\tNativeClass.AddProperty(\"%s\",\"%s\",sizeof(%s),&%s);",
 									Tmp.Name.c_str(),
 									Tmp.Type.c_str(),
 									Tmp.Type.c_str(),

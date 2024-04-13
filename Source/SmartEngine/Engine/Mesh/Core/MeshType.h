@@ -21,23 +21,58 @@ struct FVertex
 	XMFLOAT2 TexCoord;//纹理坐标
 };
 
-struct FMeshRenderingData
+struct FSkinnedVertex :public FVertex
 {
-	vector<FVertex> VertexData;
+	FSkinnedVertex(){}
+
+};
+
+template<class T>
+struct FMeshData
+{
+	vector<T> VertexData;
 	
 	vector<uint16_t> IndexData;
+
+	bool IsVaild() const { return VertexData.size() != 0 && IndexData.size() != 0; }
 	
-	UINT GetVertexSizeInBytes() const { return VertexData.size() * sizeof(FVertex); }
+	UINT GetVertexSizeInBytes() { return VertexData.size() * sizeof(T); }
 	
-	UINT GetIndexSizeInBytes() const { return IndexData.size() * sizeof(uint16_t); }
+	UINT GetIndexSizeInBytes() { return IndexData.size() * sizeof(uint16_t); }
+};
+
+struct FMeshSection
+{
+	FMeshSection();
+
+	UINT IndexSize;
+	
+	UINT VertexSize;
+};
+
+template<class T>
+struct FRenderContent
+{
+	FRenderContent()
+	{}
+
+	std::vector<FMeshSection> SectionDescribe;
+	
+	FMeshData<T> Data;
 };
 
 //Pyramid的边数
 enum EPyramidNumberSides
 {
 	Pyramid_3 = 3,
-	
 	Pyramid_4 ,
-	
 	Pyramid_5 ,
 };
+
+typedef FMeshData<FVertex> FVertexMeshData;
+
+typedef FMeshData<FSkinnedVertex> FSkinnedVertexMeshData;
+
+typedef FRenderContent<FVertex> FMeshRenderingData;
+
+typedef FRenderContent<FSkinnedVertex> FSkinnedMeshRenderingData;

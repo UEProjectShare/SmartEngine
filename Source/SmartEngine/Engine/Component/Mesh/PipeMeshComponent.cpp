@@ -87,15 +87,15 @@ void CPipeMeshComponent::BuildRadiusPoint(
 
 		//计算出内外圈半径
 		float OuterRadius = InTopRadius + i * RadiusInterval;
-		const float InnerRadius = math_libray::Clamp((OuterRadius - 0.1f) - InThickness, 0.f, OuterRadius);
+		float InnerRadius = math_libray::Clamp((OuterRadius - 0.1f) - InThickness, 0.f, OuterRadius);
 		
 		for (size_t j = 0; j <= InAxialSubdivision; ++j)
 		{
-			const float BetaValueCos = cosf(j * BetaValue);
-			const float BetaValueSin = sinf(j * BetaValue);
+			float BetaValueCos = cosf(j * BetaValue);
+			float BetaValueSin = sinf(j * BetaValue);
 
 			//外圈点
-			MeshData.VertexData.push_back(FVertex(
+			MeshData.Data.VertexData.push_back(FVertex(
 				XMFLOAT3(
 					OuterRadius * BetaValueCos,//x
 					Y,//y
@@ -103,24 +103,24 @@ void CPipeMeshComponent::BuildRadiusPoint(
 				XMFLOAT4(Colors::White)));
 
 			{
-				FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+				FVertex& MyVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 				MyVertex.UTangent = XMFLOAT3(-BetaValueSin, 0.0f, BetaValueCos);
 
-				const float D = InBottomRadius - InTopRadius;
+				float D = InBottomRadius - InTopRadius;
 				XMFLOAT3 Bitangent(D * BetaValueCos, -InHeight, D * BetaValueSin);
 
-				const XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
-				const XMVECTOR B = XMLoadFloat3(&Bitangent);
-				const XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
+				XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
+				XMVECTOR B = XMLoadFloat3(&Bitangent);
+				XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
 				XMStoreFloat3(&MyVertex.Normal, N);
 
-				MyVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InAxialSubdivision);
-				MyVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InHeightSubdivision);
+				MyVertex.TexCoord.x = (float)j / (float)InAxialSubdivision;
+				MyVertex.TexCoord.y = (float)i / (float)InHeightSubdivision;
 			}
 
 			//绘制内圈
-			MeshData.VertexData.push_back(FVertex(
+			MeshData.Data.VertexData.push_back(FVertex(
 				XMFLOAT3(
 					InnerRadius * BetaValueCos,//x
 					Y,//y
@@ -128,11 +128,11 @@ void CPipeMeshComponent::BuildRadiusPoint(
 				XMFLOAT4(Colors::White)));
 
 			{
-				FVertex& MyVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+				FVertex& MyVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 				MyVertex.UTangent = XMFLOAT3(-BetaValueSin, 0.0f, BetaValueCos);
 
-				const float D = InBottomRadius - InTopRadius;
+				float D = InBottomRadius - InTopRadius;
 				XMFLOAT3 Bitangent(D * BetaValueCos, -InHeight, D * BetaValueSin);
 
 				XMVECTOR T = XMLoadFloat3(&MyVertex.UTangent);
@@ -140,8 +140,8 @@ void CPipeMeshComponent::BuildRadiusPoint(
 				XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
 				XMStoreFloat3(&MyVertex.Normal, N);
 
-				MyVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InAxialSubdivision);
-				MyVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InHeightSubdivision);
+				MyVertex.TexCoord.x = (float)j / (float)InAxialSubdivision;
+				MyVertex.TexCoord.y = (float)i / (float)InHeightSubdivision;
 			}
 		}
 	}
@@ -156,12 +156,15 @@ void CPipeMeshComponent::CreateMesh(
 	uint32_t InAxialSubdivision,
 	uint32_t InHeightSubdivision)
 {
-	//半径间隔
-	const float RadiusInterval = (InTopRadius - InBottomRadius) / InHeightSubdivision;
-	//高度间隔
-	const float HeightInterval = InHeight / InHeightSubdivision;
+	MeshData.SectionDescribe.push_back(FMeshSection());
+	FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
 
-	const float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
+	//半径间隔
+	float RadiusInterval = (InTopRadius - InBottomRadius) / InHeightSubdivision;
+	//高度间隔
+	float HeightInterval = InHeight / InHeightSubdivision;
+
+	float BetaValue = XM_2PI / (float)InAxialSubdivision;
 
 	BuildRadiusPoint(
 		MeshData,
@@ -175,27 +178,27 @@ void CPipeMeshComponent::CreateMesh(
 		InAxialSubdivision,
 		InHeightSubdivision);
 
-	const float VertexCircleNum = InAxialSubdivision;
+	float VertexCircleNum = InAxialSubdivision;
 
 	//绘制腰围
 	for (uint32_t i = 0; i < InHeightSubdivision + 1; ++i)
 	{
 		for (uint32_t j = 0; j < InAxialSubdivision; ++j)
 		{
-			const int OuterStartPoint = j * 2;
-			const int InnerStartPoint = j * 2 + 1;
+			int OuterStartPoint = j * 2;
+			int InnerStartPoint = j * 2 + 1;
 
-			const int VC = VertexCircleNum * 2 ;
+			int VC = VertexCircleNum * 2 ;
 
 			//绘制圈外
 			DrawQuadrilateral(
 				MeshData,//提取绘制信息
-				GetQuadrilateralDrawPointTypeA(OuterStartPoint, i, VC, 2));//拿到圈外四个点
+				GetQuadrilateralDrawPointTypeA(OuterStartPoint, i,VC,2));//拿到圈外四个点
 			
 			//绘制圈内
 			DrawQuadrilateral(
 				MeshData,//提取绘制信息
-				GetQuadrilateralDrawPointTypeA(InnerStartPoint, i, VC, 2), true);//拿到圈内四个点																		
+				GetQuadrilateralDrawPointTypeA(InnerStartPoint, i,VC,2),true);//拿到圈内四个点																		
 		}
 	}
 
@@ -204,51 +207,51 @@ void CPipeMeshComponent::CreateMesh(
 	{
 		for (uint32_t i = 0; i < 1; ++i)
 		{
-			const float Y = 0.5f * InHeight - HeightInterval * i;
+			float Y = 0.5f * InHeight - HeightInterval * i;
 
 			//计算出内外圈半径
 			float OuterRadius = InTopRadius + i * RadiusInterval;
-			const float InnerRadius = math_libray::Clamp((OuterRadius - 0.1f) - InThickness, 0.f, OuterRadius);
+			float InnerRadius = math_libray::Clamp((OuterRadius - 0.1f) - InThickness, 0.f, OuterRadius);
 
 			for (size_t j = 0; j <= InAxialSubdivision; ++j)
 			{
-				const float BetaValueCos = cosf(j * BetaValue);
-				const float BetaValueSin = sinf(j * BetaValue);
+				float BetaValueCos = cosf(j * BetaValue);
+				float BetaValueSin = sinf(j * BetaValue);
 
 				//外圈点
-				MeshData.VertexData.push_back(FVertex(
+				MeshData.Data.VertexData.push_back(FVertex(
 					XMFLOAT3(
 						OuterRadius * BetaValueCos,//x
 						Y,//y
 						OuterRadius * BetaValueSin), //z
 					XMFLOAT4(Colors::White), XMFLOAT3(0.f,1.f,0.f)));
 
-				FVertex& InOuterVertex = MeshData.VertexData[MeshData.VertexData.size()-1];
+				FVertex &InOuterVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size()-1];
 				
-				InOuterVertex.TexCoord.x = (BetaValueCos * 0.5f) + 0.5f;
-				InOuterVertex.TexCoord.y = (BetaValueSin * 0.5f) + 0.5f;
+				InOuterVertex.TexCoord.x =(BetaValueCos * 0.5f)+0.5f;
+				InOuterVertex.TexCoord.y =(BetaValueSin * 0.5f)+0.5f;
 
 				//绘制内圈
-				MeshData.VertexData.push_back(FVertex(
+				MeshData.Data.VertexData.push_back(FVertex(
 					XMFLOAT3(
 						InnerRadius * BetaValueCos,//x
 						Y,//y
 						InnerRadius * BetaValueSin), //z
 					XMFLOAT4(Colors::White), XMFLOAT3(0.f, 1.f, 0.f)));
 
-				FVertex& InnerVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+				FVertex& InnerVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
-				const float ExtraRadiusRatio = (OuterRadius - InnerRadius) / InTopRadius;
+				float ExtraRadiusRatio = (OuterRadius - InnerRadius) / InTopRadius;
 
 				InnerVertex.TexCoord.x = ((1.f - ExtraRadiusRatio)*BetaValueCos * 0.5f)+0.5f;
 				InnerVertex.TexCoord.y = ((1.f - ExtraRadiusRatio)*BetaValueSin * 0.5f)+0.5f;
 			}
 		}
-		const int BaseIndex = (InHeightSubdivision + 2) * (InAxialSubdivision ) * 2 + 2;
+		int BaseIndex = (InHeightSubdivision + 2) * (InAxialSubdivision ) * 2 + 2;
 		for (uint32_t j = 0; j < InAxialSubdivision; ++j)
 		{
-			const int OuterStartPoint = j * 2;
-			const int InnerStartPoint = j * 2 + 1;
+			int OuterStartPoint = j * 2;
+			int InnerStartPoint = j * 2 + 1;
 
 			fvector_4id DrawPoint= {
 						BaseIndex+InnerStartPoint,
@@ -267,48 +270,48 @@ void CPipeMeshComponent::CreateMesh(
 			float Y = 0.5f * InHeight - HeightInterval * InHeightSubdivision;
 
 			//计算出内外圈半径
-			const float OuterRadius = InTopRadius + InHeightSubdivision * RadiusInterval;
-			const float InnerRadius = math_libray::Clamp((OuterRadius - 0.1f) - InThickness, 0.f, OuterRadius);
+			float OuterRadius = InTopRadius + InHeightSubdivision * RadiusInterval;
+			float InnerRadius = math_libray::Clamp((OuterRadius - 0.1f) - InThickness, 0.f, OuterRadius);
 
 			for (size_t j = 0; j <= InAxialSubdivision; ++j)
 			{
-				const float BetaValueCos = cosf(j * BetaValue);
-				const float BetaValueSin = sinf(j * BetaValue);
+				float BetaValueCos = cosf(j * BetaValue);
+				float BetaValueSin = sinf(j * BetaValue);
 
 				//外圈点
-				MeshData.VertexData.push_back(FVertex(
+				MeshData.Data.VertexData.push_back(FVertex(
 					XMFLOAT3(
 						OuterRadius * BetaValueCos,//x
 						Y,//y
 						OuterRadius * BetaValueSin), //z
 					XMFLOAT4(Colors::White), XMFLOAT3(0.f, -1.f, 0.f)));
 
-				FVertex& InOuterVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+				FVertex& InOuterVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 				InOuterVertex.TexCoord.x = (BetaValueCos * 0.5f) + 0.5f;
 				InOuterVertex.TexCoord.y = (BetaValueSin * 0.5f) + 0.5f;
 
 				//绘制内圈
-				MeshData.VertexData.push_back(FVertex(
+				MeshData.Data.VertexData.push_back(FVertex(
 					XMFLOAT3(
 						InnerRadius * BetaValueCos,//x
 						Y,//y
 						InnerRadius * BetaValueSin), //z
 					XMFLOAT4(Colors::White), XMFLOAT3(0.f, -1.f, 0.f)));
 
-				FVertex& InnerVertex = MeshData.VertexData[MeshData.VertexData.size() - 1];
+				FVertex& InnerVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
-				const float ExtraRadiusRatio = (OuterRadius - InnerRadius) / InTopRadius;
+				float ExtraRadiusRatio = (OuterRadius - InnerRadius) / InTopRadius;
 
 				InnerVertex.TexCoord.x = ((1.f - ExtraRadiusRatio) * BetaValueCos * 0.5f) + 0.5f;
 				InnerVertex.TexCoord.y = ((1.f - ExtraRadiusRatio) * BetaValueSin * 0.5f) + 0.5f;
 			}
 		}
 
-		const int BaseIndex = (InHeightSubdivision + 3) * InAxialSubdivision * 2 + 4;
+		int BaseIndex = (InHeightSubdivision + 3) * InAxialSubdivision * 2 + 4;
 		for (uint32_t j = 0; j < InAxialSubdivision; ++j)
 		{
-			const int OuterStartPoint = j * 2;
-			const int InnerStartPoint = j * 2 + 1;
+			int OuterStartPoint = j * 2;
+			int InnerStartPoint = j * 2 + 1;
 
 			fvector_4id DrawPoint = {
 						 BaseIndex+InnerStartPoint,
@@ -319,11 +322,14 @@ void CPipeMeshComponent::CreateMesh(
 			DrawQuadrilateral(MeshData, DrawPoint,true);
 		}
 	}
+
+	Section.IndexSize = MeshData.Data.IndexData.size();
+	Section.VertexSize = MeshData.Data.VertexData.size();
 }
 
 void CPipeMeshComponent::BuildKey(size_t& OutHashKey, float InTopRadius, float InBottomRadius, float InHeight, float InThickness, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)
 {
-	const std::hash<float> FloatHash;
+	std::hash<float> FloatHash;
 	std::hash<int> IntHash;
 
 	OutHashKey = 5;

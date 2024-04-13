@@ -58,6 +58,9 @@
       <Filter>CoreObject</Filter>
     </ClCompile>
     <ClCompile Include="CodeReflection\NativeClass.cpp" />
+    <ClCompile Include="CoreObject\ArrayPropertyObject.cpp" />
+    <ClCompile Include="CoreObject\ContainerPropertyObject.cpp" />
+    <ClCompile Include="CoreObject\MapPropertyObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodeReflection\CodeReflectionMacroTag.h">
@@ -113,5 +116,8 @@
     <ClInclude Include="CodeReflection\NativeClass.h" />
     <ClInclude Include="CodeReflection\ReflectionTag.h" />
     <ClInclude Include="CoreMacro.h" />
+    <ClInclude Include="CoreObject\ArrayPropertyObject.h" />
+    <ClInclude Include="CoreObject\ContainerPropertyObject.h" />
+    <ClInclude Include="CoreObject\MapPropertyObject.h" />
   </ItemGroup>
 </Project>

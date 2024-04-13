@@ -157,6 +157,13 @@
   <ItemGroup>
     <ClCompile Include="Common\EngineVariableTable.cpp" />
     <ClCompile Include="Common\OperationHandleSelectManage.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\BrowseEditor.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Core\AssetEditorCommon.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Core\AssetFileDirectory.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\AssetEditor.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\Element\BrowseAssetIcon.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\FileEditor.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.cpp" />
     <ClCompile Include="EditorEngine\Core\EditorBase.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.cpp" />
@@ -167,6 +174,7 @@
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\ActorObjectDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\ArrayDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\BoolDetailsMapping.cpp" />
+    <ClCompile Include="EditorEngine\DetailsEditor\Mappings\ContainerDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\FloatDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\IntDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\MapDetailsMapping.cpp" />
@@ -212,6 +220,7 @@
     <ClCompile Include="Engine\Component\Mesh\PipeMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh\PlaneMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh\PyramidMeshComponent.cpp" />
+    <ClCompile Include="Engine\Component\Mesh\SkinnedMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh\SphereMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh\TorusMeshComponent.cpp" />
     <ClCompile Include="Engine\Component\Sky\FogComponent.cpp" />
@@ -333,6 +342,13 @@
   <ItemGroup>
     <ClInclude Include="Common\EngineVariableTable.h" />
     <ClInclude Include="Common\OperationHandleSelectManage.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\BrowseEditor.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Core\AssetEditorCommon.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Core\AssetFileDirectory.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\AssetEditor.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\Element\BrowseAssetIcon.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\FileEditor.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.h" />
     <ClInclude Include="EditorEngine\Core\EditorBase.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsMacro.h" />
@@ -344,6 +360,7 @@
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\ActorObjectDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\ArrayDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\BoolDetailsMapping.h" />
+    <ClInclude Include="EditorEngine\DetailsEditor\Mappings\ContainerDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\FloatDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\IntDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\MapDetailsMapping.h" />
@@ -389,6 +406,7 @@
     <ClInclude Include="Engine\Component\Mesh\PipeMeshComponent.h" />
     <ClInclude Include="Engine\Component\Mesh\PlaneMeshComponent.h" />
     <ClInclude Include="Engine\Component\Mesh\PyramidMeshComponent.h" />
+    <ClInclude Include="Engine\Component\Mesh\SkinnedMeshComponent.h" />
     <ClInclude Include="Engine\Component\Mesh\SphereMeshComponent.h" />
     <ClInclude Include="Engine\Component\Mesh\TorusMeshComponent.h" />
     <ClInclude Include="Engine\Component\Sky\FogComponent.h" />

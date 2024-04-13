@@ -16,10 +16,41 @@ struct FNativeClass
 public:
 	FNativeClass();
 
-	void AddProperty(
+	bool RemoveTopProperty();
+
+	bool RemoveAllProperty();
+
+	int GetPropertyNumber()const;
+
+	CPropertyObject* AddArrayProperty(
 		const std::string& PropertyName,
 		const std::string& InType,
+		const std::string& InValueType,
+		int InValueElementSize,
 		int InCount,
+		int InElementSize,
+		void* InData);
+
+	CPropertyObject* AddMapProperty(
+		const std::string& PropertyName,
+		const std::string& InType,
+		const std::string& InKeyType,
+		int InKeyElementSize,
+		const std::string& InValueType,
+		int InValueElementSize,
+		int InCount,
+		int InElementSize,
+		void* InData);
+
+	template<class T>
+	T* AddProperty(const std::string& PropertyName,
+		const std::string& InType,
+		int InElementSize,
+		void* InData);
+
+	CPropertyObject* AddProperty(
+		const std::string& PropertyName,
+		const std::string& InType,
 		int InElementSize,
 		void* InData);
 	

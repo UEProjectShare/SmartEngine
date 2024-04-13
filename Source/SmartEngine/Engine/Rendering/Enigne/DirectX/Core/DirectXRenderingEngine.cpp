@@ -664,6 +664,22 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
+		//if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())
+		//{
+		//	string Path = FEnginePathHelper::GetEngineContentPath() + "\\TestC_1.fbx";
+		//	CustomMesh->CreateMesh(Path);
+		//
+		//	CustomMesh->SetPosition(XMFLOAT3(0.f, -12, 30.f));
+		//	if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+		//	{
+		//		InMaterial->SetBaseColor(fvector_4d(1.f));
+		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+		//
+		//		InMaterial->SetRoughness(0.01f);
+		//		InMaterial->SetFresnelF0(fvector_3d(0.5f));
+		//	}
+		//}
+
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//Í¸Ã÷µÄÖé×Ó
 		{
 			SphereMesh->SetMeshRenderLayerType(EMeshRenderLayerType::RENDERLAYER_OPAQUE_REFLECTOR);

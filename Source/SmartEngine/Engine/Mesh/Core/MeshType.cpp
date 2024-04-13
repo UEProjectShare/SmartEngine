@@ -19,3 +19,9 @@ FVertex::FVertex(const XMFLOAT3& InPos, const XMFLOAT4& InColor, const XMFLOAT3&
 	, TexCoord(InTexCoord)
 {
 }
+
+FMeshSection::FMeshSection()
+	:IndexSize(0)
+	, VertexSize(0)
+{
+}

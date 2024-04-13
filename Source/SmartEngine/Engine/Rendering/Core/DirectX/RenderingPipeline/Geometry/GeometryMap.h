@@ -8,6 +8,7 @@
 #include "../DynamicMap/ShadowMap/DynamicShadowMap.h"
 #include "../DynamicMap/ShadowMap/DynamicShadowCubeMap.h"
 
+enum ERenderingMeshType;
 class CMaterial;
 struct FRenderingTexture;
 class CFogComponent;
@@ -26,21 +27,67 @@ struct FGeometry : public IDirectXDeviceInterface_Struct
 
 	void BuildMesh(const size_t InMeshHash,CMeshComponent* InMesh, const FMeshRenderingData& MeshData,int InKey);
 	
-	void DuplicateMesh(CMeshComponent* InMesh, const std::shared_ptr<FRenderingData>& MeshData, int InKey);
+	void BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FSkinnedMeshRenderingData& SkinnedMeshData, int InKey);
+	
+	void DuplicateMesh(CMeshComponent* InMesh, std::shared_ptr<FRenderingData>& MeshData, int InKey);
 	
 	bool FindMeshRenderingDataByHash(const size_t& InHash, std::shared_ptr<FRenderingData>& MeshData, int InRenderLayerIndex = -1);
 
 	//构建模型
-	void Build();
+	void Build(int InType);
+	
+	//获取基础构建数据
+	bool GetRenderingDataInfo(
+		ERenderingMeshType InMeshType,
+		UINT& VertexSizeInBytes,
+		UINT& IndexSizeInBytes,
+		void*& VertexDataPtr,
+		void*& IndexDataPtr);
 
 	UINT GetDrawObjectNumber() const;
 
-	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
+	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(int InType);
 	
-	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(int InType);
 
-	static void FindRenderingDatas(const std::function<EFindValueType(std::shared_ptr<FRenderingData>&)>& InFun);
+	static void FindRenderingDatas(std::function<EFindValueType(std::shared_ptr<FRenderingData>&)> InFun);
 
+	//复制
+private:
+	template<class T>
+	void DuplicateMesh_Interior(
+		CMeshComponent* InMesh,
+		std::shared_ptr<FRenderingData>& MeshData,
+		FMeshData<T>& InMyRenderingData,
+		int InKey);
+
+	void DuplicateMeshRenderingSection(
+		const std::shared_ptr<FRenderingData>& MeshData,
+		std::shared_ptr<FRenderingData>& InMeshRenderingData);
+	
+	//构建
+	template<class T>
+	void BuildMesh_Interior(
+		const size_t InMeshHash,
+		CMeshComponent* InMesh,
+		const FRenderContent<T>& MeshData,
+		int InKey,
+		FMeshData<T>& InMeshRenderingData,
+		std::function<void(std::shared_ptr<FRenderingData>)> InFun);
+
+	template<class T>
+	void BuildBoundingBox(const FRenderContent<T>& MeshData, BoundingBox& OutBounds);
+
+	template<class T>
+	void BuildRenderingSection(
+		const FRenderContent<T>& MeshData,
+		std::shared_ptr<FRenderingData> InRenderingData,
+		FMeshData<T>& InMeshRenderingData);
+
+	void BuildUniqueRenderingSection(
+		const std::shared_ptr<FRenderingData>& MeshData,
+		std::shared_ptr<FRenderingData>& InMeshRenderingData);
+	
 protected:
 	ComPtr<ID3DBlob> CPUVertexBufferPtr;
 	
@@ -55,7 +102,8 @@ protected:
 	ComPtr<ID3D12Resource> IndexBufferTmpPtr;
 
 	//真实的数据
-	FMeshRenderingData MeshRenderingData;
+	FVertexMeshData MeshRenderingData;
+	FSkinnedVertexMeshData SkinnedMeshRenderingData;
 	
 	//唯一性的渲染池
 	static map<size_t, std::shared_ptr<FRenderingData>> UniqueRenderingDatas;
