@@ -152,7 +152,7 @@ void FRenderLayer::DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InW
 					Tmp.IndexSize,//顶点数量
 					1,//绘制实例数量
 					Tmp.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
-					Tmp.VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
+					InRenderingData->VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
 					0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
 			}
 		}
@@ -225,15 +225,15 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 				XMStoreFloat4x4(&ObjectTransformation.TextureTransformation, XMMatrixTranspose(ATRIXTextureTransform));
 				XMStoreFloat4x4(&ObjectTransformation.NormalTransformation, NormalInverseMatrix);
 				
-				//收集材质Index
-				if (const auto& InMater = (*InRenderingData->Mesh->GetMaterials())[0])
-				{
-					ObjectTransformation.MaterialIndex = InMater->GetMaterialIndex();
-				}
-
 				//更新ObjectIndex
-				for (auto &Tmp : InRenderingData->Sections)
+				for (auto& Tmp : InRenderingData->Sections)
 				{
+					//收集材质Index
+					if (auto& InMater = (*InRenderingData->Mesh->GetMaterials())[Tmp.MaterialIndex])
+					{
+						ObjectTransformation.MaterialIndex = InMater->GetMaterialIndex();
+					}
+
 					GeometryMap->MeshConstantBufferViews.Update(Tmp.MeshObjectIndex, &ObjectTransformation);
 				}
 			}

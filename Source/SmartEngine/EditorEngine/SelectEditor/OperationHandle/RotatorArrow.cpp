@@ -46,11 +46,14 @@ void GRotatorArrow::CreateMesh()
 	string MeshPathZ = FEnginePathHelper::RelativeToAbsolutePath(
 		FEnginePathHelper::GetEngineContentPath() + "\\Handle\\RotateHandleZ.fbx");
 
+	FIEParam IEParam;
+	IEParam.bOriginalCoordinate = false;
+
 	//创建操作轴
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, XAxisComponent, MeshPathX);
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, YAxisComponent, MeshPathY);
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, ZAxisComponent, MeshPathZ);
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, AxisComponent, MeshPathZ);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, XAxisComponent, MeshPathX,IEParam);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, YAxisComponent, MeshPathY,IEParam);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, ZAxisComponent, MeshPathZ,IEParam);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, AxisComponent, MeshPathZ, IEParam);
 
 	//显示CD面片
 	CREATE_RENDER_DATA_BY_COMPONENT(CPlaneMeshComponent, XPlaneComponent, 5.2, 5.2, 2, 2);

@@ -164,7 +164,7 @@ void CPipeMeshComponent::CreateMesh(
 	//¸ß¶È¼ä¸ô
 	float HeightInterval = InHeight / InHeightSubdivision;
 
-	float BetaValue = XM_2PI / (float)InAxialSubdivision;
+	float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
 
 	BuildRadiusPoint(
 		MeshData,
@@ -325,6 +325,8 @@ void CPipeMeshComponent::CreateMesh(
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+
+	SpawnDefaultMaterial();
 }
 
 void CPipeMeshComponent::BuildKey(size_t& OutHashKey, float InTopRadius, float InBottomRadius, float InHeight, float InThickness, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)

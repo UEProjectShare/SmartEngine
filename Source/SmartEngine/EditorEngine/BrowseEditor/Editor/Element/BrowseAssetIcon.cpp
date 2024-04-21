@@ -1,5 +1,6 @@
 #include "BrowseAssetIcon.h"
 #include "../ObjectAssetMenuEditor.h"
+#include "../../../Core/EditorCommon.h"
 
 void FBrowseAssetIcon::Draw(int UID, const char* AssetName, float DeltaTime)
 {
@@ -26,7 +27,9 @@ void FBrowseAssetIcon::Draw(int UID, const char* AssetName, float DeltaTime)
 			UV0, UV1,
 			SelectFramePadding))
 		{
-
+			BlueprintEditorSelected::Add(
+				EBlueprintSelectedType::BlueprintSelected_Object,
+				AssetName);
 		}
 
 		ObjectAssetMenuEditor.DrawEditor(DeltaTime);

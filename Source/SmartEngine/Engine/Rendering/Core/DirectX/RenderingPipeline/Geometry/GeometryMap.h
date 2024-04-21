@@ -48,7 +48,7 @@ struct FGeometry : public IDirectXDeviceInterface_Struct
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(int InType);
 	
-	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(int InType);
+	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(int InType) const;
 
 	static void FindRenderingDatas(std::function<EFindValueType(std::shared_ptr<FRenderingData>&)> InFun);
 
@@ -63,7 +63,7 @@ private:
 
 	void DuplicateMeshRenderingSection(
 		const std::shared_ptr<FRenderingData>& MeshData,
-		std::shared_ptr<FRenderingData>& InMeshRenderingData);
+		const std::shared_ptr<FRenderingData>& InMeshRenderingData);
 	
 	//¹¹½¨
 	template<class T>
@@ -86,7 +86,7 @@ private:
 
 	void BuildUniqueRenderingSection(
 		const std::shared_ptr<FRenderingData>& MeshData,
-		std::shared_ptr<FRenderingData>& InMeshRenderingData);
+		const std::shared_ptr<FRenderingData>& InMeshRenderingData);
 	
 protected:
 	ComPtr<ID3DBlob> CPUVertexBufferPtr;

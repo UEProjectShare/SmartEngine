@@ -7,16 +7,14 @@
 #include "Mappings/ArrayDetailsMapping.h"
 #include "Mappings/Vector3DDetailsMapping.h"
 #include "Mappings/ActorObjectDetailsMapping.h"
-#include "Core/RegisterDetailsMapping.h"
-#include "../../Engine/Actor/Core/ActorObject.h"
 #include "Mappings/RotatorDetailsMapping.h"
 #include "Mappings/XMFLOAT3DetailsMapping.h"
-
-extern GActorObject* SelectedObject;
+#include "Core/RegisterDetailsMapping.h"
+#include "../../Engine/Actor/Core/ActorObject.h"
 
 FDetailsEditor::FDetailsEditor()
 {
-	LastSelectedObject = nullptr;
+
 }
 
 void FDetailsEditor::BuildEditor()
@@ -33,41 +31,33 @@ void FDetailsEditor::BuildEditor()
 	FRegisterDetailsMapping::RegisterPropertyDetails("frotator", FRotatorDetailsMapping::MakeDetailsMapping());
 
 	//类的映射
-	FRegisterDetailsMapping::RegisterClassDetails("GActorObject", FActorObjectDetailsMapping::MakeDetailsMapping());
+	FRegisterDetailsMapping::RegisterClassDetails("GActorObject",FActorObjectDetailsMapping::MakeDetailsMapping());
 }
 
 void FDetailsEditor::DrawEditor(float DeltaTime)
 {
-	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 
-	ImGui::Begin("DetailsEditor");
-
-	if (SelectedObject)
-	{
-		if (SelectedObject == LastSelectedObject)
-		{
-			string ComponentAreaName = SelectedObject->GetName().append(":Component Area");
-			if (ImGui::CollapsingHeader(ComponentAreaName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				//映射对象
-				FRegisterDetailsMapping::UpdateClassWidget(SelectedObject);
-			}
-
-			string PropertyAreaName = SelectedObject->GetName().append(":Property Area");
-			if (ImGui::CollapsingHeader(PropertyAreaName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				//映射变量
-				FRegisterDetailsMapping::UpdatePropertyWidget(SelectedObject->GetNativeClass().Property);
-			}
-			ImGui::Separator();
-		}
-	}
-
-	ImGui::End();
-
-	LastSelectedObject = SelectedObject;
 }
 
 void FDetailsEditor::ExitEditor()
 {
+}
+
+void FDetailsEditor::UpdateActorDetailsEditor(GActorObject* InUpdateActor)
+{
+	const string ComponentAreaName = InUpdateActor->GetName().append(":Component Area");
+	if (ImGui::CollapsingHeader(ComponentAreaName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//映射对象
+		FRegisterDetailsMapping::UpdateClassWidget(InUpdateActor);
+	}
+
+	const string PropertyAreaName = InUpdateActor->GetName().append(":Property Area");
+	if (ImGui::CollapsingHeader(PropertyAreaName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//映射变量
+		FRegisterDetailsMapping::UpdatePropertyWidget(InUpdateActor->GetNativeClass().Property);
+	}
+
+	ImGui::Separator();
 }

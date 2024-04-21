@@ -654,7 +654,7 @@ int CDirectXRenderingEngine::PostInit()
 			string MeshPath = FEnginePathHelper::GetEngineContentPath() + "/SK_Mannequin.FBX";
 			CustomMesh->CreateMesh(MeshPath);
 			CustomMesh->SetPosition(XMFLOAT3(0.f, 0, 50.f));
-			CustomMesh->SetRotation(fvector_3d(0.f, 180.f, 0.f));
+			CustomMesh->SetRotation(fvector_3d(90.f, 0.f, 0.f));
 			CustomMesh->SetCastShadow(true);
 
 			if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
@@ -664,21 +664,21 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
-		//if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())
-		//{
-		//	string Path = FEnginePathHelper::GetEngineContentPath() + "\\TestC_1.fbx";
-		//	CustomMesh->CreateMesh(Path);
-		//
-		//	CustomMesh->SetPosition(XMFLOAT3(0.f, -12, 30.f));
-		//	if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
-		//	{
-		//		InMaterial->SetBaseColor(fvector_4d(1.f));
-		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-		//
-		//		InMaterial->SetRoughness(0.01f);
-		//		InMaterial->SetFresnelF0(fvector_3d(0.5f));
-		//	}
-		//}
+		if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())
+		{
+			string Path = FEnginePathHelper::GetEngineContentPath() + "\\TestC_1.fbx";
+			CustomMesh->CreateMesh(Path);
+		
+			CustomMesh->SetPosition(XMFLOAT3(0.f, -6, 50.f));
+			if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+			{
+				InMaterial->SetBaseColor(fvector_4d(1.f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+		
+				InMaterial->SetRoughness(0.01f);
+				InMaterial->SetFresnelF0(fvector_3d(0.5f));
+			}
+		}
 
 		if (GSphereMesh* SphereMesh = World->CreateActorObject<GSphereMesh>())//Í¸Ã÷µÄÖé×Ó
 		{

@@ -564,6 +564,48 @@
     <ClCompile Include="Engine\Component\Mesh\SkinnedMeshComponent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintEditor\BlueprintEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintGraphic\GraphicBlueprintEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintPin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\Node.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintToolbarEidtor\BlueprintToolbarEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Details\ObjectDetailsEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Graphic\ObjectGraphicBlueprintEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintPin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Toolbar\ObjectBlueprintToolbarEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\ObjectBlueprintEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\Core\EditorCommon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\DetailsEditor\OutsideDetailsEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h">
@@ -1143,6 +1185,51 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Mesh\SkinnedMeshComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintEditor\BlueprintEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintGraphic\GraphicBlueprintEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintPin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\Node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintToolbarEidtor\BlueprintToolbarEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintEditorType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Details\ObjectDetailsEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Graphic\ObjectGraphicBlueprintEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintPin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Toolbar\ObjectBlueprintToolbarEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\ObjectBlueprintEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\Core\EditorCommon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\DetailsEditor\OutsideDetailsEditor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -86,8 +86,8 @@ public:
 		uint32_t InAxialSubdivision,
 		uint32_t InHeightSubdivision);
 
-	CMeshComponent* CreateMeshComponent(const FCreateObjectParam& InObjectParam, string& InPath);
-
+	CMeshComponent* CreateMeshComponent(const FCreateObjectParam& InObjectParam, string& InPath, const struct FIEParam& InParam);
+	
 	FRenderingPipeline* GetRenderingPipeline() const {return const_cast<FRenderingPipeline*>(&RenderingPipeline);}
 
 protected:

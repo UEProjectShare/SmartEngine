@@ -28,6 +28,8 @@ public:
 	
 	void SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType);
 
+	void SpawnDefaultMaterial();
+
 	virtual ERenderingMeshType GetMeshType() const { return ERenderingMeshType::MESH_TYPE; }
 
 	void GetBoundingBox(BoundingBox& OutBoundingBox) const;

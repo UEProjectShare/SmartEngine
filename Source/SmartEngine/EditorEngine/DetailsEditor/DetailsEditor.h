@@ -1,6 +1,8 @@
 #pragma once
 #include "../Core/EditorBase.h"
 
+class GActorObject;
+
 class FDetailsEditor : public FEditorBase
 {
 public:
@@ -11,7 +13,6 @@ public:
 	void DrawEditor(float DeltaTime) override;
 	
 	void ExitEditor() override;
-
-private:
-	class GActorObject* LastSelectedObject;
+	
+	void UpdateActorDetailsEditor(GActorObject* InUpdateActor);
 };

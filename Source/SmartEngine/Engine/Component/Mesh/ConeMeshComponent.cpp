@@ -15,11 +15,11 @@ void CConeMeshComponent::CreateMesh(
 	FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
 
 	//半径间隔
-	float RadiusInterval = -InRadius / (float)InHeightSubdivision;
+	float RadiusInterval = -InRadius / static_cast<float>(InHeightSubdivision);
 	//高度间隔
-	float HeightInterval = InHeight / (float)InHeightSubdivision;
+	float HeightInterval = InHeight / static_cast<float>(InHeightSubdivision);
 
-	float BetaValue = XM_2PI / (float)InAxialSubdivision;
+	float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
 
 	//构建顶部
 	MeshData.Data.VertexData.push_back(
@@ -123,6 +123,8 @@ void CConeMeshComponent::CreateMesh(
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+
+	SpawnDefaultMaterial();
 }
 
 void CConeMeshComponent::BuildKey(size_t& OutHashKey, float InRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)

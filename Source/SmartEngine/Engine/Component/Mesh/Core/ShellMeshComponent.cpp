@@ -39,5 +39,5 @@ fvector_4id CShellMeshComponent::GetQuadrilateralDrawPointTypeA(int InRowsand, i
 	return { InColumns * GroupLayer + InRowsand,				 //A
 			(InColumns + 1) * GroupLayer + InRowsand,			 //B
 			(InColumns + 1) * GroupLayer + InRowsand + Offset,	 //C
-			InColumns * GroupLayer + InRowsand + Offset };		 //D
+			InColumns * GroupLayer + InRowsand + Offset };	 //D
 }

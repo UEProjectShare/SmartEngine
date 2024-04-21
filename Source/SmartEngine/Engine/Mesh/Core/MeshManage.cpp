@@ -76,9 +76,9 @@ CMeshComponent* CMeshManage::CreateTorusMeshComponent(const FCreateObjectParam& 
     return MeshConstruction::CreateMeshComponent<CTorusMeshComponent>(InObjectParam,this, InRadius, InSectionRadius,InAxialSubdivision, InHeightSubdivision);
 }
 
-CMeshComponent* CMeshManage::CreateMeshComponent(const FCreateObjectParam& InObjectParam,string& InPath)
+CMeshComponent* CMeshManage::CreateMeshComponent(const FCreateObjectParam& InObjectParam,string& InPath, const struct FIEParam& InParam)
 {
-    return MeshConstruction::CreateMeshComponent<CCustomMeshComponent>(InObjectParam,this, InPath);
+    return MeshConstruction::CreateMeshComponent<CCustomMeshComponent>(InObjectParam,this, InPath, InParam);
 }
 
 CMeshComponent* CMeshManage::CreateBoxMeshComponent(const FCreateObjectParam& InObjectParam,float InHeight, float InWidth, float InDepth)

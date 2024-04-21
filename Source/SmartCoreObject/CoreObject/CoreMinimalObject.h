@@ -6,7 +6,7 @@
 #include "../CodeReflection/ScriptMacro.h"
 #include "../Construction/ObjectConstruction.h"
 #include "../CodeReflection/NativeClass.h"
-#include "../CoreMacro.h"
+#include "CoreMacro.h"
 
 class CFunctionObject;
 class CCoreMinimalObject;

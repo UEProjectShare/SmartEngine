@@ -23,5 +23,6 @@ FVertex::FVertex(const XMFLOAT3& InPos, const XMFLOAT4& InColor, const XMFLOAT3&
 FMeshSection::FMeshSection()
 	:IndexSize(0)
 	, VertexSize(0)
+	, MaterialIndex(0)
 {
 }

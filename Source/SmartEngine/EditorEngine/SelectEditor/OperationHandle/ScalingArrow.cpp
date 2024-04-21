@@ -21,10 +21,13 @@ void GScalingArrow::CreateMesh()
 	string AnyAxisMeshPath = FEnginePathHelper::RelativeToAbsolutePath(
 		FEnginePathHelper::GetEngineContentPath() + "\\Handle\\AnyAxis_Type_1.fbx");
 
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, XAxisComponent, MeshPath);
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, YAxisComponent, MeshPath);
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, ZAxisComponent, MeshPath);
-	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, AxisComponent, AnyAxisMeshPath);
+	FIEParam IEParam;
+	IEParam.bOriginalCoordinate = false;
+
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, XAxisComponent, MeshPath,IEParam);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, YAxisComponent, MeshPath,IEParam);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, ZAxisComponent, MeshPath,IEParam);
+	CREATE_RENDER_DATA_BY_COMPONENT(CCustomMeshComponent, AxisComponent, AnyAxisMeshPath,IEParam);
 
 	YAxisComponent->SetRotation(fvector_3d(-90.f, 0.f, 0.f));
 	XAxisComponent->SetRotation(fvector_3d(0.f, 90.f, 0.f));

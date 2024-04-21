@@ -9,17 +9,19 @@ enum EMeshLoadAssetType
 	MESH_FBX,
 };
 
+struct FIEParam;
+
 class CCustomMeshComponent : public CMeshComponent
 {
 	CODEREFLECTION()
 public:
 	CCustomMeshComponent();
 
-	void CreateMesh(FMeshRenderingData& MeshData, const string& InPath);
+	void CreateMesh(FMeshRenderingData& MeshData, const string& InPath, const FIEParam& InParam);
 
-	static bool LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FMeshRenderingData& MeshData);
+	bool LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FMeshRenderingData& MeshData);
 	
-	static bool LoadFBXFromBuff(const string& InPath, FMeshRenderingData& MeshData);
+	bool LoadFBXFromBuff(const string& InPath, FMeshRenderingData& MeshData, const FIEParam& InParam);
 
-	void BuildKey(size_t& OutHashKey, const std::string& InPath);
+	void BuildKey(size_t& OutHashKey, const std::string& InPath, const FIEParam& InParam);
 };

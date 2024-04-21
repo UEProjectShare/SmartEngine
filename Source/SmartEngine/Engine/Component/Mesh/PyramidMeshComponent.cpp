@@ -16,14 +16,14 @@ void CPyramidMeshComponent::CreateMesh(
 
 	float InRadius = InSize;
 	float InHeight = InSize * 2.f;
-	uint32_t InAxialSubdivision = (uint32_t)PyramidNumberSides;
+	uint32_t InAxialSubdivision = static_cast<uint32_t>(PyramidNumberSides);
 
 	//半径间隔
-	float RadiusInterval = -InRadius / (float)InHeightSubdivide;
+	float RadiusInterval = -InRadius / static_cast<float>(InHeightSubdivide);
 	//高度间隔
-	float HeightInterval = InHeight / (float)InHeightSubdivide;
+	float HeightInterval = InHeight / static_cast<float>(InHeightSubdivide);
 
-	float BetaValue = XM_2PI / (float)InAxialSubdivision;
+	float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
 
 	//构建顶部
 	MeshData.Data.VertexData.push_back(
@@ -58,8 +58,8 @@ void CPyramidMeshComponent::CreateMesh(
 			XMVECTOR N = -XMVector3Normalize(XMVector3Cross(T, B));
 			XMStoreFloat3(&Vertex.Normal, N);
 
-			Vertex.TexCoord.x = (float)j / (float)InAxialSubdivision;
-			Vertex.TexCoord.y = (float)i / (float)InHeightSubdivide;
+			Vertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InAxialSubdivision);
+			Vertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InHeightSubdivide);
 		}
 	}
 
@@ -128,6 +128,8 @@ void CPyramidMeshComponent::CreateMesh(
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+
+	SpawnDefaultMaterial();
 }
 
 void CPyramidMeshComponent::BuildKey(size_t& OutHashKey, EPyramidNumberSides InPyramidNumberSidesType, uint32_t InHeightSubdivide, uint32_t InSize)

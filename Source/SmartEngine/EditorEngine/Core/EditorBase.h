@@ -1,7 +1,7 @@
 #pragma once
 #include "../../Engine/EngineMinimal.h"
 
-class FEditorBase
+class FEditorBase : public std::enable_shared_from_this<FEditorBase>
 {
 public:
 	virtual ~FEditorBase() = default;

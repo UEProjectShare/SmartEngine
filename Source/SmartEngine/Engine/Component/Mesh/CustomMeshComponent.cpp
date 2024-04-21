@@ -1,7 +1,10 @@
 #include "CustomMeshComponent.h"
 #include "../../Mesh/Core/MeshType.h"
+#include "../../Mesh/Core/Material/Material.h"
+#include "../../Core/Construction/MacroConstruction.h"
+
 #if THIRD_PARTY_LIBRARY
-#include "FBXSDK.h"
+#include "MeshImportExport.h"
 
 #pragma comment(lib, "SmartMeshImportExportTool.lib")
 
@@ -12,7 +15,10 @@ CCustomMeshComponent::CCustomMeshComponent()
 
 }
 
-void CCustomMeshComponent::CreateMesh(FMeshRenderingData& MeshData, const string& InPath)
+void CCustomMeshComponent::CreateMesh(
+	FMeshRenderingData& MeshData, 
+	const string& InPath,
+	const FIEParam& InParam)
 {
 	//C:/dd/dd/c/x.obj
 	//x.obj
@@ -46,7 +52,7 @@ void CCustomMeshComponent::CreateMesh(FMeshRenderingData& MeshData, const string
 		char PathBuff[1024] = { 0 };
 		get_full_path(PathBuff,1024, InPath.c_str());
 
-		LoadFBXFromBuff(PathBuff, MeshData);
+		LoadFBXFromBuff(PathBuff, MeshData, InParam);
 	}
 }
 
@@ -145,7 +151,7 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 			}
 		}
 
-		MeshData.Data.VertexData.resize((int)Position.size());
+		MeshData.Data.VertexData.resize(static_cast<int>(Position.size()));
 		for (size_t i = 0; i < Position.size(); i++)
 		{
 			MeshData.Data.VertexData[i].Position = Position[i];
@@ -173,13 +179,15 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 		Section.IndexSize = MeshData.Data.IndexData.size();
 		Section.VertexSize = MeshData.Data.VertexData.size();
 
+		SpawnDefaultMaterial();
+
 		return true;
 	}
 
 	return false;
 }
 
-void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPath)
+void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPath, const FIEParam& InParam)
 {
 	std::hash<string> FloatHash;
 	
@@ -187,41 +195,65 @@ void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPat
 	OutHashKey += FloatHash(InPath);
 }
 
-bool CCustomMeshComponent::LoadFBXFromBuff(const string& InPath, FMeshRenderingData& MeshData)
+bool CCustomMeshComponent::LoadFBXFromBuff(const string& InPath, FMeshRenderingData& MeshData,const FIEParam& InParam)
 {
 #if THIRD_PARTY_LIBRARY
-	FFBXRenderData RenderData;
-	FFBXAssetImport().LoadMeshData(InPath.c_str(), RenderData);
+	FIERenderData RenderData;
+	AssetImport::LoadMeshData(InPath.c_str(), EIEMeshType::IE_FBX, RenderData,InParam);
 
 	for (auto &TmpModel: RenderData.ModelData)
 	{
-		MeshData.SectionDescribe.push_back(FMeshSection());
-		FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
+		auto FindSection = [&](int InMatrealIndex)->FMeshSection*
+		{
+			for (auto& Tmp : MeshData.SectionDescribe)
+			{
+				if (Tmp.MaterialIndex == InMatrealIndex)
+				{
+					return &Tmp;
+				}
+			}
 
-		for (auto & MeshTmp: TmpModel.MeshData)
+			MeshData.SectionDescribe.push_back(FMeshSection());
+			FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
+			
+			Section.MaterialIndex = InMatrealIndex;
+
+			return &Section;
+		};
+
+		//模型处理
+		for (auto& MeshTmp: TmpModel.MeshData)
 		{
 			for (auto &VertexTmp: MeshTmp.VertexData)
 			{
-				for (int i =0 ;i < 3;i++)
+				//三角形赋值
+				for (int i = 0 ;i < 3; i++)
 				{
 					 MeshData.Data.VertexData.push_back(FVertex());
 					 FVertex& InVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
-					 InVertex.Position.x = VertexTmp.Vertexs[i].Position.X;
-					 InVertex.Position.y = VertexTmp.Vertexs[i].Position.Y;
-					 InVertex.Position.z = VertexTmp.Vertexs[i].Position.Z;
+					 InVertex.Position.x = VertexTmp.Vertexs[i].Position.x;
+					 InVertex.Position.y = VertexTmp.Vertexs[i].Position.y;
+					 InVertex.Position.z = VertexTmp.Vertexs[i].Position.z;
 
-					 InVertex.Normal.x = VertexTmp.Vertexs[i].Normal.X;
-					 InVertex.Normal.y = VertexTmp.Vertexs[i].Normal.Y;
-					 InVertex.Normal.z = VertexTmp.Vertexs[i].Normal.Z;
+					 InVertex.Normal.x = VertexTmp.Vertexs[i].Normal.x;
+					 InVertex.Normal.y = VertexTmp.Vertexs[i].Normal.y;
+					 InVertex.Normal.z = VertexTmp.Vertexs[i].Normal.z;
 
-					 InVertex.UTangent.x = VertexTmp.Vertexs[i].Tangent.X;
-					 InVertex.UTangent.y = VertexTmp.Vertexs[i].Tangent.Y;
-					 InVertex.UTangent.z = VertexTmp.Vertexs[i].Tangent.Z;
+					 InVertex.UTangent.x = VertexTmp.Vertexs[i].Tangent.x;
+					 InVertex.UTangent.y = VertexTmp.Vertexs[i].Tangent.y;
+					 InVertex.UTangent.z = VertexTmp.Vertexs[i].Tangent.z;
 
-					 InVertex.TexCoord.x = VertexTmp.Vertexs[i].UV.X;
-					 InVertex.TexCoord.y = VertexTmp.Vertexs[i].UV.Y;
-				}				
+					 InVertex.TexCoord.x = VertexTmp.Vertexs[i].UV.x;
+					 InVertex.TexCoord.y = VertexTmp.Vertexs[i].UV.y;
+				}
+
+				//Section
+				if (FMeshSection* Section = FindSection(VertexTmp.MaterialID))
+				{
+					Section->IndexSize += 3;
+					Section->VertexSize += 3;
+				}
 			}
 
 			//拷贝
@@ -229,9 +261,46 @@ bool CCustomMeshComponent::LoadFBXFromBuff(const string& InPath, FMeshRenderingD
 				MeshData.Data.IndexData.end(),
 				MeshTmp.IndexData.begin(),
 				MeshTmp.IndexData.end());
+		}
 
-			Section.IndexSize = MeshTmp.IndexData.size();
-			Section.VertexSize = MeshTmp.VertexData.size();
+		//多材质
+		BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
+		if (vector<CMaterial*>* InMaterials = GetMaterials())
+		{
+			for (auto& MaterialTmp : TmpModel.MaterialMap)
+			{
+				InMaterials->push_back(CreateObject<CMaterial>(Param, new CMaterial()));
+				if (CMaterial* InMaterial = (*InMaterials)[InMaterials->size() - 1])
+				{
+					InMaterial->Rename(MaterialTmp.second.Name);
+
+					auto& Diffuse = MaterialTmp.second.DiffuseColor;
+					InMaterial->SetBaseColor(fvector_4d(Diffuse.Buffer()[0], Diffuse.Buffer()[1], Diffuse.Buffer()[2], 1.f));
+				
+					auto& Specular = MaterialTmp.second.Specular;
+					InMaterial->SetSpecular(fvector_3d(static_cast<float>(Specular.Buffer()[0]), static_cast<float>(Specular.Buffer()[1]), static_cast<float>(Specular.Buffer()[2])));
+
+					auto& Reflectivity = MaterialTmp.second.Reflectivity;
+					InMaterial->SetRefractiveValue(*reinterpret_cast<float*>(Reflectivity.Buffer()));
+				
+					//shader设置
+					if (MaterialTmp.second.ShadingModel == "Lambert")
+					{
+						InMaterial->SetMaterialType(EMaterialType::Lambert);
+					}
+					else if (MaterialTmp.second.ShadingModel == "Phong")
+					{
+						InMaterial->SetMaterialType(EMaterialType::Phong);
+					}
+
+					if (!MaterialTmp.second.DiffuseColor.TextureFilename.empty())
+					{
+
+
+						InMaterial->SetBaseColor(MaterialTmp.second.DiffuseColor.TextureFilename);
+					}
+				}
+			}
 		}
 	}
 #endif

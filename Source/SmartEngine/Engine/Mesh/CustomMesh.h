@@ -13,5 +13,5 @@ public:
 
 	void Draw(float DeltaTime) override;
 
-	void CreateMesh(const string &InPath);
+	void CreateMesh(const string &InPath, const FIEParam& InParam = FIEParam());
 };

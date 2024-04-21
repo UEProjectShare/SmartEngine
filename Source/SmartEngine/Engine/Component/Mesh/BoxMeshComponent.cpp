@@ -16,40 +16,40 @@ void CBoxMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InHeight,
 	float CDepth = 0.5f * InDepth;
 	
 	//前面点
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, -CDepth),XMFLOAT4(Colors::White),XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2( 0.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, -CDepth),XMFLOAT4(Colors::White),XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2( 0.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, -CDepth),XMFLOAT4(Colors::White),XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2( 1.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, -CDepth),XMFLOAT4(Colors::White),XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2( 1.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2( 0.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2( 0.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2( 1.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2( 1.0f, 1.0f)));
 
 	//后面点
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, +CDepth),XMFLOAT4(Colors::White),  XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)));
 
 	//上面点
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, -CDepth),XMFLOAT4(Colors::White),  XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
 
 	//右面点
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f),XMFLOAT2(1.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
 					   
 	//左面点
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, +CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(-CWidth, -CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
 
 	//右面点
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, -CDepth),XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
-	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, +CDepth),XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, -CDepth), XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, +CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)));
+	MeshData.Data.VertexData.push_back(FVertex(XMFLOAT3(+CWidth, -CHeight, +CDepth), XMFLOAT4(Colors::White), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)));
 
 	//绘制模型
 	//前面
@@ -78,6 +78,8 @@ void CBoxMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InHeight,
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+	
+	SpawnDefaultMaterial();
 }
 
 void CBoxMeshComponent::BuildKey(size_t& OutHashKey, float InHeight, float InWidth, float InDepth)

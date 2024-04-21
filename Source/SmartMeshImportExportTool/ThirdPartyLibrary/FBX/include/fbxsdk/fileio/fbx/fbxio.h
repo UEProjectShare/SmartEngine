@@ -1063,7 +1063,7 @@ public:
       * \param pFieldName
       * \param pByteSize
       */
-    void* FieldReadR(const char* pFieldName,int* pByteSize);
+    void* FieldReadR(const char* pFieldName, int* pByteSize);
 
 	/**
 	  * \name FBX SDK 2009.3 and later

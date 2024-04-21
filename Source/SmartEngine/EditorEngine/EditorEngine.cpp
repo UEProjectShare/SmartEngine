@@ -4,14 +4,16 @@
 #include "OutLineEditor/OutLineEditor.h"
 #include "DetailsEditor/DetailsEditor.h"
 #include "BrowseEditor/BrowseEditor.h"
+#include "Core/EditorCommon.h"
+#include "DetailsEditor/OutsideDetailsEditor.h"
 
 CEditorEngine::CEditorEngine()
 {
-	ToolbarEditor = new FToolbarEditor();
-	LogEditor = new FLogEditor();
-	OutLineEditor = new FOutLineEditor();
-	DetailsEditor = new FDetailsEditor();
-	BrowseEditor = new FBrowseEditor();
+	Editors.push_back(std::make_shared<FToolbarEditor>());
+	Editors.push_back(std::make_shared<FLogEditor>());
+	Editors.push_back(std::make_shared<FOutLineEditor>());
+	Editors.push_back(std::make_shared<FOutsideDetailsEditor>());
+	Editors.push_back(std::make_shared<FBrowseEditor>());
 }
 
 int CEditorEngine::PreInit(
@@ -61,11 +63,10 @@ void CEditorEngine::BuildEditor()
 	ImGuiIO& IO = ImGui::GetIO();
 	IO.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-	ToolbarEditor->BuildEditor();
-	LogEditor->BuildEditor();
-	OutLineEditor->BuildEditor();
-	DetailsEditor->BuildEditor();
-	BrowseEditor->BuildEditor();
+	for (auto &Tmp : Editors)
+	{
+		Tmp->BuildEditor();
+	}
 }
 
 void CEditorEngine::DrawEditor(float DeltaTime)
@@ -75,20 +76,20 @@ void CEditorEngine::DrawEditor(float DeltaTime)
 	bool show_demo_window = true;
 	ImGui::ShowDemoWindow(&show_demo_window);//Ñ§Ï°°¸Àý
 
-	ToolbarEditor->DrawEditor(DeltaTime);
-	LogEditor->DrawEditor(DeltaTime);
-	OutLineEditor->DrawEditor(DeltaTime);
-	DetailsEditor->DrawEditor(DeltaTime);
-	BrowseEditor->DrawEditor(DeltaTime);
+	for (auto& Tmp : Editors)
+	{
+		Tmp->DrawEditor(DeltaTime);
+	}
+
+	BlueprintEditorSelected::Tick(DeltaTime);
 }
 
 void CEditorEngine::ExitEditor()
 {
-	ToolbarEditor->ExitEditor();
-	LogEditor->ExitEditor();
-	OutLineEditor->ExitEditor();
-	DetailsEditor->ExitEditor();
-	BrowseEditor->ExitEditor();
+	for (auto& Tmp : Editors)
+	{
+		Tmp->ExitEditor();
+	}
 }
 
 void CEditorEngine::DrawLayer(float DeltaTime)

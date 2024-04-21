@@ -18,7 +18,7 @@ void CPlaneMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InHeigh
 			return InValue;
 		}
 
-		return InValue / ((float)InSubdivideValue - 1);
+		return InValue / (static_cast<float>(InSubdivideValue) - 1);
 	};
 
 	float CHeight = 0.5f * InHeight;
@@ -27,8 +27,8 @@ void CPlaneMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InHeigh
 	float HeightSubdivideValue = SubdivideValue(InHeight, InHeightSubdivide);
 	float WidthSubdivideValue = SubdivideValue(InWidth, InWidthSubdivide);
 
-	float HorizontalAverageSubdivision = 1.f / ((float)InWidthSubdivide - 1.f);
-	float VerticalAverageSubdivision = 1.f / ((float)InHeightSubdivide - 1.f);
+	float HorizontalAverageSubdivision = 1.f / (static_cast<float>(InWidthSubdivide) - 1.f);
+	float VerticalAverageSubdivision = 1.f / (static_cast<float>(InHeightSubdivide) - 1.f);
 
 	//绘制点的位置
 	for (uint32_t i = 0; i < InHeightSubdivide; ++i)
@@ -79,6 +79,8 @@ void CPlaneMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InHeigh
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+
+	SpawnDefaultMaterial();
 }
 
 void CPlaneMeshComponent::BuildKey(size_t& OutHashKey, float InHeight, float InWidth, uint32_t InHeightSubdivide, uint32_t InWidthSubdivide)

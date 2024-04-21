@@ -21,7 +21,7 @@ struct FVertex
 	XMFLOAT2 TexCoord;//ÎÆÀí×ø±ê
 };
 
-struct FSkinnedVertex :public FVertex
+struct FSkinnedVertex : public FVertex
 {
 	FSkinnedVertex(){}
 
@@ -38,7 +38,7 @@ struct FMeshData
 	
 	UINT GetVertexSizeInBytes() { return VertexData.size() * sizeof(T); }
 	
-	UINT GetIndexSizeInBytes() { return IndexData.size() * sizeof(uint16_t); }
+	UINT GetIndexSizeInBytes() const { return IndexData.size() * sizeof(uint16_t); }
 };
 
 struct FMeshSection
@@ -48,6 +48,8 @@ struct FMeshSection
 	UINT IndexSize;
 	
 	UINT VertexSize;
+
+	int MaterialIndex;
 };
 
 template<class T>
@@ -65,8 +67,8 @@ struct FRenderContent
 enum EPyramidNumberSides
 {
 	Pyramid_3 = 3,
-	Pyramid_4 ,
-	Pyramid_5 ,
+	Pyramid_4,
+	Pyramid_5,
 };
 
 typedef FMeshData<FVertex> FVertexMeshData;

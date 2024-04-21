@@ -43,13 +43,5 @@ public:
 	void DrawLayer(float DeltaTime);
 
 protected:
-	class FToolbarEditor* ToolbarEditor;
-	
-	class FLogEditor* LogEditor;
-
-	class FOutLineEditor* OutLineEditor;
-
-	class FDetailsEditor* DetailsEditor;
-
-	class FBrowseEditor* BrowseEditor;
+	std::vector<std::shared_ptr<FEditorBase>> Editors;
 };

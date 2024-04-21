@@ -748,7 +748,7 @@ void FGeometry::DuplicateMesh_Interior(
 		InRenderLayer->RenderDatas.push_back(InRenderingData);
 
 		//基础注册
-		InRenderingData->VertexTotalxSize = MeshData->VertexTotalxSize;
+		InRenderingData->VertexTotalSize = MeshData->VertexTotalSize;
 		InRenderingData->IndexTotalSize = MeshData->IndexTotalSize;
 		InRenderingData->Mesh = InMesh;
 		InRenderingData->GeometryKey = InKey;
@@ -862,6 +862,9 @@ void FGeometry::BuildRenderingSection(
 			InSection.IndexSize = Tmp.IndexSize;
 			InSection.VertexSize = Tmp.VertexSize;
 
+			//材质ID
+			InSection.MaterialIndex = Tmp.MaterialIndex;
+
 			//记录index偏移位置
 			InSection.IndexOffsetPosition = IndexOffsetPosition;
 			IndexOffsetPosition += Tmp.IndexSize;
@@ -872,7 +875,7 @@ void FGeometry::BuildRenderingSection(
 
 			//收集总数
 			InRenderingData->IndexTotalSize += Tmp.IndexSize;
-			InRenderingData->VertexTotalxSize += Tmp.VertexSize;
+			InRenderingData->VertexTotalSize += Tmp.VertexSize;
 		}
 
 		//高效的插入
@@ -978,7 +981,7 @@ void FGeometry::Build(int InType)
 	void* IndexDataPtr = nullptr;
 
 	if (GetRenderingDataInfo(
-		(ERenderingMeshType)InType,
+		static_cast<ERenderingMeshType>(InType),
 		VertexSizeInBytes,
 		IndexSizeInBytes,
 		VertexDataPtr,
@@ -1070,7 +1073,7 @@ D3D12_VERTEX_BUFFER_VIEW FGeometry::GetVertexBufferView(int InType)
 	return VBV;
 }
 
-D3D12_INDEX_BUFFER_VIEW FGeometry::GetIndexBufferView(int InType)
+D3D12_INDEX_BUFFER_VIEW FGeometry::GetIndexBufferView(int InType) const
 {
 	D3D12_INDEX_BUFFER_VIEW IBV;
 	IBV.BufferLocation = GPUIndexBufferPtr->GetGPUVirtualAddress();
@@ -1106,7 +1109,7 @@ void FGeometry::FindRenderingDatas(std::function<EFindValueType(std::shared_ptr<
 
 void FGeometry::DuplicateMeshRenderingSection(
 	const std::shared_ptr<FRenderingData>& MeshData,
-	std::shared_ptr<FRenderingData>& InMeshRenderingData)
+	const std::shared_ptr<FRenderingData>& InMeshRenderingData)
 {
 	for (auto& Tmp : MeshData->Sections)
 	{
@@ -1119,6 +1122,8 @@ void FGeometry::DuplicateMeshRenderingSection(
 		MeshRendering.IndexSize = Tmp.IndexSize;
 		MeshRendering.VertexSize = Tmp.VertexSize;
 
+		MeshRendering.MaterialIndex = Tmp.MaterialIndex;
+
 		MeshRendering.IndexOffsetPosition = Tmp.IndexOffsetPosition;
 		MeshRendering.VertexOffsetPosition = Tmp.VertexOffsetPosition;
 	}
@@ -1126,7 +1131,7 @@ void FGeometry::DuplicateMeshRenderingSection(
 
 void FGeometry::BuildUniqueRenderingSection(
 	const std::shared_ptr<FRenderingData>& MeshData,
-	std::shared_ptr<FRenderingData>& InMeshRenderingData)
+	const std::shared_ptr<FRenderingData>& InMeshRenderingData)
 {
 	for (auto& Tmp : MeshData->Sections)
 	{
@@ -1138,6 +1143,8 @@ void FGeometry::BuildUniqueRenderingSection(
 
 		InUniqueSection.IndexSize = Tmp.IndexSize;
 		InUniqueSection.VertexSize = Tmp.VertexSize;
+
+		InUniqueSection.MaterialIndex = Tmp.MaterialIndex;
 
 		InUniqueSection.IndexOffsetPosition = Tmp.IndexOffsetPosition;
 		InUniqueSection.VertexOffsetPosition = Tmp.VertexOffsetPosition;

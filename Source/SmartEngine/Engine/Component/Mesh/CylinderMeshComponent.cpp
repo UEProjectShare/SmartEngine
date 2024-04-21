@@ -16,7 +16,7 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 	//高度间隔
 	float HeightInterval = InHeight / InHeightSubdivision;
 
-	float BetaValue = XM_2PI / (float)InAxialSubdivision;
+	float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
 
 	for (uint32_t i = 0; i < InHeightSubdivision + 1; ++i)
 	{
@@ -46,8 +46,8 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 			XMStoreFloat3(&MyVertex.Normal, N);
 
 			//展UV
-			MyVertex.TexCoord.x = (float)j / (float)InHeightSubdivision;
-			MyVertex.TexCoord.y = (float)i / (float)InAxialSubdivision;
+			MyVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InHeightSubdivision);
+			MyVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InAxialSubdivision);
 		}
 	}
 
@@ -162,6 +162,8 @@ void CCylinderMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InTo
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+
+	SpawnDefaultMaterial();
 }
 
 void CCylinderMeshComponent::BuildKey(size_t& OutHashKey, float InTopRadius, float InBottomRadius, float InHeight, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)

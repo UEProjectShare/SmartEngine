@@ -14,6 +14,8 @@ namespace MeshConstruction
 			std::shared_ptr<FRenderingData> RenderingData;
 			if (InManage->GetRenderingPipeline()->FindMeshRenderingDataByHash(HashKey, RenderingData, static_cast<int>(InMesh->GetRenderLayerType())))
 			{
+				//生成一个默认的材质
+				InMesh->SpawnDefaultMaterial();
 				InManage->GetRenderingPipeline()->DuplicateMesh(InMesh, RenderingData);
 			}
 			else

@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FBXSDK.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SmartMeshImportExportTool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ThirdPartyLibrary\FBX\include\fbxsdk\core\arch\fbxalloc.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -870,9 +864,45 @@
     <ClInclude Include="ThirdPartyLibrary\FBX\include\fbxsdk.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Core\FBX\FBXAssist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FBX\FBXType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FileStream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IEPropertyObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImportExport.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImportExportTool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImportExportToolMacro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImportExportToolType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FBXSDK.cpp">
+    <ClCompile Include="Core\FBX\FBXAssist.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FBX\FBXType.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FileStream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IEPropertyObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshImportExport.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

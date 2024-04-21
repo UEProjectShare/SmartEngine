@@ -13,7 +13,10 @@ CSpotLightComponent::CSpotLightComponent()
 	string MeshPath = FEnginePathHelper::GetEngineContentPath() + "/SpotMesh.obj";
 	
 	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
-	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param, MeshPath));
+
+	FIEParam IEParam;
+	IEParam.bOriginalCoordinate = false;
+	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param, MeshPath, IEParam));
 
 	if (GetLightMesh())
 	{

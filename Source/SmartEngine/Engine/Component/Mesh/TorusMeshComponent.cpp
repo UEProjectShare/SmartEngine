@@ -11,11 +11,11 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 	MeshData.SectionDescribe.push_back(FMeshSection());
 	FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
 
-	float BetaValue = XM_2PI / (float)InAxialSubdivision;
-	float ThetaValue = XM_2PI / (float)InHeightSubdivision;
+	float BetaValue = XM_2PI / static_cast<float>(InAxialSubdivision);
+	float ThetaValue = XM_2PI / static_cast<float>(InHeightSubdivision);
 	for (size_t i = 0; i <= InAxialSubdivision; ++i)
 	{
-		float BetaRadian = i* BetaValue;
+		float BetaRadian = i * BetaValue;
 
 		//InRadius
 		fvector_3d Center(
@@ -41,7 +41,7 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 				FVertex(EngineMath::ToFloat3(PointPosition),
 				XMFLOAT4(Colors::White)));
 
-			FVertex &InVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
+			FVertex& InVertex = MeshData.Data.VertexData[MeshData.Data.VertexData.size() - 1];
 
 			//求法线
 			fvector_3d Normal = PointPosition - Center;
@@ -51,8 +51,8 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 			InVertex.Normal = EngineMath::ToFloat3(Normal);
 
 			//展UV
-			InVertex.TexCoord.x = (float)j / (float)InHeightSubdivision;
-			InVertex.TexCoord.y = (float)i / (float)InAxialSubdivision;
+			InVertex.TexCoord.x = static_cast<float>(j) / static_cast<float>(InHeightSubdivision);
+			InVertex.TexCoord.y = static_cast<float>(i) / static_cast<float>(InAxialSubdivision);
 
 			//InVertex.UTangent.x = tan(BetaRadian) * InRadius;
 			//InVertex.UTangent.y = tan(ThetaRadian) * InSectionRadius;
@@ -72,6 +72,8 @@ void CTorusMeshComponent::CreateMesh(FMeshRenderingData& MeshData, float InRadiu
 
 	Section.IndexSize = MeshData.Data.IndexData.size();
 	Section.VertexSize = MeshData.Data.VertexData.size();
+	
+	SpawnDefaultMaterial();
 }
 
 void CTorusMeshComponent::BuildKey(size_t& OutHashKey, float InRadius, float InSectionRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision)

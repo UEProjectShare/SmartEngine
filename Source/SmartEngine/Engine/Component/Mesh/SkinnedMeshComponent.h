@@ -3,7 +3,7 @@
 #include "SkinnedMeshComponent.CodeReflection.h"
 
 //模型读取类型
-class CSkinnedMeshComponent :public CMeshComponent
+class CSkinnedMeshComponent : public CMeshComponent
 {
 	CODEREFLECTION()
 public:
@@ -11,8 +11,7 @@ public:
 
 	void CreateMesh(FSkinnedMeshRenderingData& MeshData, const string& InPath);
 
-	virtual ERenderingMeshType GetMeshType() const { return ERenderingMeshType::SKINNED_MESH_TYPE; }
-
-public:
+	ERenderingMeshType GetMeshType() const override { return ERenderingMeshType::SKINNED_MESH_TYPE; }
+	
 	void BuildKey(size_t& OutHashKey, const std::string& InPath);
 };

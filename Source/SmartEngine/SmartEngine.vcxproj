@@ -129,6 +129,9 @@
     <PreBuildEvent>
       <Command>$(SolutionDir)Binaries\Win64\SmartBuildTool.exe</Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>copy $(SolutionDir)Source\SmartMeshImportExportTool\ThirdPartyLibrary\FBX\lib\x64\debug\ $(SolutionDir)Binaries\Win64\</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -153,10 +156,25 @@
     <PreBuildEvent>
       <Command>$(SolutionDir)Binaries\Win64\SmartBuildTool.exe</Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>copy $(SolutionDir)Source\SmartMeshImportExportTool\ThirdPartyLibrary\FBX\lib\x64\release\ $(SolutionDir)Binaries\Win64\</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\EngineVariableTable.cpp" />
     <ClCompile Include="Common\OperationHandleSelectManage.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintEditor\BlueprintEditor.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintGraphic\GraphicBlueprintEditor.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintNode.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintPin.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\Node.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintToolbarEidtor\BlueprintToolbarEditor.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Details\ObjectDetailsEditor.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Graphic\ObjectGraphicBlueprintEditor.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintNode.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintPin.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\ObjectBlueprintEditor.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Toolbar\ObjectBlueprintToolbarEditor.cpp" />
     <ClCompile Include="EditorEngine\BrowseEditor\BrowseEditor.cpp" />
     <ClCompile Include="EditorEngine\BrowseEditor\Core\AssetEditorCommon.cpp" />
     <ClCompile Include="EditorEngine\BrowseEditor\Core\AssetFileDirectory.cpp" />
@@ -165,6 +183,7 @@
     <ClCompile Include="EditorEngine\BrowseEditor\Editor\FileEditor.cpp" />
     <ClCompile Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.cpp" />
     <ClCompile Include="EditorEngine\Core\EditorBase.cpp" />
+    <ClCompile Include="EditorEngine\Core\EditorCommon.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\DetailsMapping.cpp" />
@@ -182,6 +201,7 @@
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\StringDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\Vector3DDetailsMapping.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.cpp" />
+    <ClCompile Include="EditorEngine\DetailsEditor\OutsideDetailsEditor.cpp" />
     <ClCompile Include="EditorEngine\EditorEngine.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogEditor.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogObject\LogSystem.cpp" />
@@ -342,6 +362,19 @@
   <ItemGroup>
     <ClInclude Include="Common\EngineVariableTable.h" />
     <ClInclude Include="Common\OperationHandleSelectManage.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintEditorType.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintEditor\BlueprintEditor.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintGraphic\GraphicBlueprintEditor.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintNode.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintPin.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\Node.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintToolbarEidtor\BlueprintToolbarEditor.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Details\ObjectDetailsEditor.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Graphic\ObjectGraphicBlueprintEditor.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintNode.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Node\ObjectBlueprintPin.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\ObjectBlueprintEditor.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\ObjectBlueprintEditor\Toolbar\ObjectBlueprintToolbarEditor.h" />
     <ClInclude Include="EditorEngine\BrowseEditor\BrowseEditor.h" />
     <ClInclude Include="EditorEngine\BrowseEditor\Core\AssetEditorCommon.h" />
     <ClInclude Include="EditorEngine\BrowseEditor\Core\AssetFileDirectory.h" />
@@ -350,6 +383,7 @@
     <ClInclude Include="EditorEngine\BrowseEditor\Editor\FileEditor.h" />
     <ClInclude Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.h" />
     <ClInclude Include="EditorEngine\Core\EditorBase.h" />
+    <ClInclude Include="EditorEngine\Core\EditorCommon.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsMacro.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ConstructDetailsWidget.h" />
@@ -368,6 +402,7 @@
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\StringDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\Vector3DDetailsMapping.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Mappings\XMFLOAT3DetailsMapping.h" />
+    <ClInclude Include="EditorEngine\DetailsEditor\OutsideDetailsEditor.h" />
     <ClInclude Include="EditorEngine\EditorEngine.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogEditor.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogObject\LogSystem.h" />
@@ -417,7 +452,6 @@
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\CameraType.h" />
     <ClInclude Include="Engine\Core\Construction\ActorMeshConstruction.h" />
-    <ClInclude Include="Engine\Core\Construction\ConstructionComponents.h" />
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h" />
     <ClInclude Include="Engine\Core\Construction\MeshConstruction.h" />
     <ClInclude Include="Engine\Core\Engine.h" />

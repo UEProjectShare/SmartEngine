@@ -317,6 +317,7 @@
 #define IOSN_OBJ_REFERENCE_NODE          "ReferenceNode"
 #define IOSN_OBJ_TRIANGULATE			 "Triangulate"
 #define IOSN_OBJ_DEFORMATION             "Deformation"
+#define IOSN_OBJ_USE_DISSOLVE_FACTOR     "UseDissolveFactor"
 
 #define IOSN_3DS_REFERENCENODE			 "ReferenceNode"
 #define IOSN_3DS_TEXTURE      			 "Texture"
@@ -844,6 +845,7 @@
 
 #define EXP_OBJ_TRIANGULATE             EXP_OBJ "|" IOSN_OBJ_TRIANGULATE
 #define EXP_OBJ_DEFORMATION             EXP_OBJ "|" IOSN_OBJ_DEFORMATION
+#define EXP_OBJ_USE_DISSOLVE_FACTOR     EXP_OBJ "|" IOSN_OBJ_USE_DISSOLVE_FACTOR
 
 #define EXP_3DS_REFERENCENODE           EXP_3DS "|" IOSN_3DS_REFERENCENODE	
 #define EXP_3DS_TEXTURE                 EXP_3DS "|" IOSN_3DS_TEXTURE      	

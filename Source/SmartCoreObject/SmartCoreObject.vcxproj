@@ -76,14 +76,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\SmartEngineCore\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\SmartEngineCore\;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\SmartEngineCore\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\SmartEngineCore\;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>

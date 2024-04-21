@@ -999,12 +999,14 @@ public:
             {
                 SetCount(pArrayTemplate.GetCount(), eUninitialized);
 
-                void* lSrc = const_cast<FbxLayerElementArrayTemplate<T>&>(pArrayTemplate).GetLocked(eReadLock);
-                void* lDst = GetLocked();
-                memcpy(lDst, lSrc, sizeof(T) * pArrayTemplate.GetCount());
-                const_cast<FbxLayerElementArrayTemplate<T>&>(pArrayTemplate).Release(&lSrc);
-                Release(&lDst);
-
+				if(pArrayTemplate.GetCount()>0)
+				{
+					void* lSrc = const_cast<FbxLayerElementArrayTemplate<T>&>(pArrayTemplate).GetLocked(eReadLock);
+					void* lDst = GetLocked();
+					memcpy(lDst, lSrc, sizeof(T) * pArrayTemplate.GetCount());
+					const_cast<FbxLayerElementArrayTemplate<T>&>(pArrayTemplate).Release(&lSrc);
+					Release(&lDst);
+				}
                 ReadWriteUnlock();
                 SetStatus(LockAccessStatus::eSuccess);
             }

@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
-#include "../CoreMacro.h"
+#include "CoreMacro.h"
 #include <map>
 #include <vector>
 

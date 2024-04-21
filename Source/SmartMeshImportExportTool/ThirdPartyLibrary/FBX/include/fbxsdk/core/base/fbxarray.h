@@ -354,7 +354,7 @@ public:
         FBX_ASSERT_RETURN(pCount >  0);
         FBX_ASSERT_RETURN(pIndex >= 0);
 
-        size_t lastItem = pIndex + pCount;
+        size_t lastItem = (size_t)pIndex + (size_t)pCount;
         FBX_ASSERT_RETURN(lastItem >= 0);
         FBX_ASSERT_RETURN(lastItem <= (size_t)size);
         FBX_ASSERT_RETURN(lastItem < FBXSDK_INT_MAX);
@@ -545,7 +545,7 @@ public:
     {
         if( this != &pOther )
         {
-            if( Resize(pOther.GetSize()) )
+            if( Resize(pOther.GetSize()) && pOther.GetSize() > 0)
             {
                 memcpy(GetArray(), pOther.GetArray(), pOther.GetSize() * sizeof(T));
             }

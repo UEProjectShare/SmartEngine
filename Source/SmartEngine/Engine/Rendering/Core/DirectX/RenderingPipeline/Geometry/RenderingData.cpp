@@ -3,7 +3,7 @@
 
 FRenderingData::FRenderingData()
 	: IndexTotalSize(0)
-	, VertexTotalxSize(0)
+	, VertexTotalSize(0)
 	, VertexOffsetPosition(0)
 	, VertexTypeSize(sizeof(FVertex))
 	, IndexTypeSize(sizeof(uint16_t))
@@ -23,21 +23,21 @@ ERenderingMeshType FRenderingData::GetMeshType() const
 	return Mesh->GetMeshType();
 }
 
-FVertexMeshData* FRenderingData::GetMeshRenderingData()
+FVertexMeshData* FRenderingData::GetMeshRenderingData() const
 {
 	if (GetMeshType() == ERenderingMeshType::MESH_TYPE)
 	{
-		return (FVertexMeshData*)(MeshRenderingData);
+		return static_cast<FVertexMeshData*>(MeshRenderingData);
 	}
 
 	return nullptr;
 }
 
-FSkinnedVertexMeshData* FRenderingData::GetSkinnedMeshRenderingData()
+FSkinnedVertexMeshData* FRenderingData::GetSkinnedMeshRenderingData() const
 {
 	if (GetMeshType() == ERenderingMeshType::SKINNED_MESH_TYPE)
 	{
-		return (FSkinnedVertexMeshData*)MeshRenderingData;
+		return static_cast<FSkinnedVertexMeshData*>(MeshRenderingData);
 	}
 
 	return nullptr;

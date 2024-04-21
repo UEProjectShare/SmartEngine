@@ -23,7 +23,7 @@ void GCustomMesh::Draw(float DeltaTime)
 
 }
 
-void GCustomMesh::CreateMesh(const string& InPath)
+void GCustomMesh::CreateMesh(const string& InPath, const FIEParam& InParam)
 {
-	CREATE_RENDER_DATA(CCustomMeshComponent, InPath);
+	CREATE_RENDER_DATA(CCustomMeshComponent, InPath, InParam);
 }

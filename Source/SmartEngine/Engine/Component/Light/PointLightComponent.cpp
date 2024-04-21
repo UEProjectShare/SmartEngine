@@ -11,7 +11,10 @@ CPointLightComponent::CPointLightComponent()
 	string MeshPath = FEnginePathHelper::GetEngineContentPath() + "/PointMesh.obj";
 	
 	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
-	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param,MeshPath));
+
+	FIEParam IEParam;
+	IEParam.bOriginalCoordinate = false;
+	SetLightMesh(GetMeshManage()->CreateMeshComponent(Param,MeshPath, IEParam));
 
 	//设置太阳为线框模式
 	if (GetLightMesh())

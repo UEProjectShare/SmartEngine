@@ -40,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(ProjectDir)ThirdPartyLibrary\FBX\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(ProjectDir)ThirdPartyLibrary\FBX\include;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\ThirdPartyLibrary\FBX\lib\x64\debug;$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
-    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(ProjectDir)ThirdPartyLibrary\FBX\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary;$(ProjectDir)ThirdPartyLibrary\FBX\include;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\ThirdPartyLibrary\FBX\lib\x64\release;$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;FBXSDK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MESHIMPORTEXPORTTOOL_EXPORTS;FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -133,7 +133,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;FBXSDK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MESHIMPORTEXPORTTOOL_EXPORTS;FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -145,8 +145,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="FBXSDK.h" />
-    <ClInclude Include="SmartMeshImportExportTool.h" />
+    <ClInclude Include="Core\FBX\FBXAssist.h" />
+    <ClInclude Include="Core\FBX\FBXType.h" />
+    <ClInclude Include="Core\FileStream.h" />
+    <ClInclude Include="Core\IEPropertyObject.h" />
+    <ClInclude Include="MeshImportExport.h" />
+    <ClInclude Include="MeshImportExportTool.h" />
+    <ClInclude Include="MeshImportExportToolMacro.h" />
+    <ClInclude Include="MeshImportExportToolType.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\fbxsdk.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\fbxsdk\core\arch\fbxalloc.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\fbxsdk\core\arch\fbxarch.h" />
@@ -387,7 +393,6 @@
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\chvalid.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\debugXML.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\dict.h" />
-    <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\DOCBparser.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\encoding.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\entities.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\globals.h" />
@@ -425,14 +430,17 @@
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xmlstring.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xmlunicode.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xmlversion.h" />
-    <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xmlwin32version.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xmlwriter.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xpath.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xpathInternals.h" />
     <ClInclude Include="ThirdPartyLibrary\FBX\include\libxml2\libxml\xpointer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FBXSDK.cpp" />
+    <ClCompile Include="Core\FBX\FBXAssist.cpp" />
+    <ClCompile Include="Core\FBX\FBXType.cpp" />
+    <ClCompile Include="Core\FileStream.cpp" />
+    <ClCompile Include="Core\IEPropertyObject.cpp" />
+    <ClCompile Include="MeshImportExport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -29,7 +29,7 @@ public:
 	
 	UINT IndexTotalSize;
 	
-	UINT VertexTotalxSize;
+	UINT VertexTotalSize;
 
 	UINT VertexOffsetPosition;//¶¥µã×ÜÆ«ÒÆ
 	
@@ -45,11 +45,11 @@ public:
 	
 	ERenderingMeshType GetMeshType() const;
 	
-	FVertexMeshData* GetMeshRenderingData();
+	FVertexMeshData* GetMeshRenderingData() const;
 	
-	FSkinnedVertexMeshData* GetSkinnedMeshRenderingData();
+	FSkinnedVertexMeshData* GetSkinnedMeshRenderingData() const;
 	
-	UINT GetVertexSizeInBytes()const { return VertexTotalxSize * VertexTypeSize; }
+	UINT GetVertexSizeInBytes()const { return VertexTotalSize * VertexTypeSize; }
 	
 	UINT GetIndexSizeInBytes()const { return IndexTotalSize * IndexTypeSize; }
 	

@@ -7,9 +7,6 @@ CMeshComponent::CMeshComponent()
 {
 	MeshRenderLayerType = EMeshRenderLayerType::RENDERLAYER_OPAQUE;
 	
-	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
-	Materials.push_back(CreateObject<CMaterial>(Param,new CMaterial()));
-	
 	bCastShadow = true;
 	bPickup = true;
 	bVisible = true;
@@ -26,6 +23,12 @@ void CMeshComponent::BuildMesh(const FMeshRenderingData* InRenderingData)
 void CMeshComponent::SetMeshRenderLayerType(EMeshRenderLayerType InRenderLayerType)
 {
 	MeshRenderLayerType = InRenderLayerType;
+}
+
+void CMeshComponent::SpawnDefaultMaterial()
+{
+	BUILD_OBJECT_PARAMETERS_BY_COMPONENT(, this);
+	Materials.push_back(CreateObject<CMaterial>(Param, new CMaterial()));
 }
 
 void CMeshComponent::GetBoundingBox(BoundingBox& OutBoundingBox) const
