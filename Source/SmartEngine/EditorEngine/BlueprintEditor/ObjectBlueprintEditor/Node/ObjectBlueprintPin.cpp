@@ -5,9 +5,9 @@ FObjectBlueprintPin::FObjectBlueprintPin()
 {
 }
 
-void FObjectBlueprintPin::BuildEditor()
+void FObjectBlueprintPin::BuildEditor(const FCanvasGeometry& InGeometry)
 {
-	Super::BuildEditor();
+	Super::BuildEditor(InGeometry);
 }
 
 void FObjectBlueprintPin::DrawEditor(float DeltaTime)

@@ -13,13 +13,15 @@ class CCoreMinimalObject;
 struct FFrame;
 
 //提供核心对象
-class SMARTENGINECORE_API CCoreMinimalObject : public IGuidInterface
+class SMARTCOREOBJECT_API CCoreMinimalObject : public IGuidInterface
 {
 public:
 
 	virtual void InitMinimalObject();//内部调用
 
 	CCoreMinimalObject();
+
+	CCoreMinimalObject(int){}
 	
 	virtual ~CCoreMinimalObject();
 
@@ -83,4 +85,4 @@ protected:
 	FNativeClass NativeClass;
 };
 
-extern SMARTENGINECORE_API vector<CCoreMinimalObject*> GObjects;
+extern SMARTCOREOBJECT_API vector<CCoreMinimalObject*> GObjects;

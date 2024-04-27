@@ -1,7 +1,7 @@
 #pragma once
 #include "ContainerPropertyObject.h"
 
-class SMARTENGINECORE_API CMapPropertyObject : public CContainerPropertyObject
+class SMARTCOREOBJECT_API CMapPropertyObject : public CContainerPropertyObject
 {
 	typedef CContainerPropertyObject Super;
 

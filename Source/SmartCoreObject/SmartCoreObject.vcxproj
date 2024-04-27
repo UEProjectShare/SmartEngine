@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CodeReflection\ClassManage.cpp" />
     <ClCompile Include="CodeReflection\Frame.cpp" />
     <ClCompile Include="CodeReflection\FunctionManage.cpp" />
     <ClCompile Include="CodeReflection\NativeClass.cpp" />
@@ -168,6 +169,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
   <ItemGroup>
+    <ClInclude Include="CodeReflection\ClassManage.h" />
     <ClInclude Include="CodeReflection\CodeReflectionMacroTag.h" />
     <ClInclude Include="CodeReflection\Frame.h" />
     <ClInclude Include="CodeReflection\FunctionManage.h" />

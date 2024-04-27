@@ -1,19 +1,11 @@
 #pragma once
 #include "../../../Core/EditorBase.h"
+#include "../BlueprintEditorType.h"
+#include "../../../../Engine/Component/TimelineComponent.h"
 
-struct FGraphicBlueprintGeometry
-{
-	ImVec2 CanvasStartPosition;//P0
-	ImVec2 CanvasEndPosition;//P1
-
-	ImVec2 CanvasSize;
-
-	ImVec2 Origin;
-	ImVec2 MousePositionInCanvas;
-	fvector_2d DeltaValue;
-};
-
+class FBlueprintDrawConnection;
 class FBlueprintNode;
+
 class FGraphicBlueprintEditor : public FEditorBase
 {
 	typedef FEditorBase Super;
@@ -26,17 +18,56 @@ public:
 	void DrawEditor(float DeltaTime) override;
 
 	void ExitEditor() override;
+	
+	float GetZoomRatio() const;
+
+	void ZoomBlueprintNodeSize(float InRatio) const;
+	
+	void ZoomBlueprintNodeOffset(float InRatio) const;
 
 protected:
+	void StructureGeometryParam(FCanvasGeometry& OutGeometry) const;
+	
+	std::shared_ptr<FNode> IsInPinRange(const fvector_2d& InCurrentPosition) const;
+	
 	void ComputationalGeometry(float DeltaTime);
 	
 	void DrawBackground(float DeltaTime) const;
 	
 	void DrawGrid(float DeltaTime) const;
 
+	void ComputationalZoom(float DeltaTime);
+	
+	void DrawZoomText(float DeltaTime) const;
+	
+	void ComputationalSelection(float DeltaTime);
+	
+	void DrawSelection(float DeltaTime) const;
+
 	void DrawBlueprintNode(float DeltaTime) const;
 	
-	FGraphicBlueprintGeometry Geometry;//记录面板的位置信息
+	void CheckKeyboard(float DeltaTime);
+
+	void OnDelete();
+	
+	void OnLookAt();
+	
+	void LookAtTargetBlueprintNode(float InTime, float InDeltaTime);
+
+public:
+	int GetSelectedNodeIndex() const;
+	
+	bool IsExitIndexArrays(int InNewIndex) const;
+protected:
+	void BlueprintNodeInteraction(float DeltaTime,const FCanvasGeometry &InGeometry);
+
+	virtual std::shared_ptr<FBlueprintDrawConnection> MakePinConnection();
+	
+	FGraphicBlueprintGeometry Geometry;
 	
 	std::vector<std::shared_ptr<FBlueprintNode>> Nodes;
+	
+	std::shared_ptr<FBlueprintDrawConnection> DrawConnection;
+	
+	FTimeline Timeline;
 };

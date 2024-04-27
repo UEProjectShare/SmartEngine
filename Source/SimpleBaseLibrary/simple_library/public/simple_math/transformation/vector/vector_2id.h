@@ -49,6 +49,26 @@ public:
 		return fvector_2id(x / k, y / k);
 	}
 
+	bool operator>(const fvector_2id& a)const
+	{
+		return x > a.x && y > a.y;
+	}
+
+	bool operator<(const fvector_2id& a)const
+	{
+		return x < a.x && y < a.y;
+	}
+
+	bool operator>=(const fvector_2id& a)const
+	{
+		return x >= a.x && y >= a.y;
+	}
+
+	bool operator<=(const fvector_2id& a)const
+	{
+		return x <= a.x&& y <= a.y;
+	}
+
 	fvector_2id operator/=(float k)
 	{
 		*this = *this / k;

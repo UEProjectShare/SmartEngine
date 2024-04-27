@@ -35,7 +35,7 @@ int main()
 		def_c_paths Paths;
 		init_def_c_paths(&Paths);
 
-		find_files(SourcePath.c_str(), &Paths, true);
+		find_files(SourcePath.c_str(), &Paths, true, false);
 
 		//先收集它的模块
 		map<string, vector<string>> Modulars;

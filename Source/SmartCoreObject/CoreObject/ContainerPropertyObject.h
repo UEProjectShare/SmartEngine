@@ -1,7 +1,7 @@
 #pragma once
 #include "PropertyObject.h"
 
-class SMARTENGINECORE_API CContainerPropertyObject : public CPropertyObject
+class SMARTCOREOBJECT_API CContainerPropertyObject : public CPropertyObject
 {
 	typedef CPropertyObject Super;
 

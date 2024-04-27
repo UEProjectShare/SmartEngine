@@ -34,7 +34,7 @@ struct FFrame
 
 	void Step(CCoreMinimalObject* Context, void const* RefData);
 
-	SMARTENGINECORE_API unsigned char* GetParamAddr();
+	SMARTCOREOBJECT_API unsigned char* GetParamAddr();
 	
 	unsigned char* Code;
 	

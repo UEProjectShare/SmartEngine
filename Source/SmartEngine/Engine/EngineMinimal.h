@@ -8,6 +8,9 @@
 #pragma comment(lib, "SmartEngineCore.lib")
 #pragma comment(lib, "SmartCoreObject.lib")
 
+//资源处理
+#pragma comment(lib, "SmartAssetHandle.lib")
+
 #include "Debug/Log/SimpleLog.h"
 
 #include "MeshImportExportToolType.h"

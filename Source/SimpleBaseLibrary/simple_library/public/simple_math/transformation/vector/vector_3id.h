@@ -13,4 +13,25 @@ public:
 	fvector_3id();
 	fvector_3id(int in_value);
 	fvector_3id(int in_a, int in_b, int in_c);
+
+public:
+	bool operator>(const fvector_3id& a)const
+	{
+		return x > a.x && y > a.y && z > a.z;
+	}
+
+	bool operator<(const fvector_3id& a)const
+	{
+		return x < a.x&& y < a.y&& z < a.z;
+	}
+
+	bool operator>=(const fvector_3id& a)const
+	{
+		return x >= a.x && y >= a.y && z >= a.z;
+	}
+
+	bool operator<=(const fvector_3id& a)const
+	{
+		return x <= a.x&& y <= a.y&& z <= a.z;
+	}
 };

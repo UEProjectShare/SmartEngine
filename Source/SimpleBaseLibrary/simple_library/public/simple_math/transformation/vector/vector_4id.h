@@ -23,4 +23,25 @@ public:
 	fvector_4id(int in_value);
 
 	fvector_4id(int a, int b, int c, int d);
+
+public:
+	bool operator>(const fvector_4id& a)const
+	{
+		return x > a.x && y > a.y && z > a.z && w > a.w;
+	}
+
+	bool operator<(const fvector_4id& a)const
+	{
+		return x < a.x&& y < a.y&& z < a.z&& w < a.w;
+	}
+
+	bool operator>=(const fvector_4id& a)const
+	{
+		return x >= a.x && y >= a.y && z >= a.z && w >= a.w;
+	}
+
+	bool operator<=(const fvector_4id& a)const
+	{
+		return x <= a.x&& y <= a.y&& z <= a.z&& w <= a.w;
+	}
 };

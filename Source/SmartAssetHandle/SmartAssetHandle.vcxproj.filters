@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Filter Include="Core">
+            <UniqueIdentifier>{27BE3816-CF2D-42DA-A729-6C118000FAD3}</UniqueIdentifier>
+        </Filter>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="Core\AssetAssistLibrary.cpp">
+            <Filter>Core</Filter>
+        </ClCompile>
+        <ClCompile Include="Core\AssetPackage.cpp">
+            <Filter>Core</Filter>
+        </ClCompile>
+        <ClCompile Include="Core\AssetPackageManage.cpp">
+            <Filter>Core</Filter>
+        </ClCompile>
+        <ClCompile Include="SmartAssetHandleType.cpp" />
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="Core\AssetAssistLibrary.h">
+            <Filter>Core</Filter>
+        </ClInclude>
+        <ClInclude Include="Core\AssetPackage.h">
+            <Filter>Core</Filter>
+        </ClInclude>
+        <ClInclude Include="Core\AssetPackageManage.h">
+            <Filter>Core</Filter>
+        </ClInclude>
+        <ClInclude Include="SmartAssetHandle.h" />
+        <ClInclude Include="SmartAssetHandleMacro.h" />
+        <ClInclude Include="SmartAssetHandleType.h" />
+    </ItemGroup>
+</Project>

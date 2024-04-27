@@ -2,6 +2,11 @@
 #include "Toolbar/ObjectBlueprintToolbarEditor.h"
 #include "Details/ObjectDetailsEditor.h"
 #include "Graphic/ObjectGraphicBlueprintEditor.h"
+#include "../Core/BlueprintConnection/BlueprintConnectionType.h"
+#include "../Core/BlueprintConnection/BlueprintConnectionManage.h"
+#include "../Core/BlueprintConnection/BlueprintConnectionExtend/BlueprintBezierCubicConnection.h"
+#include "../Core/BlueprintConnection/BlueprintConnectionExtend/BlueprintLineConnection.h"
+#include "../Core/BlueprintConnection/BlueprintConnectionExtend/BlueprintBezierQuadraticConnection.h"
 
 FObjectBlueprintEditor::FObjectBlueprintEditor()
 	: Super()
@@ -11,6 +16,18 @@ FObjectBlueprintEditor::FObjectBlueprintEditor()
 void FObjectBlueprintEditor::BuildEditor()
 {
 	Super::BuildEditor();
+
+	FBlueprintConnectionManage::Get()->RegistertConnection(
+	EObjectConnectionType::OBJECT_BLUEPRINT,
+	std::make_shared<FBlueprintLineConnection>());
+
+	//FBlueprintConnectionManage::Get()->RegistertConnection(
+	//	EObjectConnectionType::OBJECT_BLUEPRINT,
+	//	std::make_shared<FBlueprintBezierCubicConnection>());
+
+	//FBlueprintConnectionManage::Get()->RegistertConnection(
+	//	EObjectConnectionType::OBJECT_BLUEPRINT,
+	//	std::make_shared<FBlueprintBezierQuadraticConnection>());
 
 	Editors.insert({ "Detail", make_shared<FObjectDetailsEditor>() });
 	Editors.insert({ "Toolbar", make_shared<FObjectBlueprintToolbarEditor>() });

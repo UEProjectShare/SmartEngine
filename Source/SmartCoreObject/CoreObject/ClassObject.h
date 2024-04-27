@@ -1,7 +1,10 @@
 #pragma once
 #include "FieldObject.h"
 
-class SMARTENGINECORE_API CClassObject : public CFieldObject
+class SMARTCOREOBJECT_API CClassObject : public CFieldObject
 {
     typedef CFieldObject Super;
+
+public:
+    CClassObject(int);
 };

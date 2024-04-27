@@ -7,6 +7,6 @@ struct FCreateObjectParam;
 
 namespace ConstructionComponent
 {
-	void SMARTENGINECORE_API UpdateConstructionComponents(CComponent* InComponent, CComponent* InParentComponent);
-	void SMARTENGINECORE_API ConstructionComponents(const FCreateObjectParam& InObjectParam, CCoreMinimalObject* NewObject);
+	void SMARTCOREOBJECT_API UpdateConstructionComponents(CComponent* InComponent, CComponent* InParentComponent);
+	void SMARTCOREOBJECT_API ConstructionComponents(const FCreateObjectParam& InObjectParam, CCoreMinimalObject* NewObject);
 }

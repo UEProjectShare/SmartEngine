@@ -23,7 +23,7 @@ void FAssetEditor::DrawEditor(float DeltaTime)
 				char Buff[512] = { 0 };
 				get_path_clean_filename(Buff, SelectAssetPath->AssetPaths[i].c_str());
 
-				FBrowseAssetIcon().Draw(i, Buff, DeltaTime);
+				FBrowseAssetIcon().Draw(i, Buff, SelectAssetPath->AssetPaths[i].c_str(), DeltaTime);
 
 				ImGui::SameLine();
 			}

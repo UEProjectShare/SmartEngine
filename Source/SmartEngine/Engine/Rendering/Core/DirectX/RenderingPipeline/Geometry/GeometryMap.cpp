@@ -412,29 +412,35 @@ bool FGeometryMap::FindMeshRenderingDataByHash(const size_t& InHash, std::shared
 
 void FGeometryMap::LoadTexture() const
 {
-	def_c_paths Paths;
-	init_def_c_paths(&Paths);
+	def_c_paths_v2 Paths;
+	init_def_c_paths_v2(&Paths);
 
-	const std::string ContentPath =
+	std::string ContentPath = 
 		FEnginePathHelper::RelativeToAbsolutePath(
-			FEnginePathHelper::GetEngineContentPath());
+		FEnginePathHelper::GetEngineContentPath());
 
-	Engine_Log("Load texture root path: [%s]", ContentPath);
+	Engine_Log("Load texture root path: [%s]", ContentPath.c_str());
 
-	find_files(ContentPath.c_str(), &Paths, true);
+	find_files_v2(ContentPath.c_str(), &Paths, true, true);
 
 	Engine_Log("Load texture num: [%i]", Paths.index);
 
-	for (int i = 0; i < Paths.index; i++)
+	int offset = 0;
+	for (int i = 0; i < Paths.num; i++)
 	{
-		//......./filename_cubemap.
-		if (find_string(Paths.paths[i], ".dds", 0) != -1)
-		{
-			//单位化路径
-			normalization_path(Paths.paths[i]);
+		char* TmpPath = get_def_c_paths_by_offset(&Paths, offset);
+		offset += get_def_c_offset(TmpPath);
 
+		//......./filename_cubemap.
+		if (find_string(TmpPath, ".dds", 0) != -1)
+		{
+#ifdef _WIN64
+#else
+			//单位化路径
+			normalization_path(TmpPath);
+#endif 
 			wchar_t TexturePath[1024] = { 0 };
-			char_to_wchar_t(TexturePath, 1024, Paths.paths[i]);
+			char_to_wchar_t(TexturePath, 1024, TmpPath);
 
 			if (wfind_string(TexturePath, L"_CubeMap.") != -1 ||
 				wfind_string(TexturePath, L"_cubemap.") != -1)
@@ -449,8 +455,10 @@ void FGeometryMap::LoadTexture() const
 			}
 		}
 
-		Engine_Log("texture fullname: [%s]", Paths.paths[i]);
+		Engine_Log("texture fullname: [%s]", TmpPath);
 	}
+
+	destroy_def_c_paths_v2(&Paths);
 }
 
 void FGeometryMap::Build()

@@ -16,4 +16,6 @@ protected:
 	class FAssetEditor* AssetEditor;
 	
 	class FFileEditor* FileEditor;
+
+	class FAssetMenuEditor* AssetMenuEditor;
 };

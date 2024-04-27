@@ -3,7 +3,7 @@
 
 class CPropertyObject;
 
-class SMARTENGINECORE_API CFunctionObject : public CFieldObject
+class SMARTCOREOBJECT_API CFunctionObject : public CFieldObject
 {
 	typedef CFieldObject Super;
 public:

@@ -2,7 +2,7 @@
 
 #include "../CoreObject/CoreMinimalObject.h"
 
-class SMARTENGINECORE_API CComponent : public CCoreMinimalObject
+class SMARTCOREOBJECT_API CComponent : public CCoreMinimalObject
 {
 public:
 	CComponent();

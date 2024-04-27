@@ -1,7 +1,7 @@
 #pragma once
 #include "FieldObject.h"
 
-class SMARTENGINECORE_API CStructObject : public CFieldObject
+class SMARTCOREOBJECT_API CStructObject : public CFieldObject
 {
 
 };

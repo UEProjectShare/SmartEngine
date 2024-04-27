@@ -225,6 +225,7 @@ namespace IntermediateFile
 		}
 		AnalysisRaw.push_back("public: \\");
 		AnalysisRaw.push_back("virtual bool UpdateEditorContainerPropertyDetails(class CPropertyObject* InProperty); \\");
+		AnalysisRaw.push_back("static class CClassObject* GetClass(); \\");
 		AnalysisRaw.push_back("protected: \\");
 		AnalysisRaw.push_back("virtual void InitReflectionContent(); \\");
 		AnalysisRaw.push_back("private:");
@@ -306,6 +307,10 @@ namespace IntermediateFile
 		AnalysisRaw.push_back("#include \"CodeReflection/FunctionManage.h\"");
 		AnalysisRaw.push_back("#include \"CoreMacro.h\"");
 		AnalysisRaw.push_back("#include \"CoreObject/PropertyObject.h\"");
+
+		AnalysisRaw.push_back("#include \"CoreObject/ClassObject.h\"");
+		AnalysisRaw.push_back("#include \"CodeReflection/ClassManage.h\"");
+		AnalysisRaw.push_back("#include \"Construction/ObjectConstruction.h\"");
 		
 		AnalysisRaw.push_back("");
 		AnalysisRaw.push_back("#ifdef _MSC_VER");
@@ -655,6 +660,29 @@ namespace IntermediateFile
 
 			AnalysisRaw.push_back((""));
 
+			AnalysisRaw.push_back(
+			simple_cpp_string_algorithm::printf("CClassObject* %s::GetClass()",
+				ClassAnalysis.ClassName.c_str()));
+			AnalysisRaw.push_back(("{"));
+			{
+				AnalysisRaw.push_back(("\tstatic CClassObject* ClassObject = nullptr;"));
+				AnalysisRaw.push_back(("\tif (!ClassObject)"));
+				AnalysisRaw.push_back(("\t{"));
+				{
+					AnalysisRaw.push_back(("\t\tFCreateObjectParam ClassParam;"));
+					AnalysisRaw.push_back(("\t\tClassObject = CreateObject<CClassObject>(ClassParam, new CClassObject(0));"));
+					AnalysisRaw.push_back(
+						simple_cpp_string_algorithm::printf("\t\tClassObject->Rename(\"%s\");",
+							ClassAnalysis.CodeCPPName.c_str()));
+				}
+				AnalysisRaw.push_back(("\t}"));
+				AnalysisRaw.push_back((""));
+				AnalysisRaw.push_back(("\treturn ClassObject;"));
+			}
+			AnalysisRaw.push_back(("}"));
+
+			AnalysisRaw.push_back((""));
+
 			AnalysisRaw.push_back(("/* 1xxxx xxxx "));
 			AnalysisRaw.push_back((" 2xxxx xxxx */"));
 			//Register_ActorObject
@@ -671,6 +699,14 @@ namespace IntermediateFile
 					AnalysisRaw.end(),
 					StaticRegistration.begin(),
 					StaticRegistration.end());
+
+				AnalysisRaw.push_back((""));
+
+				AnalysisRaw.push_back(
+					simple_cpp_string_algorithm::printf(
+						"\tFClassManage::SetNativeClass(FClassID(\"%s\",%s::GetClass()));",
+						ClassAnalysis.CodeCPPName.c_str(),
+						ClassAnalysis.ClassName.c_str()));
 
 				AnalysisRaw.push_back((""));
 				AnalysisRaw.push_back(("\treturn 0;"));

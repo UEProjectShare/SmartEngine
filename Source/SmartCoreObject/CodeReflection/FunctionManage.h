@@ -7,7 +7,7 @@
 
 class CFunctionObject;
 
-struct SMARTENGINECORE_API FFunctionID
+struct SMARTCOREOBJECT_API FFunctionID
 {
 	std::string ClassName;
 	std::string FuncName;
@@ -21,7 +21,7 @@ struct SMARTENGINECORE_API FFunctionID
 	{}
 };
 
-struct SMARTENGINECORE_API FFunctionManage
+struct SMARTCOREOBJECT_API FFunctionManage
 {
 	static FNativeFunctionPtr& GetNativeFuncPtr(const CFunctionObject* Function);
 	static int SetNativeFuncPtr(const FFunctionID& Function);

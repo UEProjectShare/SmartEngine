@@ -2,6 +2,18 @@
 #include "simple_library/public/simple_core_minimal/simple_c_helper_file/simple_file_helper.h"
 #include "simple_library/public/simple_core_minimal/simple_c_core/simple_c_array/simple_c_array_string.h"
 
+#ifdef  _WIN64
+struct _finddatai64_t finddata;
+char separator[] = "/";
+char wildcard[] = "*";
+#else
+#ifdef _WIN32    
+struct _finddata_t finddata;
+char separator[] = "\\";
+char wildcard[] = "*";
+#endif 
+#endif 
+
 //用于检测ShellExecute的返回值信息
 bool check_ShellExecute_ret(int ret)
 {
@@ -109,26 +121,110 @@ void remove_dir_all_files(const char* file_dir)
 	def_c_paths Paths;
 	init_def_c_paths(&Paths);
 
-	//Engine_Log("Load texture root path: [%s]", ContentPath.c_str());
-
-	find_files(file_dir, &Paths, true);
+	find_files(file_dir, &Paths, true,false);
 
 	for (int i = 0; i < Paths.index; i++)
 	{
 		remove(Paths.paths[i]);
-	}	
+	}
 }
 
-void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
+void find_files_v2(char const* in_path, def_c_paths_v2* str, bool b_recursion, bool b_include_folder)
 {
 #ifdef  _WIN64
-	struct _finddatai64_t finddata;
+	intptr_t hfile = 0;
 #else
 #ifdef _WIN32    
-	struct _finddata_t finddata;
+	long hfile = 0;
 #endif 
 #endif 
+	char buff[1024] = { 0 };
 
+	strcpy(buff, in_path);
+	strcat(buff, separator);
+
+	if (b_include_folder)
+	{	
+		//添加路径 第一个路径
+		add_def_c_paths(str, buff);
+	}
+
+	//拼接
+	strcat(buff, wildcard);
+	if ((hfile =
+#ifdef _WIN64
+		_findfirst64
+#else
+#ifdef WIN32	
+		_findfirst
+#endif // _WIN64
+#endif // _WIN32
+		(buff, &finddata)) != -1)
+	{
+		do
+		{
+			if (finddata.attrib & _A_SUBDIR)
+			{
+				if (strcmp(finddata.name, ".") == 0 ||
+					strcmp(finddata.name, "..") == 0)
+				{
+					continue;
+				}
+
+				memset(buff, 0, 1024);
+
+				strcpy(buff, in_path);
+				strcat(buff, separator);
+				strcat(buff, finddata.name);
+
+				if (b_recursion)
+				{
+					find_files_v2(buff, str, b_recursion, b_include_folder);
+				}
+			}
+			else
+			{
+				memset(buff, 0, 1024);
+
+				strcpy(buff, in_path);
+				strcat(buff, separator);
+				strcat(buff, finddata.name);
+
+				add_def_c_paths(str, buff);
+			}
+
+		} while (
+#ifdef _WIN64
+			_findnext64
+#else
+#ifdef _WIN32
+
+			_findnext
+#endif
+#endif
+			(hfile, &finddata) == 0);
+		_findclose(hfile);
+	}
+}
+
+int get_def_c_offset(const char* str)
+{
+	return 
+		strlen(str) + 
+		sizeof(char) + //我们提供的\0结尾
+		sizeof(char);//拷贝中自带的\0结尾
+}
+
+int get_def_c_offset_w(const wchar_t* str)
+{
+	return
+		wcslen(str) +
+		sizeof(wchar_t) + //我们提供的\0结尾
+		sizeof(wchar_t);//拷贝中自带的\0结尾
+}
+
+void find_files(char const *in_path, def_c_paths *str, bool b_recursion,bool b_include_folder)
+{
 #ifdef  _WIN64
 	intptr_t hfile = 0;
 #else
@@ -139,7 +235,16 @@ void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
 	
 	char tmp_path[1024] = { 0 };
 	strcpy(tmp_path, in_path);
-	strcat(tmp_path, "\\*");
+
+	if (b_include_folder)
+	{
+		strcpy(str->paths[str->index], in_path);
+		strcat(str->paths[str->index++], separator);
+	}
+
+	//拼接
+	strcat(tmp_path, separator);
+	strcat(tmp_path, wildcard);
 	if ((hfile = 
 #ifdef _WIN64
 		_findfirst64
@@ -153,27 +258,27 @@ void find_files(char const *in_path, def_c_paths *str, bool b_recursion)
 		do
 		{
 			if (finddata.attrib & _A_SUBDIR)
-			{
-				if (b_recursion)
+			{		
+				if (strcmp(finddata.name, ".") == 0 ||
+					strcmp(finddata.name, "..") == 0)
 				{
-					if (strcmp(finddata.name, ".") == 0 ||
-						strcmp(finddata.name, "..") == 0)
-					{
-						continue;
-					}
+					continue;
+				}
 
-					char new_path[1024] = { 0 };
-					strcpy(new_path, in_path);
-					strcat(new_path, "\\");
-					strcat(new_path, finddata.name);
+				char new_path[1024] = { 0 };
+				strcpy(new_path, in_path);
+				strcat(new_path, separator);
+				strcat(new_path, finddata.name);
 
-					find_files(new_path, str, b_recursion);
+				if (b_recursion)
+				{	
+					find_files(new_path, str, b_recursion, b_include_folder);
 				}
 			}
 			else
 			{
 				strcpy(str->paths[str->index], in_path);
-				strcat(str->paths[str->index], "\\");
+				strcat(str->paths[str->index], separator);
 				strcat(str->paths[str->index++], finddata.name);
 			}
 
@@ -477,6 +582,144 @@ unsigned int get_file_size_by_filename_w(const wchar_t* filename)
 	}
 
 	return file_size;
+}
+
+void init_def_c_paths_v2(def_c_paths_v2* c_paths)
+{
+	c_paths->index = 0;
+	c_paths->num = 0;
+	c_paths->paths = NULL;
+}
+
+void init_def_c_paths_w_v2(def_c_paths_w_v2* c_paths)
+{
+	c_paths->index = 0;
+	c_paths->num = 0;
+	c_paths->paths = NULL;
+}
+
+void add_def_c_paths(def_c_paths_v2* c_paths, const char* str)
+{
+	int str_len = strlen(str);
+	str_len += sizeof(char);//最后一个 /0结尾
+
+	if (!c_paths->paths)
+	{
+		c_paths->paths = (char*)malloc(str_len);
+	}
+	else
+	{
+		c_paths->paths = (char*)realloc(c_paths->paths, c_paths->index + str_len);
+	}
+
+	memset(&c_paths->paths[c_paths->index], 0, str_len);
+
+	memcpy(&c_paths->paths[c_paths->index++],str, str_len -sizeof(char));
+
+	c_paths->index += str_len;
+	c_paths->num++;
+}
+
+void add_def_c_paths_w(def_c_paths_w_v2* c_paths, const wchar_t* str)
+{
+	int str_len = wcslen(str);
+	str_len += sizeof(wchar_t);//最后一个 /0结尾
+
+	if (!c_paths->paths)
+	{
+		c_paths->paths = (wchar_t*)malloc(str_len);
+	}
+	else
+	{
+		c_paths->paths = (wchar_t*)realloc(c_paths->paths, c_paths->index + str_len);
+	}
+
+	memset(&c_paths->paths[c_paths->index], 0, str_len);
+
+	memcpy(&c_paths->paths[c_paths->index], str, str_len- sizeof(wchar_t));
+
+	c_paths->index += str_len;
+	c_paths->num++;
+}
+
+int get_def_c_paths_offset_by_index(def_c_paths_v2* c_paths, int index)
+{
+	int offset = 0;
+	for (int i = 0; i < c_paths->num; i++)
+	{
+		if (i == index)
+		{
+			return offset;
+		}
+
+		int len = strlen(c_paths->paths[offset]);
+		offset += len + sizeof(char);
+	}
+
+	return -1;
+}
+
+int get_def_c_paths_offset_by_index_w(def_c_paths_w_v2* c_paths, int index)
+{
+	int offset = 0;
+	for (int i = 0; i < c_paths->num; i++)
+	{
+		if (i == index)
+		{
+			return offset;
+		}
+
+		int len = wcslen(c_paths->paths[offset]);
+		offset += len + sizeof(wchar_t);
+	}
+
+	return -1;
+}
+
+char* get_def_c_paths_by_offset(def_c_paths_v2* c_paths, int in_offset)
+{
+	return &c_paths->paths[in_offset];
+}
+
+wchar_t* get_def_c_paths_by_offset_w(def_c_paths_w_v2* c_paths, int in_offset)
+{
+	return &c_paths->paths[in_offset];
+}
+
+char *get_def_c_paths_by_index(def_c_paths_v2* c_paths, int index)
+{
+	int offset = get_def_c_paths_offset_by_index(c_paths, index);
+
+	if (offset != -1)
+	{
+		return get_def_c_paths_by_offset(c_paths, offset);
+	}
+
+	return NULL;
+}
+
+wchar_t *get_def_c_paths_by_index_w(def_c_paths_w_v2* c_paths, int index)
+{
+	int offset = get_def_c_paths_offset_by_index_w(c_paths, index);
+
+	if (offset != -1)
+	{
+		return get_def_c_paths_by_offset_w(c_paths, offset);
+	}
+
+	return NULL;
+}
+
+void destroy_def_c_paths_v2(def_c_paths_v2* c_paths)
+{
+	free(c_paths->paths);
+	init_def_c_paths_v2(c_paths);
+}
+
+void destroy_def_c_paths_w_v2(def_c_paths_w_v2* c_paths)
+{
+	free(c_paths->paths);
+	init_def_c_paths_w_v2(c_paths);
 }
 
 bool load_data_from_disk(const char* path, char* buf)

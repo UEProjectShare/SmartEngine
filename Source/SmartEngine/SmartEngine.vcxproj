@@ -71,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(SolutionDir)Source\SmartCoreObject;$(SolutionDir)Intermediate\CodeReflection;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(SolutionDir)Source\SmartCoreObject;$(SolutionDir)Intermediate\CodeReflection;$(SolutionDir)Source\SmartAssetHandle;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
     <LibraryPath>$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(SolutionDir)Source\SmartCoreObject;$(SolutionDir)Intermediate\CodeReflection;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)imgui;$(SolutionDir)Source\SmartMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\SmartEngine\imgui;$(SolutionDir)Source\SmartEngineCore;$(SolutionDir)Source\SmartCoreObject;$(SolutionDir)Intermediate\CodeReflection;$(SolutionDir)Source\SmartAssetHandle;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
     <LibraryPath>$(SolutionDir)Binaries\Win64;$(LibraryPath)</LibraryPath>
@@ -163,6 +163,13 @@
   <ItemGroup>
     <ClCompile Include="Common\EngineVariableTable.cpp" />
     <ClCompile Include="Common\OperationHandleSelectManage.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\BlueprintConfigInfo.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierCubicConnection.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierQuadraticConnection.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintLineConnection.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionManage.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintDrawConnection.cpp" />
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\Interface\BlueprintConnection.cpp" />
     <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintEditor\BlueprintEditor.cpp" />
     <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintGraphic\GraphicBlueprintEditor.cpp" />
     <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintNode\BlueprintNode.cpp" />
@@ -181,7 +188,8 @@
     <ClCompile Include="EditorEngine\BrowseEditor\Editor\AssetEditor.cpp" />
     <ClCompile Include="EditorEngine\BrowseEditor\Editor\Element\BrowseAssetIcon.cpp" />
     <ClCompile Include="EditorEngine\BrowseEditor\Editor\FileEditor.cpp" />
-    <ClCompile Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\Menu\AssetMenuEditor.cpp" />
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\Menu\ObjectAssetMenuEditor.cpp" />
     <ClCompile Include="EditorEngine\Core\EditorBase.cpp" />
     <ClCompile Include="EditorEngine\Core\EditorCommon.cpp" />
     <ClCompile Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.cpp" />
@@ -362,6 +370,14 @@
   <ItemGroup>
     <ClInclude Include="Common\EngineVariableTable.h" />
     <ClInclude Include="Common\OperationHandleSelectManage.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\BlueprintConfigInfo.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierCubicConnection.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierQuadraticConnection.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintLineConnection.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionManage.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionType.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintDrawConnection.h" />
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\Interface\BlueprintConnection.h" />
     <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintEditorType.h" />
     <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintEditor\BlueprintEditor.h" />
     <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintGraphic\GraphicBlueprintEditor.h" />
@@ -381,7 +397,8 @@
     <ClInclude Include="EditorEngine\BrowseEditor\Editor\AssetEditor.h" />
     <ClInclude Include="EditorEngine\BrowseEditor\Editor\Element\BrowseAssetIcon.h" />
     <ClInclude Include="EditorEngine\BrowseEditor\Editor\FileEditor.h" />
-    <ClInclude Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\Menu\AssetMenuEditor.h" />
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\Menu\ObjectAssetMenuEditor.h" />
     <ClInclude Include="EditorEngine\Core\EditorBase.h" />
     <ClInclude Include="EditorEngine\Core\EditorCommon.h" />
     <ClInclude Include="EditorEngine\DetailsEditor\Core\ClassDetailsMapping.h" />

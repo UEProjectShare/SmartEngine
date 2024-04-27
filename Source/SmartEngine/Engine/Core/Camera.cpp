@@ -37,7 +37,7 @@ GCamera::GCamera()
 void GCamera::BeginInit()
 {
 	//初始化我们的投影矩阵
-	const float AspectRatio = static_cast<float>(FEngineRenderConfig::GetRenderConfig()->ScreenWidth) / static_cast<float>(FEngineRenderConfig::GetRenderConfig()->ScreenHeight);
+	float AspectRatio = static_cast<float>(FEngineRenderConfig::GetRenderConfig()->ScreenWidth) / static_cast<float>(FEngineRenderConfig::GetRenderConfig()->ScreenHeight);
 	////(1,1,0) (-1,1,0) (-1,-1,0) (1,-1,0) (1,1,1) (-1,1,1) (-1,-1,1) (1,-1,1)
 	////基于视野构建左手透视投影矩阵
 	SetFrustum(
@@ -130,12 +130,13 @@ void GCamera::BuildViewMatrix(float DeltaTime)
 			CameraPos.x = Radius * sinf(B) * cosf(A);
 			CameraPos.z = Radius * sinf(B) * sinf(A);
 			CameraPos.y = Radius * cosf(B);
+			
+			XMVECTOR Pos = XMVectorSet(CameraPos.x, CameraPos.y, CameraPos.z, 1.0f);
+			XMVECTOR ViewTarget = XMVectorZero();
 
-			const XMVECTOR Pos = XMVectorSet(CameraPos.x, CameraPos.y, CameraPos.z, 1.0f);
-			const XMVECTOR ViewTarget = XMVectorZero();
-			const XMVECTOR ViewUp = XMVectorSet(0.f, 1.0f, 0.f, 0.f);
+			XMVECTOR ViewUp = XMVectorSet(0.f, 1.0f, 0.f, 0.f);
 
-			const XMMATRIX ViewLookAt = XMMatrixLookAtLH(Pos, ViewTarget, ViewUp);
+			XMMATRIX ViewLookAt = XMMatrixLookAtLH(Pos, ViewTarget, ViewUp);
 			XMStoreFloat4x4(&ViewMatrix, ViewLookAt);
 
 			break;
@@ -159,7 +160,6 @@ void GCamera::OnLeftMouseButtonDown(int X, int Y)
 
 	SetCapture(GetMainWindowsHandle());
 }
-
 
 void GCamera::OnMouseButtonDown(int X, int Y)
 {
@@ -187,78 +187,98 @@ void GCamera::OnMouseButtonUp(int X, int Y)
 
 void GCamera::OnMouseMove(int X, int Y)
 {
-	if (bRightMouseDown)
+#if EDITOR_ENGINE
+	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
+#endif
 	{
-		const float XRadians = XMConvertToRadians(static_cast<float>(X - LastMousePosition.x) * MouseSensitivity);
-		const float YRadians = XMConvertToRadians(static_cast<float>(Y - LastMousePosition.y) * MouseSensitivity);
-		
-		switch (CameraType)
+		if (bRightMouseDown)
 		{
-			case CameraRoaming:
-			{
-				RotateAroundXAxis(YRadians);
-				RotateAroundYAxis(XRadians);
-				break;
-			}	
-			case ObservationObject:
-			{
-				A += (-XRadians);
-				B += YRadians;
+			float XRadians = XMConvertToRadians((float)(X - LastMousePosition.x) * MouseSensitivity);
+			float YRadians = XMConvertToRadians((float)(Y - LastMousePosition.y) * MouseSensitivity);
 
-				A = math_libray::Clamp(A, 0.f, XM_2PI * 2.f);
-				break;
+			switch (CameraType)
+			{
+				case CameraRoaming:
+				{
+					RotateAroundXAxis(YRadians);
+					RotateAroundYAxis(XRadians);
+					break;
+				}
+				case ObservationObject:
+				{
+					A += (-XRadians);
+					B += YRadians;
+
+					A = math_libray::Clamp(A, 0.f, XM_2PI * 2.f);
+					break;
+				}
 			}
 		}
+
+		LastMousePosition.x = X;
+		LastMousePosition.y = Y;
+
+		SetDirty(true);
 	}
-
-	LastMousePosition.x = X;
-	LastMousePosition.y = Y;
-
-	SetDirty(true);
 }
 
 void GCamera::OnMouseWheel(int X, int Y, float InDelta)
 {
-	if (CameraType == ECameraType::ObservationObject)
+#if EDITOR_ENGINE
+	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
+#endif
 	{
-		Radius += (InDelta / 100.f);
+		if (CameraType == ECameraType::ObservationObject)
+		{
+			Radius += (InDelta / 100.f);
 
-		//限制在一定的范围内
-		Radius = math_libray::Clamp(Radius, 7.f, 40.f);
+			//限制在一定的范围内
+			Radius = math_libray::Clamp(Radius, 7.f, 40.f);
+		}
+
+		SetDirty(true);
 	}
-
-	SetDirty(true);
 }
 
 void GCamera::MoveForward(float InValue)
 {
-	if (CameraType == ECameraType::CameraRoaming)
+#if EDITOR_ENGINE
+	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
+#endif
 	{
-		XMFLOAT3 AT3Position = GetRootComponent()->GetPosition();
-		const XMFLOAT3 AT3ForwardVector = GetRootComponent()->GetForwardVector();
+		if (CameraType == ECameraType::CameraRoaming)
+		{
+			XMFLOAT3 AT3Position = GetRootComponent()->GetPosition();
+			XMFLOAT3 AT3ForwardVector = GetRootComponent()->GetForwardVector();
 
-		const XMVECTOR AmountMovement = XMVectorReplicate(InValue * 1.f);
-		const XMVECTOR Forward = XMLoadFloat3(&AT3ForwardVector);
-		const XMVECTOR Position = XMLoadFloat3(&AT3Position);
+			XMVECTOR AmountMovement = XMVectorReplicate(InValue * 1.f);
+			XMVECTOR Forward = XMLoadFloat3(&AT3ForwardVector);
+			XMVECTOR Position = XMLoadFloat3(&AT3Position);
 
-		XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Forward, Position));
-		GetRootComponent()->SetPosition(AT3Position);
+			XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Forward, Position));
+			GetRootComponent()->SetPosition(AT3Position);
+		}
 	}
 }
 
 void GCamera::MoveRight(float InValue)
 {
-	if (CameraType == ECameraType::CameraRoaming)
+#if EDITOR_ENGINE
+	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
+#endif
 	{
-		XMFLOAT3 AT3Position = GetRootComponent()->GetPosition();
-		const XMFLOAT3 AT3RightVector = GetRootComponent()->GetRightVector();
+		if (CameraType == ECameraType::CameraRoaming)
+		{
+			XMFLOAT3 AT3Position = GetRootComponent()->GetPosition();
+			XMFLOAT3 AT3RightVector = GetRootComponent()->GetRightVector();
 
-		const XMVECTOR AmountMovement = XMVectorReplicate(InValue * 1.f);
-		const XMVECTOR Right = XMLoadFloat3(&AT3RightVector);
-		const XMVECTOR Position = XMLoadFloat3(&AT3Position);
+			XMVECTOR AmountMovement = XMVectorReplicate(InValue * 1.f);
+			XMVECTOR Right = XMLoadFloat3(&AT3RightVector);
+			XMVECTOR Position = XMLoadFloat3(&AT3Position);
 
-		XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Right, Position));
-		GetRootComponent()->SetPosition(AT3Position);
+			XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Right, Position));
+			GetRootComponent()->SetPosition(AT3Position);
+		}
 	}
 }
 
@@ -310,11 +330,11 @@ void GCamera::RotateAroundXAxis(float InRotateDegrees) const
 {
 	//拿到相机的方向
 	XMFLOAT3 RightVector = GetRootComponent()->GetRightVector();
-	const XMFLOAT3 UPVector = GetRootComponent()->GetUPVector();
-	const XMFLOAT3 ForwardVector = GetRootComponent()->GetForwardVector();
+	XMFLOAT3 UPVector = GetRootComponent()->GetUPVector();
+	XMFLOAT3 ForwardVector = GetRootComponent()->GetForwardVector();
 
 	//拿到关于Y的旋转矩阵
-	const XMMATRIX RotationY = XMMatrixRotationAxis(XMLoadFloat3(&GetRootComponent()->GetRightVector()), InRotateDegrees);
+	XMMATRIX RotationY = XMMatrixRotationAxis(XMLoadFloat3(&GetRootComponent()->GetRightVector()),InRotateDegrees);
 
 	//计算各个方向和按照Z轴旋转后的最终效果
 	//XMStoreFloat3(&TransformationComponent->GetRightVector(), XMVector3TransformNormal(XMLoadFloat3(&RightVector), RotationY));
@@ -325,12 +345,12 @@ void GCamera::RotateAroundXAxis(float InRotateDegrees) const
 void GCamera::RotateAroundYAxis(float InRotateDegrees) const
 {
 	//拿到相机的方向
-	const XMFLOAT3 RightVector = GetRootComponent()->GetRightVector();
-	const XMFLOAT3 UPVector = GetRootComponent()->GetUPVector();
-	const XMFLOAT3 ForwardVector = GetRootComponent()->GetForwardVector();
+	XMFLOAT3 RightVector = GetRootComponent()->GetRightVector();
+	XMFLOAT3 UPVector = GetRootComponent()->GetUPVector();
+	XMFLOAT3 ForwardVector = GetRootComponent()->GetForwardVector();
 
 	//拿到关于Z的旋转矩阵
-	const XMMATRIX RotationZ = XMMatrixRotationY(InRotateDegrees);
+	XMMATRIX RotationZ = XMMatrixRotationY(InRotateDegrees);
 
 	//计算各个方向和按照Z轴旋转后的最终效果
 	XMStoreFloat3(&GetRootComponent()->GetRightVector(), XMVector3TransformNormal(XMLoadFloat3(&RightVector), RotationZ));
@@ -348,33 +368,33 @@ void GCamera::LookAtAndMoveToSelectedObject(float InTime, float InDeltaTime)
 		fvector_3d Extents = EngineMath::ToVector3d(SelectAABB.Extents);
 
 		//离选择对象的距离
-		const float R = Extents.len();
-		const float H = 5.f;
-		const float FOV = GetFOV();
+		float R = Extents.len();
+		float H = 5.f;
+		float FOV = GetFOV();
 		assert(FOV != 0.f);
 
-		const float L = (R + H) / tan(FOV / 2.f);
+		float L = (R + H) / tan(FOV / 2.f);
 
-		const fvector_3d CameraPosition = EngineMath::ToVector3d(GetPosition());
-		const fvector_3d SelectedObjectPosition = EngineMath::ToVector3d(SelectedObject->GetPosition());
+		fvector_3d CameraPosition = EngineMath::ToVector3d(GetPosition());
+		fvector_3d SelectedObjectPosition = EngineMath::ToVector3d(SelectedObject->GetPosition());
 
 		fvector_3d CameraForwardVector = SelectedObjectPosition - CameraPosition;
 		CameraForwardVector.normalize();
 
-		const fvector_3d CameraEndPosition = SelectedObjectPosition + CameraForwardVector * (-1.f) * L;
+		fvector_3d CameraEndPosition = SelectedObjectPosition + CameraForwardVector * (-1.f) * L;
 
-		const fvector_3d CurrentCameraPosition = EngineMath::Lerp(CameraPosition, CameraEndPosition, InDeltaTime * 2.f / InTime);
+		fvector_3d CurrentCameraPosition = EngineMath::Lerp(CameraPosition, CameraEndPosition, InDeltaTime * 2.f / InTime);
 		
 		SetPosition(EngineMath::ToFloat3(CurrentCameraPosition));
 
 		//是否启用四元数
-		const float LerpSpeed = 4.f / InTime;
+		float LerpSpeed = 4.f / InTime;
 		if (true)
 		{
-			const fquat Q1 = GetRotationQuat();
-			const fquat Q2 = EngineMath::BuildQuat(CameraForwardVector);
+			fquat Q1 = GetRotationQuat();
+			fquat Q2 = EngineMath::BuildQuat(CameraForwardVector);
 
-			const fquat CurrentQ = fquat::lerp(Q1, Q2, InDeltaTime * LerpSpeed);
+			fquat CurrentQ = fquat::lerp(Q1, Q2, InDeltaTime * LerpSpeed);
 
 			SetRotationQuat(CurrentQ);
 		}
@@ -388,8 +408,8 @@ void GCamera::LookAtAndMoveToSelectedObject(float InTime, float InDeltaTime)
 		
 			SetRotation(CurrentRotator);
 
-			//Engine_Log("Rotator1 y=%f, r=%f, p=%f", Rotator1.yaw, Rotator1.roll, Rotator1.pitch);
-			//Engine_Log("Rotator2 y=%f, r=%f, p=%f", Rotator2.yaw, Rotator2.roll, Rotator2.pitch);
+			//Engine_Log("Rotator1 y=%f,r=%f,p=%f", Rotator1.yaw, Rotator1.roll,Rotator1.pitch);
+			//Engine_Log("Rotator2 y=%f,r=%f,p=%f", Rotator2.yaw, Rotator2.roll, Rotator2.pitch);
 		}
 	}
 

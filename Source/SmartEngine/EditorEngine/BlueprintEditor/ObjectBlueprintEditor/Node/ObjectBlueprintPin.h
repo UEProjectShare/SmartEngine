@@ -6,10 +6,10 @@ class FObjectBlueprintPin : public FBlueprintPin
 	typedef FBlueprintPin Super;
 public:
 	FObjectBlueprintPin();
-
-	void BuildEditor() override;
-
+	
+	void BuildEditor(const FCanvasGeometry& InGeometry) override;
+	
 	void DrawEditor(float DeltaTime) override;
-
+	
 	void ExitEditor() override;
 };

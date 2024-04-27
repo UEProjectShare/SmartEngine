@@ -33,6 +33,26 @@ public:
 		return fvector_2d(x- a.x, y - a.y);
 	}
 
+	bool operator>(const fvector_2d& a)const
+	{
+		return x > a.x && y > a.y;
+	}
+
+	bool operator<(const fvector_2d& a)const
+	{
+		return x < a.x && y < a.y;
+	}
+
+	bool operator>=(const fvector_2d& a)const
+	{
+		return x >= a.x && y >= a.y;
+	}
+
+	bool operator<=(const fvector_2d& a)const
+	{
+		return x <= a.x&& y <= a.y;
+	}
+
 	void operator-=(const fvector_2d& a)
 	{
 		*this = *this - a;

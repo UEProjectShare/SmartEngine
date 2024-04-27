@@ -1,5 +1,9 @@
 #include "ObjectGraphicBlueprintEditor.h"
 #include "../Node/ObjectBlueprintNode.h"
+#include "../../BlueprintConfigInfo.h"
+#include "../../Core/BlueprintConnection/BlueprintDrawConnection.h"
+#include "../../Core/BlueprintConnection/BlueprintConnectionManage.h"
+#include "../../Core/BlueprintConnection/BlueprintConnectionType.h"
 
 FObjectGraphicBlueprintEditor::FObjectGraphicBlueprintEditor()
 	:Super()
@@ -26,11 +30,17 @@ void FObjectGraphicBlueprintEditor::DrawEditor(float DeltaTime)
 	
 	if (ImGui::BeginPopup("Context"))
 	{
-		if (ImGui::MenuItem("Create Blueprint Node", nullptr, false, true))
+		if (ImGui::MenuItem("Create Blueprint Node", NULL, false, true))
 		{
-			CreateBlueprintNode(
+			FCanvasGeometry CanvasGeometry;
+			StructureGeometryParam(CanvasGeometry);
+
+			if (auto Node = CreateBlueprintNode(
 				fvector_2d(Geometry.MousePositionInCanvas.x, Geometry.MousePositionInCanvas.y),
-				fvector_2d(Geometry.Origin.x, Geometry.Origin.y));
+				fvector_2d(Geometry.Origin.x, Geometry.Origin.y)))
+			{
+				Node->BuildEditor(CanvasGeometry);
+			}
 		}
 
 		ImGui::EndPopup();
@@ -42,16 +52,25 @@ void FObjectGraphicBlueprintEditor::ExitEditor()
 	Super::ExitEditor();
 }
 
-void FObjectGraphicBlueprintEditor::CreateBlueprintNode(
+std::shared_ptr<FBlueprintNode> FObjectGraphicBlueprintEditor::CreateBlueprintNode(
 	const fvector_2d& InNewOffsetPosition,
 	const fvector_2d& InNewOriginPosition)
 {
 	Nodes.push_back(std::make_shared<FObjectBlueprintNode>());
 	auto& Node = Nodes[Nodes.size() - 1];
 	
+	Node->SetStandardOffsetPosition(InNewOffsetPosition / GetZoomRatio());
 	Node->SetOffsetPosition(InNewOffsetPosition);
 	Node->SetOriginPosition(InNewOriginPosition);
-	Node->SetSize(256);
+	Node->SetSize(FBlueprintConfigInfo::Get()->BlueprintNodeSize * GetZoomRatio());
 	
-	Node->BuildEditor();
+	return Node;
+}
+
+std::shared_ptr<FBlueprintDrawConnection> FObjectGraphicBlueprintEditor::MakePinConnection()
+{
+	auto BlueprintDrawConnection = make_shared<FBlueprintDrawConnection>();
+	BlueprintDrawConnection->SetConnectionType(OBJECT_BLUEPRINT);
+	
+	return BlueprintDrawConnection;
 }

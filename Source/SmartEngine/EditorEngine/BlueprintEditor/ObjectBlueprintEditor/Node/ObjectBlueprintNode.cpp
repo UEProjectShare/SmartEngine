@@ -1,24 +1,27 @@
 #include "ObjectBlueprintNode.h"
 #include "ObjectBlueprintPin.h"
+#include "../../BlueprintConfigInfo.h"
 
 FObjectBlueprintNode::FObjectBlueprintNode()
-	: Super()
+	:Super()
 {
 }
 
-void FObjectBlueprintNode::BuildEditor()
+void FObjectBlueprintNode::BuildEditor(const FCanvasGeometry& InGeometry)
 {
-	Super::BuildEditor();
+	Super::BuildEditor(InGeometry);
 
-	int PinSize = 16.f;
+	AddPin(EBlueprintPinType::Pin_Input, InGeometry);
+	AddPin(EBlueprintPinType::Pin_ParamInput, InGeometry);
+	AddPin(EBlueprintPinType::Pin_ParamInput, InGeometry);
+	AddPin(EBlueprintPinType::Pin_ParamInput, InGeometry);
+	AddPin(EBlueprintPinType::Pin_ParamInput, InGeometry);
 
-	AddPin(EBlueprintPinType::Pin_Input, fvector_2d(OffsetPosition.x + PinSize, OffsetPosition.y + 64 * 1), OriginPosition);
-	AddPin(EBlueprintPinType::Pin_Input, fvector_2d(OffsetPosition.x + PinSize, OffsetPosition.y + 64 * 2), OriginPosition);
-	AddPin(EBlueprintPinType::Pin_Input, fvector_2d(OffsetPosition.x + PinSize, OffsetPosition.y + 64 * 3), OriginPosition);
+	AddPin(EBlueprintPinType::Pin_Output, InGeometry);
+	AddPin(EBlueprintPinType::Pin_ParamOutput, InGeometry);
+	AddPin(EBlueprintPinType::Pin_ParamOutput, InGeometry);
 
-	AddPin(EBlueprintPinType::Pin_Input, fvector_2d(OffsetPosition.x + NodeSize.x - PinSize, OffsetPosition.y + 64 * 1), OriginPosition);
-	AddPin(EBlueprintPinType::Pin_Input, fvector_2d(OffsetPosition.x + NodeSize.x - PinSize, OffsetPosition.y + 64 * 2), OriginPosition);
-	AddPin(EBlueprintPinType::Pin_Input, fvector_2d(OffsetPosition.x + NodeSize.x - PinSize, OffsetPosition.y + 64 * 3), OriginPosition);
+	BlueprintNodeSelfAdaption(InGeometry.ZoomRatio);
 }
 
 void FObjectBlueprintNode::DrawEditor(float DeltaTime)
@@ -31,17 +34,7 @@ void FObjectBlueprintNode::ExitEditor()
 	Super::ExitEditor();
 }
 
-void FObjectBlueprintNode::AddPin(
-	EBlueprintPinType InType,
-	const fvector_2d& InNewOffsetPosition,
-	const fvector_2d& InNewOriginPosition)
+std::shared_ptr<FBlueprintPin> FObjectBlueprintNode::MakePin()
 {
-	Pins.push_back(std::make_shared<FObjectBlueprintPin>());
-	auto& Pin = Pins[Pins.size() - 1];
-
-	Pin->SetOffsetPosition(InNewOffsetPosition);
-	Pin->SetOriginPosition(InNewOriginPosition);
-	Pin->SetSize(16);
-
-	Pin->BuildEditor();
+	return make_shared<FObjectBlueprintPin>();
 }

@@ -552,9 +552,6 @@
     <ClCompile Include="EditorEngine\BrowseEditor\Editor\FileEditor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="EditorEngine\BrowseEditor\BrowseEditor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -604,6 +601,33 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EditorEngine\DetailsEditor\OutsideDetailsEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierCubicConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierQuadraticConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintLineConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\Interface\BlueprintConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintDrawConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BlueprintEditor\BlueprintConfigInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\Menu\AssetMenuEditor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\BrowseEditor\Editor\Menu\ObjectAssetMenuEditor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -681,9 +705,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Common\OperationHandleSelectManage.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Construction\ConstructionComponents.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actor\Core\ActorObject.h">
@@ -1175,9 +1196,6 @@
     <ClInclude Include="EditorEngine\BrowseEditor\Editor\FileEditor.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EditorEngine\BrowseEditor\Editor\ObjectAssetMenuEditor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="EditorEngine\BrowseEditor\BrowseEditor.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -1230,6 +1248,36 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="EditorEngine\DetailsEditor\OutsideDetailsEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierCubicConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintBezierQuadraticConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionExtend\BlueprintLineConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\Interface\BlueprintConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintConnectionType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\Core\BlueprintConnection\BlueprintDrawConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BlueprintEditor\BlueprintConfigInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\Menu\AssetMenuEditor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\BrowseEditor\Editor\Menu\ObjectAssetMenuEditor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

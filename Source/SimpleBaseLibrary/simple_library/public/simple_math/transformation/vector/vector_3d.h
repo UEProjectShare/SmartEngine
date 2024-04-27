@@ -18,20 +18,30 @@ public:
 	char* to_string(char* buff);
 
 public:
-	
-	bool operator!=(const fvector_3d& a)const
+
+	bool operator>(const fvector_3d& a)const
 	{
-		return x != a.x && y != a.y && z != a.z;
+		return x > a.x && y > a.y && z > a.z;
+	}
+
+	bool operator<(const fvector_3d& a)const
+	{
+		return x < a.x&& y < a.y && z < a.z;
 	}
 
 	bool operator>=(const fvector_3d& a)const
 	{
-		return x >= a.x && y >= a.y  && z >= a.z;
+		return x >= a.x && y >= a.y && z >= a.z;
 	}
 
 	bool operator<=(const fvector_3d& a)const
 	{
-		return x <= a.x && y <= a.y && z <= a.z;
+		return x <= a.x&& y <= a.y&& z <= a.z;
+	}
+
+	bool operator!=(const fvector_3d& a)const
+	{
+		return x != a.x && y != a.y && z != a.z;
 	}
 
 	bool operator==(const fvector_3d& a)const

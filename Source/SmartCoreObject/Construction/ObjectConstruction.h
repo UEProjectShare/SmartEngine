@@ -6,7 +6,7 @@ class CComponent;
 #include "../CoreObject/CoreMinimalObject.h"
 #include "ConstructionComponents.h"
 
-struct SMARTENGINECORE_API FCreateObjectParam
+struct SMARTCOREOBJECT_API FCreateObjectParam
 {
 	FCreateObjectParam()
 		: Outer(nullptr)

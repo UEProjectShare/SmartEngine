@@ -23,6 +23,27 @@ struct SIMPLE_LIBRARY_API fvector_4d
 
 	fvector_4d(float a, float b, float c, float d);
 
+public:
+	bool operator>(const fvector_4d& a)const
+	{
+		return x > a.x && y > a.y && z > a.z && w > a.w;
+	}
+
+	bool operator<(const fvector_4d& a)const
+	{
+		return x < a.x&& y < a.y&& z < a.z && w < a.w;
+	}
+
+	bool operator>=(const fvector_4d& a)const
+	{
+		return x >= a.x && y >= a.y && z >= a.z && w >= a.w;
+	}
+
+	bool operator<=(const fvector_4d& a)const
+	{
+		return x <= a.x&& y <= a.y&& z <= a.z&& w <= a.w;
+	}
+
 	fvector_4d operator+(const fvector_4d& a) const
 	{
 		return fvector_4d(a.x + x, a.y + y, a.z + z, a.w + w);

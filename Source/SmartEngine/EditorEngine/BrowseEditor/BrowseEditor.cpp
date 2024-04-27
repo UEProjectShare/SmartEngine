@@ -1,17 +1,20 @@
 #include "BrowseEditor.h"
 #include "Editor/AssetEditor.h"
 #include "Editor/FileEditor.h"
+#include "Editor/Menu/AssetMenuEditor.h"
 
 FBrowseEditor::FBrowseEditor()
 {
 	AssetEditor = new FAssetEditor();
 	FileEditor = new FFileEditor();
+	AssetMenuEditor = new FAssetMenuEditor();
 }
 
 void FBrowseEditor::BuildEditor()
 {
 	AssetEditor->BuildEditor();
 	FileEditor->BuildEditor();
+	AssetMenuEditor->BuildEditor();
 }
 
 void FBrowseEditor::DrawEditor(float DeltaTime)
@@ -34,6 +37,7 @@ void FBrowseEditor::DrawEditor(float DeltaTime)
 		ImGui::Separator();
 		{
 			AssetEditor->DrawEditor(DeltaTime);
+			AssetMenuEditor->DrawEditor(DeltaTime);
 		}
 		ImGui::EndChild();
 		ImGui::EndGroup();
@@ -45,4 +49,5 @@ void FBrowseEditor::ExitEditor()
 {
 	AssetEditor->ExitEditor();
 	FileEditor->ExitEditor();
+	AssetMenuEditor->ExitEditor();
 }

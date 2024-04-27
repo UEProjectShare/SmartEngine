@@ -61,6 +61,7 @@
     <ClCompile Include="CoreObject\ArrayPropertyObject.cpp" />
     <ClCompile Include="CoreObject\ContainerPropertyObject.cpp" />
     <ClCompile Include="CoreObject\MapPropertyObject.cpp" />
+    <ClCompile Include="CodeReflection\ClassManage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodeReflection\CodeReflectionMacroTag.h">
@@ -119,5 +120,6 @@
     <ClInclude Include="CoreObject\ArrayPropertyObject.h" />
     <ClInclude Include="CoreObject\ContainerPropertyObject.h" />
     <ClInclude Include="CoreObject\MapPropertyObject.h" />
+    <ClInclude Include="CodeReflection\ClassManage.h" />
   </ItemGroup>
 </Project>

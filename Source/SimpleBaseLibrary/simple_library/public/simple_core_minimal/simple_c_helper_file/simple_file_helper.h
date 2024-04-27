@@ -43,7 +43,7 @@ int copy_file(char *Src, char *Dest);
 
 void remove_dir_all_files(const char* file_dir);
 
-void find_files(char const *in_path, def_c_paths *str,bool b_recursion);
+void find_files(char const *in_path, def_c_paths *str,bool b_recursion,bool b_include_folder);
 
 bool is_file_exists(char const* filename);
 
@@ -123,4 +123,43 @@ bool open_by_operation_w(const wchar_t *in_operation, const wchar_t* url, const 
 bool open_explore_w(const wchar_t* url);
 
 unsigned int get_file_size_by_filename_w(const wchar_t* filename);
+
+//v2版本 路径自适应
+
+typedef struct
+{
+	int index;//表示当前偏移
+	int num;//表示数量
+	char* paths;//MAX_PATH
+}def_c_paths_v2;
+
+typedef struct
+{
+	int index;//表示当前偏移
+	int num;//表示数量
+	wchar_t* paths;//MAX_PATH
+}def_c_paths_w_v2;
+
+void init_def_c_paths_v2(def_c_paths_v2* c_paths);
+void init_def_c_paths_w_v2(def_c_paths_w_v2* c_paths);
+
+void find_files_v2(char const* in_path, def_c_paths_v2* str, bool b_recursion, bool b_include_folder);
+
+int get_def_c_offset(const char* str);
+int get_def_c_offset_w(const wchar_t* str);
+
+void add_def_c_paths(def_c_paths_v2* c_paths,const char *str);
+void add_def_c_paths_w(def_c_paths_w_v2* c_paths, const wchar_t* str);
+
+int get_def_c_paths_offset_by_index(def_c_paths_v2* c_paths, int index);
+int get_def_c_paths_offset_by_index_w(def_c_paths_w_v2* c_paths, int index);
+
+char* get_def_c_paths_by_offset(def_c_paths_v2* c_paths, int in_offset);
+wchar_t* get_def_c_paths_by_offset_w(def_c_paths_w_v2* c_paths, int in_offset);
+
+char* get_def_c_paths_by_index(def_c_paths_v2* c_paths,int index);
+wchar_t *get_def_c_paths_by_index_w(def_c_paths_w_v2* c_paths, int index);
+
+void destroy_def_c_paths_v2(def_c_paths_v2* c_paths);
+void destroy_def_c_paths_w_v2(def_c_paths_w_v2* c_paths);
 _CRT_END_C_HEADER

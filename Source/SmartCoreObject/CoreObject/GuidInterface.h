@@ -3,7 +3,7 @@
 #include "../SmartCoreObjectMacro.h"
 
 //提供一个对象的身份ID
-class SMARTENGINECORE_API IGuidInterface
+class SMARTCOREOBJECT_API IGuidInterface
 {
 public:
 	IGuidInterface();

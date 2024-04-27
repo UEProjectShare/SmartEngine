@@ -5,7 +5,7 @@
 #endif
 
 #ifdef SMARTENGINECORE_EXPORTS
-#define SMARTENGINECORE_API __declspec(dllexport)
+#define SMARTCOREOBJECT_API __declspec(dllexport)
 #else
-#define SMARTENGINECORE_API __declspec(dllimport)
+#define SMARTCOREOBJECT_API __declspec(dllimport)
 #endif
